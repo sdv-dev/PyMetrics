@@ -5,7 +5,7 @@ on:
     inputs:
       project:
         description: 'Name of the spreadsheet to collect'
-        required: true
+        required: false
         default: ''
       repositories:
         description: 'List of projects (aka. libraries) to collect, separated by spaces'
@@ -16,7 +16,7 @@ on:
         required: false
         default: '***REMOVED***'
       extras:
-        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date)'
+        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date --max-days)'
         required: false
         default: ''
   # schedule:   # disabled for now
@@ -37,7 +37,7 @@ jobs:
         python -m pip install .
     - name: Collect Github Data
       run: |
-        download-analytics collect -q \
+        download-analytics collect -vv \
           -s ${{ github.event.inputs.spreadsheet }} \
           -p ${{ github.event.inputs.projects }} \
           -o gdrive://${{ github.event.inputs.output-folder }} \
