@@ -25,18 +25,10 @@ SELECT
     details.system.name             as system_name,
     details.system.release          as system_release,
     details.cpu                     as cpu,
-FROM `bigquery-public-data.pypi.file_downloads`
+FROM `the-psf.pypi.file_downloads`
 WHERE file.project in {projects}
-    AND DATE(timestamp)
-        BETWEEN
-        DATE('{start_date}')
-        AND
-        DATE('{end_date}')
-    AND DATETIME(timestamp)
-        BETWEEN
-        DATETIME('{start_datetime}')
-        AND
-        DATETIME('{end_datetime}')
+    AND timestamp >= '{start_date}'
+    AND timestamp < '{end_date}'
 """
 OUTPUT_COLUMNS = [
     'timestamp',
@@ -70,10 +62,8 @@ def _get_query(projects, start_date, end_date):
 
     return QUERY_TEMPLATE.format(
         projects=projects,
-        start_date=start_date.date().isoformat(),
-        end_date=end_date.date().isoformat(),
-        start_datetime=start_date.isoformat(),
-        end_datetime=end_date.isoformat()
+        start_date=start_date.isoformat(),
+        end_date=end_date.isoformat(),
     )
 
 
