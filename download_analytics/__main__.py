@@ -90,11 +90,11 @@ def _collect(args, parser):
     )
 
 
-def valid_date(arg):
+def _valid_date(arg):
     try:
         return datetime.strptime(arg, '%Y-%m-%d')
     except ValueError:
-        raise argparse.ArgumentTypeError(f'Invalid date: {arg}')
+        raise argparse.ArgumentTypeError(f'Invalid date: {arg}') from None
 
 
 def _get_parser():
@@ -132,7 +132,7 @@ def _get_parser():
         '-p', '--projects', nargs='*',
         help='List of projects to collect. If not given use the configured ones.')
     collect.add_argument(
-        '-S', '--start-date', type=valid_date, required=False,
+        '-S', '--start-date', type=_valid_date, required=False,
         help='Date from which to start pulling data.')
     collect.add_argument(
         '-m', '--max-days', type=int, required=False,
