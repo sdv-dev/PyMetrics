@@ -11,6 +11,7 @@ with open('README.md', encoding='utf-8') as readme_file:
 install_requires = [
     'pandas',
     'google-cloud-bigquery',
+    'pyarrow',
     'tqdm',
     'openpyxl',
     'xlsxwriter',
