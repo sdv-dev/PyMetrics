@@ -1,5 +1,7 @@
 """Functions to query Google Big Query."""
 
+# pylint: disable=E1101
+
 import json
 import logging
 import os
@@ -41,10 +43,12 @@ def run_query(query, dry_run=False, credentials_file=None):
     dry_run_job = client.query(query, job_config=job_config)
     LOGGER.info('Estimated processed GBs: %.2f', dry_run_job.total_bytes_processed / 1024 ** 3)
 
-    if not dry_run:
-        query_job = client.query(query)
-        data = query_job.to_dataframe()
-        LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024 ** 3)
-        LOGGER.info('Total billed GBs: %.2f', query_job.total_bytes_billed / 1024 ** 3)
+    if dry_run:
+        return None
 
-        return data
+    query_job = client.query(query)
+    data = query_job.to_dataframe()
+    LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024 ** 3)
+    LOGGER.info('Total billed GBs: %.2f', query_job.total_bytes_billed / 1024 ** 3)
+
+    return data
