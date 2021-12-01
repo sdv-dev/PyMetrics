@@ -1,0 +1,11 @@
+output-path: gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
+max-days: 7
+projects:
+  downloads:
+  - sdv
+  - ctgan
+  - copulas
+  - rdt
+  - deepecho
+  - sdmetrics
+  - sdgym
