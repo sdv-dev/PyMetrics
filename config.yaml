@@ -9,3 +9,5 @@ projects:
   - deepecho
   - sdmetrics
   - sdgym
+  - gretel-synthetics
+  - ydata-synthetic
