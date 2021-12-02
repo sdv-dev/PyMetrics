@@ -43,9 +43,9 @@ def _load_config(config_path):
         config = import_config
 
         config_projects = config['projects']
-        for spreadsheet, projects in config_projects.items():
+        for superproject, projects in config_projects.items():
             if not projects:
-                config_projects[spreadsheet] = import_projects[spreadsheet]
+                config_projects[superproject] = import_projects[superproject]
 
     return config
 
@@ -56,25 +56,25 @@ def _collect(args, parser):
 
     projects = {}
     if args.projects:
-        if not args.spreadsheets:
-            parser.error('If projects are given, spreadsheet name must be provided.')
-        elif len(args.spreadsheets) > 1:
-            parser.error('If projects are given, only one spreadsheet name must be provided.')
+        if not args.superprojects:
+            parser.error('If projects are given, a superproject name must be provided.')
+        elif len(args.superprojects) > 1:
+            parser.error('If projects are given, only one superproject name must be provided.')
 
         projects = {
-            args.spreadsheets[0]: args.projects
+            args.superprojects[0]: args.projects
         }
 
     elif not args.projects:
         projects = config_projects
 
     else:
-        for spreadsheet in args.projects:
-            if spreadsheet not in config_projects:
-                LOGGER.error('Unknown projects spreadsheet %s', spreadsheet)
+        for superproject in args.projects:
+            if superproject not in config_projects:
+                LOGGER.error('Unknown superprojects %s', superproject)
                 return
 
-            projects[spreadsheet] = config_projects[spreadsheet]
+            projects[superproject] = config_projects[superproject]
 
     output_path = args.output_path or config.get('output-path', '.')
     max_days = args.max_days or config.get('max-days')
@@ -87,6 +87,7 @@ def _collect(args, parser):
         credentials_file=args.authentication_credentials,
         dry_run=args.dry_run,
         force=args.force,
+        backup_path=args.backup_path,
     )
 
 
@@ -118,13 +119,13 @@ def _get_parser():
 
     collect.add_argument(
         '-o', '--output-path', type=str, required=False,
-        help='Output path. ')
+        help='Output path.')
     collect.add_argument(
         '-a', '--authentication-credentials', type=str, required=False,
         help='Path to the credentials file to use.')
     collect.add_argument(
-        '-s', '--spreadsheets', type=str, nargs='*',
-        help='Spreadsheets to collect. Defaults to ALL the configuried ones if not given.')
+        '-s', '--superprojects', type=str, nargs='*',
+        help='Superprojects to collect. Defaults to ALL the configuried ones if not given.')
     collect.add_argument(
         '-c', '--config-file', type=str, default='config.yaml',
         help='Path to the configuration file.')
@@ -143,6 +144,9 @@ def _get_parser():
     collect.add_argument(
         '-f', '--force', action='store_true',
         help='Force the download even if the data already exists or there is a gap')
+    collect.add_argument(
+        '-b', '--backup-path', type=str,
+        help='Path to which a local backup of the CSV file must be created before uploading.')
 
     return parser
 
