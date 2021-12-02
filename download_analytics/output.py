@@ -82,6 +82,7 @@ def load_spreadsheet(spreadsheet):
             of the spreadsheet and the date fields properly
             parsed to datetimes.
     """
+    LOGGER.info('Loading spreadsheet %s', spreadsheet)
     if drive.is_drive_path(spreadsheet):
         path = spreadsheet
         folder, filename = drive.split_drive_path(spreadsheet)
