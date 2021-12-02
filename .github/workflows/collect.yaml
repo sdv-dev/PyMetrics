@@ -15,12 +15,16 @@ on:
         description: 'ID of the Google Drive Output folder'
         required: false
         default: '***REMOVED***'
+      max-days:
+        description: 'Maximum number of days to collect, starting from today.'
+        required: false
+        default: '7'
       extras:
-        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date --max-days)'
+        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date)'
         required: false
         default: ''
-  # schedule:   # disabled for now
-  #   - cron:  '0 0 * * *'
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
   collect:
@@ -40,6 +44,7 @@ jobs:
         download-analytics collect -v \
           -s ${{ github.event.inputs.spreadsheet }} \
           -p ${{ github.event.inputs.projects }} \
+          -m ${{ github.event.inputs.max-days }} \
           -o gdrive://${{ github.event.inputs.output-folder }} \
           ${{ github.event.inputs.extras }}
       env:
