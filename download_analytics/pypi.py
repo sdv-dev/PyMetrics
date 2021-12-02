@@ -68,7 +68,7 @@ def _get_query(projects, start_date, end_date):
 
 
 def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
-    end_date = datetime.utcnow()
+    end_date = datetime.utcnow().date()
     if start_date is None:
         start_date = end_date - timedelta(days=max_days)
 
