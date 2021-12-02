@@ -11,7 +11,6 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 XLSX_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-SPREADSHEET_MIMETYPE = 'application/vnd.google-apps.spreadsheet'
 PYDRIVE_CREDENTIALS = 'PYDRIVE_CREDENTIALS'
 
 LOGGER = logging.getLogger(__name__)
@@ -72,8 +71,8 @@ def _find_file(drive, filename, folder):
     raise FileNotFoundError(f"File '{filename}' not found in Google Drive folder {folder}")
 
 
-def upload_spreadsheet(content, filename, folder):
-    """Upload spredsheet to google drive.
+def upload(content, filename, folder, convert=False):
+    """Upload a file to google drive.
 
     Args:
         content (BytesIO):
@@ -82,6 +81,8 @@ def upload_spreadsheet(content, filename, folder):
             Name of the spreadsheet to create.
         folder (str):
             Id of the Google Drive Folder where the spreadshee must be created.
+        convert (bool):
+            Whether to attempt to convert the file into a Google Docs format.
     """
     drive = _get_drive_client()
 
@@ -94,17 +95,18 @@ def upload_spreadsheet(content, filename, folder):
                 {
                     'id': folder
                 }
-            ]
+            ],
+            'mimeType': 'text/csv',
         }
         drive_file = drive.CreateFile(file_config)
 
     drive_file.content = content
-    drive_file.Upload({'convert': True})
+    drive_file.Upload({'convert': convert})
     LOGGER.info('Uploaded file %s', drive_file.metadata['alternateLink'])
 
 
-def download_spreadsheet(folder, filename):
-    """Download a spredsheet from google drive.
+def download(folder, filename, xlsx=False):
+    """Download a file from google drive.
 
     Args:
         folder (str):
@@ -124,5 +126,9 @@ def download_spreadsheet(folder, filename):
     drive = _get_drive_client()
 
     drive_file = _find_file(drive, filename, folder)
-    drive_file.FetchContent(mimetype=XLSX_MIMETYPE)
+    if xlsx:
+        drive_file.FetchContent(mimetype=XLSX_MIMETYPE)
+    else:
+        drive_file.FetchContent()
+
     return drive_file.content

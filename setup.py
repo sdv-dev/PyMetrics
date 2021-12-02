@@ -18,6 +18,7 @@ install_requires = [
     'python-benedict',
     'PyYAML',
     'PyDrive',
+    'httplib2==0.15.0',  # noqa: https://stackoverflow.com/questions/59815620/gcloud-upload-httplib2-redirectmissinglocation-redirected-but-the-response-is-m
 ]
 
 

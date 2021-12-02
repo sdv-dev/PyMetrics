@@ -3,14 +3,14 @@
 import logging
 import pathlib
 
-from download_analytics.output import create_spreadsheet, load_spreadsheet
+from download_analytics.output import create_csv, load_csv
 from download_analytics.pypi import get_pypi_downloads
 
 LOGGER = logging.getLogger(__name__)
 
 
 def collect_downloads(projects, start_date=None, output_path=None, max_days=1,
-                      credentials_file=None, dry_run=False, force=False):
+                      credentials_file=None, dry_run=False, force=False, backup_path=None):
     """Pull data about the downloads of a list of projects.
 
     Args:
@@ -21,9 +21,9 @@ def collect_downloads(projects, start_date=None, output_path=None, max_days=1,
             Date from which to start collecting data. If `None`,
             start_date will be current date - `max_days`.
         output_path (str):
-            Output path, where the spreadsheet will be written.
+            Output path, where the CSV will be written.
             It can be passed as a local file, including the `.xlsx` extension,
-            or as a Google Drive path in the format `gdrive://{folder_id}/{spreadsheet_name}`.
+            or as a Google Drive path in the format `gdrive://{folder_id}/{csv_name}.csv`.
         max_days (int):
             Maximum amount of days to include in the query from current date back, in case
             `start_date` has not been provided. Defaults to 1.
@@ -34,10 +34,9 @@ def collect_downloads(projects, start_date=None, output_path=None, max_days=1,
         force (bool):
             Whether to force the query even if data already exists or the dates
             combination creates a gap. Defaults to False.
-
-    Returns:
-        dict[str, pd.DataFrame] or None:
-            If output_path is None, a dict with the sheets is returned.
+        backup_path (str):
+            Path to which a backup file must be stored before uploading
+            to Google drive.
 
     Raises:
         TypeError
@@ -52,33 +51,34 @@ def collect_downloads(projects, start_date=None, output_path=None, max_days=1,
         projects = {output_path: projects}
         output_path = None
 
-    for spreadsheet_path, spreadsheet_projects in projects.items():
+    for csv_path, csv_projects in projects.items():
         if output_path is not None:
             if output_path.startswith('gdrive://'):
-                spreadsheet_path = f'{output_path}/{spreadsheet_path}'
+                csv_path = f'{output_path}/{csv_path}'
             else:
-                spreadsheet_path = str(pathlib.Path(output_path) / spreadsheet_path)
+                csv_path = str(pathlib.Path(output_path) / csv_path)
 
-        try:
-            previous = load_spreadsheet(spreadsheet_path)
-        except FileNotFoundError:
-            previous = {'PyPI': None}
+        if not csv_path.endswith('.csv'):
+            csv_path += '.csv'
+
+        previous = load_csv(csv_path)
 
         pypi_downloads = get_pypi_downloads(
-            projects=spreadsheet_projects,
+            projects=csv_projects,
             start_date=start_date,
-            previous=previous['PyPI'],
+            previous=previous,
             max_days=max_days,
             credentials_file=credentials_file,
             dry_run=dry_run,
             force=force
         )
 
-        sheets = {
-            'PyPI': pypi_downloads,
-        }
-
-        if all(sheet.equals(previous[name]) for name, sheet in sheets.items()):
-            LOGGER.info('Skipping update of unmodified spreadsheet %s', spreadsheet_path)
+        if pypi_downloads.empty:
+            LOGGER.info('Not creating empty CSV file %s', csv_path)
+        elif pypi_downloads.equals(previous):
+            LOGGER.info('Skipping update of unmodified CSV file %s', csv_path)
         else:
-            create_spreadsheet(spreadsheet_path, sheets)
+            if backup_path:
+                create_csv(backup_path, pypi_downloads)
+
+            create_csv(csv_path, pypi_downloads)

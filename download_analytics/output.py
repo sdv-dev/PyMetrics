@@ -57,12 +57,39 @@ def create_spreadsheet(output_path, sheets):
     if drive.is_drive_path(output_path):
         LOGGER.info('Creating file %s', output_path)
         folder, filename = drive.split_drive_path(output_path)
-        drive.upload_spreadsheet(output, filename, folder)
+        drive.upload(output, filename, folder)
     else:
         if not output_path.endswith('.xlsx'):
             output_path += '.xlsx'
 
         LOGGER.info('Creating file %s', output_path)
+        output_path = pathlib.Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(output.getbuffer())
+
+
+def create_csv(output_path, data):
+    """Create a CSV with the indicated name and data.
+
+    Args:
+        output_path (str or stream):
+            Path to where the file must be created, or open stream to write to.
+        data (dict[str, pandas.DataFrame]):
+            Sheets to created, passed as a dict that contains sheet titles as
+            keys and sheet contents as values, passed as pandas.DataFrames.
+    """
+    output = io.BytesIO()
+    data.to_csv(output, index=False)
+
+    if not output_path.endswith('.csv'):
+        output_path += '.csv'
+
+    LOGGER.info('Creating file %s', output_path)
+
+    if drive.is_drive_path(output_path):
+        folder, filename = drive.split_drive_path(output_path)
+        drive.upload(output, filename, folder)
+    else:
         output_path = pathlib.Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_bytes(output.getbuffer())
@@ -82,11 +109,11 @@ def load_spreadsheet(spreadsheet):
             of the spreadsheet and the date fields properly
             parsed to datetimes.
     """
-    LOGGER.info('Loading spreadsheet %s', spreadsheet)
+    LOGGER.info('Trying to load spreadsheet %s', spreadsheet)
     if drive.is_drive_path(spreadsheet):
         path = spreadsheet
         folder, filename = drive.split_drive_path(spreadsheet)
-        spreadsheet = drive.download_spreadsheet(folder, filename)
+        spreadsheet = drive.download(folder, filename)
     else:
         if not spreadsheet.endswith('.xlsx'):
             spreadsheet += '.xlsx'
@@ -102,3 +129,35 @@ def load_spreadsheet(spreadsheet):
     LOGGER.info('Loaded spreadsheet %s', path)
 
     return sheets
+
+
+def load_csv(csv_path):
+    """Load a CSV previously created by download-analytics.
+
+    Args:
+        csv_path (str):
+            Path to where the file is stored.
+
+    Return:
+        pd.DataFrame:
+            CSV contents.
+    """
+    if not csv_path.endswith('.csv'):
+        csv_path += '.csv'
+
+    LOGGER.info('Trying to load CSV file %s', csv_path)
+    try:
+        if drive.is_drive_path(csv_path):
+            folder, filename = drive.split_drive_path(csv_path)
+            stream = drive.download(folder, filename)
+            data = pd.read_csv(stream, parse_dates=['timestamp'])
+        else:
+            data = pd.read_csv(csv_path, parse_dates=['timestamp'])
+
+    except FileNotFoundError:
+        LOGGER.info('Failed to load CSV file %s: not found', csv_path)
+        return None
+
+    LOGGER.info('Loaded CSV %s', csv_path)
+
+    return data

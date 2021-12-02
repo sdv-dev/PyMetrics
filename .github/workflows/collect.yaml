@@ -3,11 +3,11 @@ name: Downloads Collection
 on:
   workflow_dispatch:
     inputs:
-      project:
-        description: 'Name of the spreadsheet to collect'
+      superproject:
+        description: 'Name of the superproject (aka group of projects, name of the CSV) to collect'
         required: false
         default: ''
-      repositories:
+      projects:
         description: 'List of projects (aka. libraries) to collect, separated by spaces'
         required: false
         default: ''
@@ -42,7 +42,7 @@ jobs:
     - name: Collect Downloads Data
       run: |
         download-analytics collect -v \
-          -s ${{ github.event.inputs.spreadsheet }} \
+          -s ${{ github.event.inputs.superproject }} \
           -p ${{ github.event.inputs.projects }} \
           -m ${{ github.event.inputs.max-days }} \
           -o gdrive://${{ github.event.inputs.output-folder }} \

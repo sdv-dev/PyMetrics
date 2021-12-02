@@ -1,7 +1,7 @@
 output-path: gdrive://***REMOVED***
 max-days: 7
 projects:
-  downloads:
+  pypi:
   - sdv
   - ctgan
   - copulas
