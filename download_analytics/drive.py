@@ -100,7 +100,7 @@ def upload_spreadsheet(content, filename, folder):
 
     drive_file.content = content
     drive_file.Upload({'convert': True})
-    LOGGER.info('Created file %s', drive_file.metadata['alternateLink'])
+    LOGGER.info('Uploaded file %s', drive_file.metadata['alternateLink'])
 
 
 def download_spreadsheet(folder, filename):

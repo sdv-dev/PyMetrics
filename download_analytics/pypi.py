@@ -132,13 +132,14 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
     query = _get_query(projects, start_date, end_date)
 
     new_downloads = run_query(query, dry_run, credentials_file)
-    if dry_run:
-        new_downloads = pd.DataFrame(columns=OUTPUT_COLUMNS)
+    if new_downloads is None or new_downloads.empty:
+        all_downloads = previous
     else:
         new_downloads['timestamp'] = new_downloads['timestamp'].dt.tz_convert(None)
 
-    all_downloads = previous.append(new_downloads, ignore_index=True)
-    all_downloads = all_downloads.sort_values('timestamp').drop_duplicates()
+        all_downloads = previous.append(new_downloads, ignore_index=True).sort_values('timestamp')
+        all_downloads = all_downloads.drop_duplicates().reset_index(drop=True)
+
     LOGGER.info('Obtained %s new downloads', len(all_downloads) - len(previous))
 
     return all_downloads
