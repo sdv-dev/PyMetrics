@@ -78,4 +78,7 @@ def collect_downloads(projects, start_date=None, output_path=None, max_days=1,
             'PyPI': pypi_downloads,
         }
 
-        create_spreadsheet(spreadsheet_path, sheets)
+        if all(sheet.equals(previous[name]) for name, sheet in sheets.items()):
+            LOGGER.info('Skipping update of unmodified spreadsheet %s', spreadsheet_path)
+        else:
+            create_spreadsheet(spreadsheet_path, sheets)
