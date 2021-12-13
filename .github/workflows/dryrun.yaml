@@ -2,6 +2,7 @@ name: Health-check Dry Run
 
 on:
   - workflow_dispatch
+  - push
   - pull_request
 
 jobs:
