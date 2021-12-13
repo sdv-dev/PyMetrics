@@ -25,7 +25,7 @@ SELECT
     details.system.name             as system_name,
     details.system.release          as system_release,
     details.cpu                     as cpu,
-FROM `the-psf.pypi.file_downloads`
+FROM `bigquery-public-data.pypi.file_downloads`
 WHERE file.project in {projects}
     AND timestamp >= '{start_date}'
     AND timestamp < '{end_date}'
