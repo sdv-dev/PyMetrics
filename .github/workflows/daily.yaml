@@ -22,6 +22,7 @@ jobs:
         download-analytics collect \
           --verbose \
           --max-days 30 \
+          --add-metrics \
           --output-path gdrive://***REMOVED***
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
