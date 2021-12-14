@@ -1,4 +1,4 @@
-"""Github Analytics CLI."""
+"""Download Analytics CLI."""
 
 import argparse
 import logging
@@ -37,57 +37,27 @@ def _load_config(config_path):
             import_config_path = config_path.parent / import_config_path
 
         import_config = _load_config(import_config_path)
-        import_projects = import_config['projects']
-
         import_config.update(config)
         config = import_config
-
-        config_projects = config['projects']
-        for superproject, projects in config_projects.items():
-            if not projects:
-                config_projects[superproject] = import_projects[superproject]
 
     return config
 
 
-def _collect(args, parser):
+def _collect(args):
     config = _load_config(args.config_file)
-    config_projects = config['projects']
-
-    projects = {}
-    if args.projects:
-        if not args.superprojects:
-            parser.error('If projects are given, a superproject name must be provided.')
-        elif len(args.superprojects) > 1:
-            parser.error('If projects are given, only one superproject name must be provided.')
-
-        projects = {
-            args.superprojects[0]: args.projects
-        }
-
-    elif not args.projects:
-        projects = config_projects
-
-    else:
-        for superproject in args.projects:
-            if superproject not in config_projects:
-                LOGGER.error('Unknown superprojects %s', superproject)
-                return
-
-            projects[superproject] = config_projects[superproject]
-
-    output_path = args.output_path or config.get('output-path', '.')
+    projects = args.projects or config['projects']
+    output_folder = args.output_folder or config.get('output-folder', '.')
     max_days = args.max_days or config.get('max-days')
 
     collect_downloads(
         projects=projects,
         start_date=args.start_date,
-        output_path=output_path,
+        output_folder=output_folder,
         max_days=max_days,
         credentials_file=args.authentication_credentials,
         dry_run=args.dry_run,
         force=args.force,
-        backup_path=args.backup_path,
+        add_metrics=args.add_metrics,
     )
 
 
@@ -101,7 +71,7 @@ def _valid_date(arg):
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
-    logging_args.add_argument('-v', '--verbose', action='count', default=1)
+    logging_args.add_argument('-v', '--verbose', action='count', default=0)
     logging_args.add_argument('-l', '--logfile')
 
     parser = argparse.ArgumentParser(
@@ -118,14 +88,11 @@ def _get_parser():
     collect.set_defaults(action=_collect)
 
     collect.add_argument(
-        '-o', '--output-path', type=str, required=False,
-        help='Output path.')
+        '-o', '--output-folder', type=str, required=False,
+        help='Path to the folder where data will be stored.')
     collect.add_argument(
         '-a', '--authentication-credentials', type=str, required=False,
         help='Path to the credentials file to use.')
-    collect.add_argument(
-        '-s', '--superprojects', type=str, nargs='*',
-        help='Superprojects to collect. Defaults to ALL the configuried ones if not given.')
     collect.add_argument(
         '-c', '--config-file', type=str, default='config.yaml',
         help='Path to the configuration file.')
@@ -133,7 +100,7 @@ def _get_parser():
         '-p', '--projects', nargs='*',
         help='List of projects to collect. If not given use the configured ones.')
     collect.add_argument(
-        '-S', '--start-date', type=_valid_date, required=False,
+        '-s', '--start-date', type=_valid_date, required=False,
         help='Date from which to start pulling data.')
     collect.add_argument(
         '-m', '--max-days', type=int, required=False,
@@ -145,14 +112,14 @@ def _get_parser():
         '-f', '--force', action='store_true',
         help='Force the download even if the data already exists or there is a gap')
     collect.add_argument(
-        '-b', '--backup-path', type=str,
-        help='Path to which a local backup of the CSV file must be created before uploading.')
+        '-M', '--add-metrics', action='store_true',
+        help='Compute the aggregation metrics.')
 
     return parser
 
 
 def main():
-    """Run the Github Analytics CLI."""
+    """Run the Download Analytics CLI."""
     parser = _get_parser()
     if len(sys.argv) < 2:
         parser.print_help()
@@ -161,7 +128,7 @@ def main():
     args = parser.parse_args()
 
     _env_setup(args.logfile, args.verbose)
-    args.action(args, parser)
+    args.action(args)
 
 
 if __name__ == '__main__':

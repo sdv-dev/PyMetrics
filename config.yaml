@@ -1,7 +1,6 @@
-output-path: gdrive://***REMOVED***
+output-folder: gdrive://***REMOVED***
 max-days: 7
 projects:
-  pypi:
   - sdv
   - ctgan
   - copulas
