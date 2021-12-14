@@ -23,7 +23,6 @@ jobs:
         download-analytics collect \
           --verbose \
           --max-days 30 \
-          --add-metrics \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
