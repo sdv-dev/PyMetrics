@@ -16,9 +16,9 @@ on:
         required: false
         default: '7'
       extras:
-        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date)'
+        description: 'Extra arguments to pass (e.g. --dry-run --force --start-date --add-metrics)'
         required: false
-        default: ''
+        default: '--add-metrics'
 
 jobs:
   collect:
