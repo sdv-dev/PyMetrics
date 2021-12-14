@@ -3,10 +3,6 @@ name: Manual Collection
 on:
   workflow_dispatch:
     inputs:
-      superproject:
-        description: 'Name of the output CSV file (e.g. pypi.csv)'
-        required: false
-        default: ''
       projects:
         description: 'List of projects or libraries to collect, separated by spaces (e.g. sdv rdt)'
         required: false
@@ -41,7 +37,6 @@ jobs:
       run: |
         download-analytics collect \
           --verbose \
-          --superprojects ${{ github.event.inputs.superproject }} \
           --projects ${{ github.event.inputs.projects }} \
           --max-days ${{ github.event.inputs.max_days }} \
           --output-path gdrive://${{ github.event.inputs.output_folder }} \

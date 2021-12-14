@@ -20,6 +20,20 @@ DATE_COLUMNS = [
 ]
 
 
+def get_path(folder, filename):
+    """Get the full path concatenating the folder and the filename.
+
+    Aware of both local and Google Drive path formats.
+    """
+    if folder.endswith('/'):
+        folder = folder[:-1]
+
+    if folder.startswith('gdrive://'):
+        return f'{folder}/{filename}'
+
+    return str(pathlib.Path(folder) / filename)
+
+
 def _add_sheet(writer, data, sheet):
     data.to_excel(writer, sheet_name=sheet, index=False)
 
@@ -32,18 +46,18 @@ def _add_sheet(writer, data, sheet):
 def create_spreadsheet(output_path, sheets):
     """Create a spreadsheet with the indicated name and data.
 
-    If the ``output_path`` variable ends in ``xlsx`` it is interpreted as
-    a path to where the file must be created. Otherwise, it is interpreted
-    as a name to use when constructing the final filename, which will be
-    ``github-metrics-{name}-{today}.xlsx`` within the current working
-    directory.
+    If the ``output_path`` variable starts with ``gdrive://`` it is interpreted
+    as a path to a Google Drive folder and file. Otherwise, it is interpreted as
+    a local path. In it is a local path and it does not end in ``.xlsx``, it is
+    appended to it automatically.
 
     The ``sheets`` must be passed as as dictionary that contains sheet
     titles as keys and sheet contents as values, passed as pandas.DataFrames.
 
     Args:
         output_path (str or stream):
-            Path to where the file must be created, or open stream to write to.
+            Path to where the file must be created, which can be local or to
+            a Google Drive folder.
         sheets (dict[str, pandas.DataFrame]):
             Sheets to created, passed as a dict that contains sheet titles as
             keys and sheet contents as values, passed as pandas.DataFrames.
@@ -57,7 +71,7 @@ def create_spreadsheet(output_path, sheets):
     if drive.is_drive_path(output_path):
         LOGGER.info('Creating file %s', output_path)
         folder, filename = drive.split_drive_path(output_path)
-        drive.upload(output, filename, folder)
+        drive.upload(output, filename, folder, convert=True)
     else:
         if not output_path.endswith('.xlsx'):
             output_path += '.xlsx'

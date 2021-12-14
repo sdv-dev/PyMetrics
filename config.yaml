@@ -1,7 +1,6 @@
-output-path: gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
+output-folder: gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
 max-days: 7
 projects:
-  pypi:
   - sdv
   - ctgan
   - copulas

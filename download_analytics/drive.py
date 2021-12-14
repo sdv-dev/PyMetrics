@@ -96,7 +96,6 @@ def upload(content, filename, folder, convert=False):
                     'id': folder
                 }
             ],
-            'mimeType': 'text/csv',
         }
         drive_file = drive.CreateFile(file_config)
 
