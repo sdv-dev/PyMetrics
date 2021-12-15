@@ -65,4 +65,7 @@ def collect_downloads(projects, output_folder, start_date=None, max_days=1, cred
             if not project_downloads.empty:
                 LOGGER.info('Computing metrics for project %s', project)
                 output_path = get_path(output_folder, project)
+                if dry_run:
+                    output_path = None
+
                 compute_metrics(project_downloads, output_path)
