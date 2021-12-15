@@ -23,7 +23,7 @@ jobs:
           --verbose \
           --max-days 30 \
           --add-metrics \
-          --output-path gdrive://***REMOVED***
+          --output-folder gdrive://***REMOVED***
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
