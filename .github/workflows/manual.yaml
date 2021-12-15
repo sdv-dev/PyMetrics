@@ -39,7 +39,7 @@ jobs:
           --verbose \
           --projects ${{ github.event.inputs.projects }} \
           --max-days ${{ github.event.inputs.max_days }} \
-          --output-path gdrive://${{ github.event.inputs.output_folder }} \
+          --output-folder gdrive://${{ github.event.inputs.output_folder }} \
           ${{ github.event.inputs.extras }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}

@@ -23,6 +23,8 @@ jobs:
         download-analytics collect \
           --verbose \
           --max-days 30 \
+          --add-metrics \
+          --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
