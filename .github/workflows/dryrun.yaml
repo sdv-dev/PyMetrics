@@ -24,7 +24,7 @@ jobs:
           --verbose \
           --max-days 30 \
           --add-metrics \
-          --output-folder gdrive://***REMOVED***
+          --output-folder gdrive://***REMOVED*** \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
