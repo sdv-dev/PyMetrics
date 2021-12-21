@@ -95,9 +95,10 @@ SORT_BY_VERSION = [
     'full_python_version',
 ]
 HISTORICAL_COLUMNS = [
+    'version',
+    'python_version',
     'country_code',
     'installer_name',
-    'python_version',
 ]
 
 

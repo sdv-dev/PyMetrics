@@ -71,8 +71,10 @@ def _valid_date(arg):
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
-    logging_args.add_argument('-v', '--verbose', action='count', default=0)
-    logging_args.add_argument('-l', '--logfile')
+    logging_args.add_argument('-v', '--verbose', action='count', default=0,
+                              help='Be verbose. Use `-vv` for increased verbosity.')
+    logging_args.add_argument('-l', '--logfile',
+                              help='If given, file where the logs will be written.')
 
     parser = argparse.ArgumentParser(
         prog='download-analytics',
@@ -89,10 +91,14 @@ def _get_parser():
 
     collect.add_argument(
         '-o', '--output-folder', type=str, required=False,
-        help='Path to the folder where data will be stored.')
+        help=(
+            'Path to the folder where data will be stored. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        )
+    )
     collect.add_argument(
         '-a', '--authentication-credentials', type=str, required=False,
-        help='Path to the credentials file to use.')
+        help='Path to the GCP (BigQuery) credentials file to use.')
     collect.add_argument(
         '-c', '--config-file', type=str, default='config.yaml',
         help='Path to the configuration file.')
@@ -104,16 +110,16 @@ def _get_parser():
         help='Date from which to start pulling data.')
     collect.add_argument(
         '-m', '--max-days', type=int, required=False,
-        help='Max days of data to pull of start-date is not given.')
+        help='Max days of data to pull if start-date is not given.')
     collect.add_argument(
         '-d', '--dry-run', action='store_true',
-        help='Do not run the actual query.')
+        help='Do not run the actual query, only simulate it.')
     collect.add_argument(
         '-f', '--force', action='store_true',
         help='Force the download even if the data already exists or there is a gap')
     collect.add_argument(
         '-M', '--add-metrics', action='store_true',
-        help='Compute the aggregation metrics.')
+        help='Compute the aggregation metrics and create the corresponding spreadsheets.')
 
     return parser
 
