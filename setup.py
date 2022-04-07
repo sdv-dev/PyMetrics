@@ -9,13 +9,13 @@ with open('README.md', encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 install_requires = [
-    'pandas',
-    'google-cloud-bigquery',
-    'pyarrow',
-    'openpyxl',
-    'xlsxwriter',
-    'PyYAML',
-    'PyDrive',
+    'pandas==1.4.2',
+    'google-cloud-bigquery==3.0.1',
+    'db-dtypes==1.0.0',
+    'openpyxl==3.0.9',
+    'xlsxwriter==3.0.3',
+    'PyYAML==6.0',
+    'PyDrive==1.3.1',
     'httplib2==0.15.0',  # noqa: https://stackoverflow.com/questions/59815620/gcloud-upload-httplib2-redirectmissinglocation-redirected-but-the-response-is-m
 ]
 
