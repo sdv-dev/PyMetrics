@@ -27,7 +27,7 @@ SELECT
     details.cpu                     as cpu,
 FROM `bigquery-public-data.pypi.file_downloads`
 WHERE file.project in {projects}
-    AND timestamp >= '{start_date}'
+    AND timestamp > '{start_date}'
     AND timestamp < '{end_date}'
 """
 OUTPUT_COLUMNS = [
@@ -136,9 +136,18 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
         all_downloads = previous
     else:
         new_downloads['timestamp'] = new_downloads['timestamp'].dt.tz_convert(None)
+        new_downloads = new_downloads.sort_values('timestamp')
+        if max_date is None:
+            all_downloads = new_downloads
+        else:
+            if max_date < end_date:
+                before = previous[previous.timestamp < new_downloads.timestamp.min()]
+                after = new_downloads
+            else:
+                before = new_downloads
+                after = previous[previous.timestamp > new_downloads.timestamp.max()]
 
-        all_downloads = previous.append(new_downloads, ignore_index=True).sort_values('timestamp')
-        all_downloads = all_downloads.drop_duplicates().reset_index(drop=True)
+            all_downloads = before.append(after, ignore_index=True)
 
     LOGGER.info('Obtained %s new downloads', len(all_downloads) - len(previous))
 
