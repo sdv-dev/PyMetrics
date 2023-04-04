@@ -10,3 +10,7 @@ projects:
   - sdgym
   - gretel-synthetics
   - ydata-synthetic
+  - synthesized
+  - datomize
+  - gretel-trainer
+  - ydata-sdk
