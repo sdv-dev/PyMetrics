@@ -1,11 +1,15 @@
 # Download Analytics
 
-Scripts to extract metrics about OSS project downloads.
+This projects allows you to extract download metrics from a Python library published on [PyPI](https://pypi.org/). 
+The DataCebo team uses these scripts to report growth for the libraries in the [SDV ecosystem](https://sdv.dev/) but you may 
+use it for any Python software.
+
+This software is available in open source under the MIT License. **We are not actively maintaining this repository.**
 
 ## Overview
 
 The Download Analytics project is a collection of scripts and tools to extract information
-about OSS project downloads from diffierent sources and to analyze them to produce user
+about Python software downloads from different sources and to analyze them to produce user
 engagement metrics.
 
 ### Data sources
@@ -22,10 +26,16 @@ In the future, these sources may also be added:
   `conda-forge` channel on `conda`.
 * [github](https://github.com/): Information about the project downloads from github releases.
 
-For more information about how to configure and use the software, or about the data that is being
-collected check the resources below.
+### Metrics
+This library collects the number of downloads for the software. You can break these up according to several dimensions:
+
+- **By Month**: The number of downloads per month
+- **By Version**: The number of downloads per version of the software, as determine by the software maintainers
+- **By Python Version**: The number of downloads per minor Python version (eg. 3.8)
+- **And more!** See the resources below for more information.
 
 ## Resources
+For more information about the configuration, workflows and metrics, see the resources below.
 
 |               | Document                            | Description |
 | ------------- | ----------------------------------- | ----------- |
