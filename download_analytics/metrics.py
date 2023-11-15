@@ -110,10 +110,16 @@ def _version_element_order_key(version):
     last_component = None
     last_numeric = None
     for component in version.split('.', 2):
-        numeric = RE_NUMERIC.match(component).group(0)
-        components.append(int(numeric))
-        last_component = component
-        last_numeric = numeric
+        if RE_NUMERIC.match(component):
+            try:
+                numeric = RE_NUMERIC.match(component).group(0)
+                components.append(int(numeric))
+                last_component = component
+                last_numeric = numeric
+            except AttributeError:
+                # From time to time this errors out in github actions
+                # while it shouldn't enter the `if`.
+                pass
 
     components.append(last_component[len(last_numeric):])
 
