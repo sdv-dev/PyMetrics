@@ -3,6 +3,8 @@
 import logging
 import re
 
+import pandas as pd
+
 from download_analytics.output import create_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
@@ -35,7 +37,7 @@ def _historical_groupby(downloads, groupbys=None):
 
     for groupby in groupbys:
         grouped = downloads.groupby([year_month, groupby])
-        grouped_sizes = grouped.size().unstack(-1)
+        grouped_sizes = grouped.size().unstack(-1)  # noqa: PD010
         if len(groupbys) > 1:
             grouped_sizes.columns = f"{groupby}='" + grouped_sizes.columns + "'"
 
