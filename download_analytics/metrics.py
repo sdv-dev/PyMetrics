@@ -43,7 +43,7 @@ def _historical_groupby(downloads, groupbys=None):
 
     totals = base.sum()
     totals.name = 'total'
-    base = base.append(totals)
+    base = pd.concat([base, totals], ignore_index=True)
 
     return base.reset_index().iloc[::-1]
 
