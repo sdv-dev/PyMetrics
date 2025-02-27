@@ -130,7 +130,7 @@ def _version_order_key(version_column):
 def _mangle_columns(downloads):
     downloads = downloads.rename(columns=RENAME_COLUMNS)
     downloads['full_python_version'] = downloads['python_version']
-    downloads['python_version'] = downloads['python_version'].str.rsplit('.', 1).str[0]
+    downloads['python_version'] = downloads['python_version'].str.rsplit('.', n=1).str[0]
     downloads['project_version'] = downloads['project'] + '-' + downloads['version']
     downloads['distro_version'] = downloads['distro_name'] + ' ' + downloads['distro_version']
     downloads['distro_kernel'] = downloads['distro_version'] + ' - ' + downloads['distro_kernel']
