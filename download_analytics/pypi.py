@@ -147,7 +147,7 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
                 before = new_downloads
                 after = previous[previous.timestamp > new_downloads.timestamp.max()]
 
-            all_downloads = before.append(after, ignore_index=True)
+            all_downloads = pd.concat([before, after], ignore_index=True)
 
     LOGGER.info('Obtained %s new downloads', len(all_downloads) - len(previous))
 
