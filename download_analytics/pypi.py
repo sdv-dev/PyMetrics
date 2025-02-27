@@ -71,11 +71,14 @@ def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
     if start_date is None:
         start_date = end_date - timedelta(days=max_days)
 
-    if pd.notna(min_date) and min_date > start_date:
-        if not force:
-            end_date = min_date
+    if pd.notna(min_date):
+        min_date = pd.Timestamp(min_date).date()
+        if min_date > start_date:
+            if not force:
+                end_date = min_date
 
     elif pd.notna(max_date) and not force:
+        max_date = pd.Timestamp(max_date).date()
         if max_date > start_date:
             start_date = max_date
         else:
