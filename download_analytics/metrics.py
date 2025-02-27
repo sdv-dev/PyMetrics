@@ -49,10 +49,7 @@ def _historical_groupby(downloads, groupbys=None):
 
 
 def _get_sheet_name(column):
-    words = [
-        f'{word[0].upper()}{word[1:]}'
-        for word in column.split('_')
-    ]
+    words = [f'{word[0].upper()}{word[1:]}' for word in column.split('_')]
     return ' '.join(['By'] + words)
 
 
@@ -121,7 +118,7 @@ def _version_element_order_key(version):
                 # while it shouldn't enter the `if`.
                 pass
 
-    components.append(last_component[len(last_numeric):])
+    components.append(last_component[len(last_numeric) :])
 
     return components
 
@@ -150,9 +147,7 @@ def compute_metrics(downloads, output_path=None):
     downloads = _mangle_columns(downloads)
 
     LOGGER.debug('Aggregating by month')
-    sheets = {
-        'By Month': _by_month(downloads)
-    }
+    sheets = {'By Month': _by_month(downloads)}
 
     for column in GROUPBY_COLUMNS:
         name = _get_sheet_name(column)

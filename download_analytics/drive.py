@@ -91,11 +91,7 @@ def upload(content, filename, folder, convert=False):
     except FileNotFoundError:
         file_config = {
             'title': filename,
-            'parents': [
-                {
-                    'id': folder
-                }
-            ],
+            'parents': [{'id': folder}],
         }
         drive_file = drive.CreateFile(file_config)
 

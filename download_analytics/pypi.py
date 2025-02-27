@@ -57,8 +57,7 @@ def _get_query(projects, start_date, end_date):
     if isinstance(projects, str):
         projects = f"('{projects}')"
 
-    LOGGER.info('Querying for projects `%s` between `%s` and `%s`',
-                projects, start_date, end_date)
+    LOGGER.info('Querying for projects `%s` between `%s` and `%s`', projects, start_date, end_date)
 
     return QUERY_TEMPLATE.format(
         projects=projects,
@@ -85,8 +84,16 @@ def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
     return start_date, end_date
 
 
-def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
-                       max_days=1, credentials_file=None, dry_run=False, force=False):
+def get_pypi_downloads(
+    projects,
+    start_date=None,
+    end_date=None,
+    previous=None,
+    max_days=1,
+    credentials_file=None,
+    dry_run=False,
+    force=False,
+):
     """Get PyPI downloads data from the Big Query dataset.
 
     Args:
@@ -118,7 +125,7 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
     """
     if previous is not None:
         if isinstance(projects, str):
-            projects = (projects, )
+            projects = (projects,)
 
         previous_projects = previous[previous.project.isin(projects)]
         min_date = previous_projects.timestamp.min()
