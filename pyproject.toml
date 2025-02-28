@@ -51,7 +51,6 @@ exclude = [
     "__pycache__",
     "*.ipynb",
     ".ipynb_checkpoints",
-    "tasks.py"
 ]
 
 [tool.ruff.lint]
