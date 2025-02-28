@@ -9,8 +9,16 @@ from download_analytics.pypi import get_pypi_downloads
 LOGGER = logging.getLogger(__name__)
 
 
-def collect_downloads(projects, output_folder, start_date=None, max_days=1, credentials_file=None,
-                      dry_run=False, force=False, add_metrics=True):
+def collect_downloads(
+    projects,
+    output_folder,
+    start_date=None,
+    max_days=1,
+    credentials_file=None,
+    dry_run=False,
+    force=False,
+    add_metrics=True,
+):
     """Pull data about the downloads of a list of projects.
 
     Args:
@@ -49,7 +57,7 @@ def collect_downloads(projects, output_folder, start_date=None, max_days=1, cred
         max_days=max_days,
         credentials_file=credentials_file,
         dry_run=dry_run,
-        force=force
+        force=force,
     )
 
     if pypi_downloads.empty:

@@ -71,15 +71,21 @@ def _valid_date(arg):
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
-    logging_args.add_argument('-v', '--verbose', action='count', default=0,
-                              help='Be verbose. Use `-vv` for increased verbosity.')
-    logging_args.add_argument('-l', '--logfile',
-                              help='If given, file where the logs will be written.')
+    logging_args.add_argument(
+        '-v',
+        '--verbose',
+        action='count',
+        default=0,
+        help='Be verbose. Use `-vv` for increased verbosity.',
+    )
+    logging_args.add_argument(
+        '-l', '--logfile', help='If given, file where the logs will be written.'
+    )
 
     parser = argparse.ArgumentParser(
         prog='download-analytics',
         description='Download Analytics Command Line Interface',
-        parents=[logging_args]
+        parents=[logging_args],
     )
     parser.set_defaults(action=None)
     action = parser.add_subparsers(title='action')
@@ -90,36 +96,67 @@ def _get_parser():
     collect.set_defaults(action=_collect)
 
     collect.add_argument(
-        '-o', '--output-folder', type=str, required=False,
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
         help=(
             'Path to the folder where data will be stored. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
-        )
+        ),
     )
     collect.add_argument(
-        '-a', '--authentication-credentials', type=str, required=False,
-        help='Path to the GCP (BigQuery) credentials file to use.')
+        '-a',
+        '--authentication-credentials',
+        type=str,
+        required=False,
+        help='Path to the GCP (BigQuery) credentials file to use.',
+    )
     collect.add_argument(
-        '-c', '--config-file', type=str, default='config.yaml',
-        help='Path to the configuration file.')
+        '-c',
+        '--config-file',
+        type=str,
+        default='config.yaml',
+        help='Path to the configuration file.',
+    )
     collect.add_argument(
-        '-p', '--projects', nargs='*',
-        help='List of projects to collect. If not given use the configured ones.')
+        '-p',
+        '--projects',
+        nargs='*',
+        help='List of projects to collect. If not given use the configured ones.',
+    )
     collect.add_argument(
-        '-s', '--start-date', type=_valid_date, required=False,
-        help='Date from which to start pulling data.')
+        '-s',
+        '--start-date',
+        type=_valid_date,
+        required=False,
+        help='Date from which to start pulling data.',
+    )
     collect.add_argument(
-        '-m', '--max-days', type=int, required=False,
-        help='Max days of data to pull if start-date is not given.')
+        '-m',
+        '--max-days',
+        type=int,
+        required=False,
+        help='Max days of data to pull if start-date is not given.',
+    )
     collect.add_argument(
-        '-d', '--dry-run', action='store_true',
-        help='Do not run the actual query, only simulate it.')
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not run the actual query, only simulate it.',
+    )
     collect.add_argument(
-        '-f', '--force', action='store_true',
-        help='Force the download even if the data already exists or there is a gap')
+        '-f',
+        '--force',
+        action='store_true',
+        help='Force the download even if the data already exists or there is a gap',
+    )
     collect.add_argument(
-        '-M', '--add-metrics', action='store_true',
-        help='Compute the aggregation metrics and create the corresponding spreadsheets.')
+        '-M',
+        '--add-metrics',
+        action='store_true',
+        help='Compute the aggregation metrics and create the corresponding spreadsheets.',
+    )
 
     return parser
 

@@ -1,9 +1,17 @@
+"""Invoke task definitions."""
+
 from invoke import task
 
 
 @task
 def lint(c):
-    c.run('flake8 download_analytics')
-    c.run('pydocstyle download_analytics')
-    c.run('isort -c download_analytics')
-    c.run('pylint download_analytics --rcfile=setup.cfg')
+    """Run lint checks using ruff."""
+    c.run('ruff check .')
+    c.run('ruff format --check --diff .')
+
+
+@task
+def fix_lint(c):
+    """Automatically fix lint issues using ruff."""
+    c.run('ruff check --fix .')
+    c.run('ruff format .')
