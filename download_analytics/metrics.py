@@ -3,6 +3,8 @@
 import logging
 import re
 
+import pandas as pd
+
 from download_analytics.output import create_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
@@ -35,7 +37,7 @@ def _historical_groupby(downloads, groupbys=None):
 
     for groupby in groupbys:
         grouped = downloads.groupby([year_month, groupby])
-        grouped_sizes = grouped.size().unstack(-1)
+        grouped_sizes = grouped.size().unstack(-1)  # noqa: PD010
         if len(groupbys) > 1:
             grouped_sizes.columns = f"{groupby}='" + grouped_sizes.columns + "'"
 
@@ -43,16 +45,13 @@ def _historical_groupby(downloads, groupbys=None):
 
     totals = base.sum()
     totals.name = 'total'
-    base = base.append(totals)
+    base = pd.concat([base, totals], ignore_index=True)
 
     return base.reset_index().iloc[::-1]
 
 
 def _get_sheet_name(column):
-    words = [
-        f'{word[0].upper()}{word[1:]}'
-        for word in column.split('_')
-    ]
+    words = [f'{word[0].upper()}{word[1:]}' for word in column.split('_')]
     return ' '.join(['By'] + words)
 
 
@@ -121,7 +120,7 @@ def _version_element_order_key(version):
                 # while it shouldn't enter the `if`.
                 pass
 
-    components.append(last_component[len(last_numeric):])
+    components.append(last_component[len(last_numeric) :])
 
     return components
 
@@ -133,7 +132,7 @@ def _version_order_key(version_column):
 def _mangle_columns(downloads):
     downloads = downloads.rename(columns=RENAME_COLUMNS)
     downloads['full_python_version'] = downloads['python_version']
-    downloads['python_version'] = downloads['python_version'].str.rsplit('.', 1).str[0]
+    downloads['python_version'] = downloads['python_version'].str.rsplit('.', n=1).str[0]
     downloads['project_version'] = downloads['project'] + '-' + downloads['version']
     downloads['distro_version'] = downloads['distro_name'] + ' ' + downloads['distro_version']
     downloads['distro_kernel'] = downloads['distro_version'] + ' - ' + downloads['distro_kernel']
@@ -150,9 +149,7 @@ def compute_metrics(downloads, output_path=None):
     downloads = _mangle_columns(downloads)
 
     LOGGER.debug('Aggregating by month')
-    sheets = {
-        'By Month': _by_month(downloads)
-    }
+    sheets = {'By Month': _by_month(downloads)}
 
     for column in GROUPBY_COLUMNS:
         name = _get_sheet_name(column)

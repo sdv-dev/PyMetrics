@@ -57,8 +57,7 @@ def _get_query(projects, start_date, end_date):
     if isinstance(projects, str):
         projects = f"('{projects}')"
 
-    LOGGER.info('Querying for projects `%s` between `%s` and `%s`',
-                projects, start_date, end_date)
+    LOGGER.info('Querying for projects `%s` between `%s` and `%s`', projects, start_date, end_date)
 
     return QUERY_TEMPLATE.format(
         projects=projects,
@@ -72,11 +71,14 @@ def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
     if start_date is None:
         start_date = end_date - timedelta(days=max_days)
 
-    if pd.notna(min_date) and min_date > start_date:
-        if not force:
-            end_date = min_date
+    if pd.notna(min_date):
+        min_date = pd.Timestamp(min_date).date()
+        if min_date > start_date:
+            if not force:
+                end_date = min_date
 
     elif pd.notna(max_date) and not force:
+        max_date = pd.Timestamp(max_date).date()
         if max_date > start_date:
             start_date = max_date
         else:
@@ -85,8 +87,16 @@ def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
     return start_date, end_date
 
 
-def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
-                       max_days=1, credentials_file=None, dry_run=False, force=False):
+def get_pypi_downloads(
+    projects,
+    start_date=None,
+    end_date=None,
+    previous=None,
+    max_days=1,
+    credentials_file=None,
+    dry_run=False,
+    force=False,
+):
     """Get PyPI downloads data from the Big Query dataset.
 
     Args:
@@ -118,7 +128,7 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
     """
     if previous is not None:
         if isinstance(projects, str):
-            projects = (projects, )
+            projects = (projects,)
 
         previous_projects = previous[previous.project.isin(projects)]
         min_date = previous_projects.timestamp.min()
@@ -147,7 +157,7 @@ def get_pypi_downloads(projects, start_date=None, end_date=None, previous=None,
                 before = new_downloads
                 after = previous[previous.timestamp > new_downloads.timestamp.max()]
 
-            all_downloads = before.append(after, ignore_index=True)
+            all_downloads = pd.concat([before, after], ignore_index=True)
 
     LOGGER.info('Obtained %s new downloads', len(all_downloads) - len(previous))
 

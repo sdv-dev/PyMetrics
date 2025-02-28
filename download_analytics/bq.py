@@ -30,7 +30,10 @@ def _get_bq_client(credentials_file):
         scopes=['https://www.googleapis.com/auth/cloud-platform'],
     )
 
-    return bigquery.Client(credentials=credentials, project=credentials.project_id,)
+    return bigquery.Client(
+        credentials=credentials,
+        project=credentials.project_id,
+    )
 
 
 def run_query(query, dry_run=False, credentials_file=None):
@@ -41,14 +44,14 @@ def run_query(query, dry_run=False, credentials_file=None):
 
     job_config = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
     dry_run_job = client.query(query, job_config=job_config)
-    LOGGER.info('Estimated processed GBs: %.2f', dry_run_job.total_bytes_processed / 1024 ** 3)
+    LOGGER.info('Estimated processed GBs: %.2f', dry_run_job.total_bytes_processed / 1024**3)
 
     if dry_run:
         return None
 
     query_job = client.query(query)
     data = query_job.to_dataframe()
-    LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024 ** 3)
-    LOGGER.info('Total billed GBs: %.2f', query_job.total_bytes_billed / 1024 ** 3)
+    LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024**3)
+    LOGGER.info('Total billed GBs: %.2f', query_job.total_bytes_billed / 1024**3)
 
     return data
