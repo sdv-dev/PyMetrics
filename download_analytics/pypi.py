@@ -150,7 +150,7 @@ def get_pypi_downloads(
         if max_date is None:
             all_downloads = new_downloads
         else:
-            if max_date < end_date:
+            if pd.Timestamp(max_date) < pd.Timestamp(end_date):
                 before = previous[previous.timestamp < new_downloads.timestamp.min()]
                 after = new_downloads
             else:
