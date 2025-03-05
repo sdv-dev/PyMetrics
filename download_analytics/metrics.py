@@ -35,17 +35,21 @@ def _historical_groupby(downloads, groupbys=None):
     if groupbys is None:
         groupbys = downloads.set_index('timestamp').columns
 
+    new_columns = []  # Collect grouped DataFrames here
+
     for groupby in groupbys:
         grouped = downloads.groupby([year_month, groupby])
         grouped_sizes = grouped.size().unstack(-1)  # noqa: PD010
         if len(groupbys) > 1:
             grouped_sizes.columns = f"{groupby}='" + grouped_sizes.columns + "'"
+        new_columns.append(grouped_sizes.fillna(0))  # Store for later
 
-        base[grouped_sizes.columns] = grouped_sizes.fillna(0)
+    if new_columns:
+        base = pd.concat([base] + new_columns, axis=1)  # Add all columns at once
 
     totals = base.sum()
     totals.name = 'total'
-    base = pd.concat([base, totals], ignore_index=True)
+    base = pd.concat([base, totals.to_frame().T], ignore_index=True)
 
     return base.reset_index().iloc[::-1]
 
