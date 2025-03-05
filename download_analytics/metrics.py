@@ -41,7 +41,6 @@ def _historical_groupby(downloads, groupbys=None):
         grouped_sizes = grouped.size().unstack(-1)  # noqa: PD010
         if len(groupbys) > 1:
             grouped_sizes.columns = f"{groupby}='" + grouped_sizes.columns + "'"
-            
         new_columns.append(grouped_sizes.fillna(0))
 
     if new_columns:
