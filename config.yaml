@@ -14,3 +14,8 @@ projects:
   - datomize
   - gretel-trainer
   - ydata-sdk
+  - mostlyai
+  - synthcity
+  - smartnoise-synth
+  - realtabformer
+  - be-great
