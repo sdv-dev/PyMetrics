@@ -21,7 +21,8 @@ dependencies = [
     "PyYAML",
     "PyDrive",
     "google-cloud-bigquery",
-    "db-dtypes"
+    "db-dtypes",
+    "httplib2==0.15.0",  # https://stackoverflow.com/questions/59815620/gcloud-upload-httplib2-redirectmissinglocation-redirected-but-the-response-is-m
 ]
 
 [project.urls]
