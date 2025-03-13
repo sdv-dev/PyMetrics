@@ -1,12 +1,18 @@
 name: Health-check Dry Run
 
 on:
-  - workflow_dispatch
+  - workflow_dispatch:
+    inputs:
+      slack_channel:
+        description: Slack channel to post the error message to if the builds fail.
+        required: false
+        default: "sdv-alerts-debug"
+
   - push
   - pull_request
 
 jobs:
-  collect:
+  dry_run:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -29,3 +35,22 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
+
+  alert:
+    needs: [dry_run]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Install slack dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install invoke
+        python -m pip install .[dev]
+    - name: Slack alert if failure
+      run: python -m github_analytics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}
+      env:
+        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
