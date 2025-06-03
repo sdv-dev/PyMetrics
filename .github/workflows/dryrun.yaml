@@ -11,6 +11,9 @@ on:
       - opened
       - synchronize
       - ready_for_review
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   dry_run:
     runs-on: ubuntu-latest
