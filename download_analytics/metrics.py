@@ -134,9 +134,15 @@ def _version_order_key(version_column):
 
 def _mangle_columns(downloads):
     downloads = downloads.rename(columns=RENAME_COLUMNS)
-    for col in ['python_version', 'project', 'version',
-                'distro_name', 'distro_version', 'distro_kernel']:
-        downloads[col]  = downloads[col].astype("string")
+    for col in [
+        'python_version',
+        'project',
+        'version',
+        'distro_name',
+        'distro_version',
+        'distro_kernel',
+    ]:
+        downloads[col] = downloads[col].astype('string')
 
     downloads['full_python_version'] = downloads['python_version']
     downloads['python_version'] = downloads['python_version'].str.rsplit('.', n=1).str[0]
