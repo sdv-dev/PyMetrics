@@ -1,10 +1,10 @@
 name: Style Checks
-
 on:
-  push:
   pull_request:
-    types: [opened, reopened]
-
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
 jobs:
   lint:
     runs-on: ubuntu-latest

@@ -1,5 +1,4 @@
 name: Health-check Dry Run
-
 on:
   workflow_dispatch:
     inputs:
@@ -7,10 +6,11 @@ on:
         description: Slack channel to post the error message to if the builds fail.
         required: false
         default: "sdv-alerts-debug"
-
-  push:
   pull_request:
-
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
 jobs:
   dry_run:
     runs-on: ubuntu-latest
