@@ -163,7 +163,6 @@ def load_csv(csv_path, dry_run=False):
     try:
         read_csv_kwargs = {
             'parse_dates': ['timestamp'],
-            'engine': 'pyarrow',
             'dtype_backend': 'pyarrow',
         }
         if dry_run:
