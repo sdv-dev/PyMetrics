@@ -163,12 +163,27 @@ def load_csv(csv_path, dry_run=False):
     try:
         read_csv_kwargs = {
             'parse_dates': ['timestamp'],
-            'dtype_backend': 'pyarrow',
+            'dtype': {
+                'country_code': pd.CategoricalDtype(),
+                'project': pd.CategoricalDtype(),
+                'version': pd.CategoricalDtype(),
+                'type': pd.CategoricalDtype(),
+                'installer_name': pd.CategoricalDtype(),
+                'implementation_name': pd.CategoricalDtype(),
+                'implementation_version': pd.CategoricalDtype(),
+                'distro_name': pd.CategoricalDtype(),
+                'distro_version': pd.CategoricalDtype(),
+                'system_name': pd.CategoricalDtype(),
+                'system_release': pd.CategoricalDtype(),
+                'cpu': pd.CategoricalDtype(),
+            }
         }
         if dry_run:
             nrows = 1_000_000
             LOGGER.info('Only reading first 1 million rows because dry-run')
             read_csv_kwargs['nrows'] = nrows
+        # else:
+        #     read_csv_kwargs['engine'] = 'pyarrow'
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
