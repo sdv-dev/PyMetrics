@@ -47,7 +47,7 @@ def collect_downloads(
     if not projects:
         raise ValueError('No projects have been passed')
 
-    LOGGER.info('Collecting downloads for projects={projects}')
+    LOGGER.info(f'Collecting downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
     previous = load_csv(csv_path)
