@@ -7,8 +7,8 @@ import logging
 import os
 import pathlib
 
-import numpy as np
 import pandas as pd
+import pyarrow as pa
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -69,8 +69,11 @@ def run_query(query, dry_run=False, credentials_file=None):
     query_job = client.query(query)
     dataframe_args = {
         'create_bqstorage_client': True,
-        'string_dtype': pd.StringDtype(),
-        'timestamp_dtype': np.dtype('datetime64[ns]'),
+        'bool_dtype': pd.ArrowDtype(pa.bool_()),
+        'int_dtype': pd.ArrowDtype(pa.int64()),
+        'float_dtype': pd.ArrowDtype(pa.float64()),
+        'string_dtype': pd.ArrowDtype(pa.string()),
+        'timestamp_dtype': pd.ArrowDtype(pa.timestamp('ns', tz='UTC')),
     }
     data = query_job.to_dataframe(**dataframe_args)
     LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024**3)

@@ -5,6 +5,7 @@ import logging
 import pathlib
 
 import pandas as pd
+import pyarrow as pa
 
 from download_analytics import drive
 
@@ -164,18 +165,18 @@ def load_csv(csv_path, dry_run=False):
         read_csv_kwargs = {
             'parse_dates': ['timestamp'],
             'dtype': {
-                'country_code': pd.CategoricalDtype(),
-                'project': pd.CategoricalDtype(),
-                'version': pd.CategoricalDtype(),
-                'type': pd.CategoricalDtype(),
-                'installer_name': pd.CategoricalDtype(),
-                'implementation_name': pd.CategoricalDtype(),
-                'implementation_version': pd.CategoricalDtype(),
-                'distro_name': pd.CategoricalDtype(),
-                'distro_version': pd.CategoricalDtype(),
-                'system_name': pd.CategoricalDtype(),
-                'system_release': pd.CategoricalDtype(),
-                'cpu': pd.CategoricalDtype(),
+                'country_code': pd.ArrowDtype(pa.string()),
+                'project': pd.ArrowDtype(pa.string()),
+                'version': pd.ArrowDtype(pa.string()),
+                'type': pd.ArrowDtype(pa.string()),
+                'installer_name': pd.ArrowDtype(pa.string()),
+                'implementation_name': pd.ArrowDtype(pa.string()),
+                'implementation_version': pd.ArrowDtype(pa.string()),
+                'distro_name': pd.ArrowDtype(pa.string()),
+                'distro_version': pd.ArrowDtype(pa.string()),
+                'system_name': pd.ArrowDtype(pa.string()),
+                'system_release': pd.ArrowDtype(pa.string()),
+                'cpu': pd.ArrowDtype(pa.string()),
             },
         }
         if dry_run:
