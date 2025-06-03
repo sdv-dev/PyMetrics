@@ -38,7 +38,8 @@ jobs:
         download-analytics collect \
           --verbose \
           --projects ${{ github.event.inputs.projects }} \
-          ${{ inputs.max_days && '--max_days ${{ github.event.inputs.max_days }}' || ''}}
+          ${{ github.event.inputs.max_days && '--max-days ' || '' }} \
+          ${{ github.event.inputs.max_days && github.event.inputs.max_days || '' }} \
           --output-folder gdrive://${{ github.event.inputs.output_folder }} \
           ${{ github.event.inputs.extras }}
       env:
