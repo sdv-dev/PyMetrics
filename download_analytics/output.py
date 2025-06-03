@@ -161,13 +161,17 @@ def load_csv(csv_path):
 
     LOGGER.info('Trying to load CSV file %s', csv_path)
     try:
+        read_csv_kwargs = {
+            'parse_dates': ['timestamp'],
+            'engine': 'pyarrow',
+            'dtype_backend':'pyarrow'
+        }
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
-            data = pd.read_csv(stream, parse_dates=['timestamp'])
+            data = pd.read_csv(stream, **read_csv_kwargs)
         else:
-            data = pd.read_csv(csv_path, parse_dates=['timestamp'])
-
+            data = pd.read_csv(csv_path, **read_csv_kwargs)
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None

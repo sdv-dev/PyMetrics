@@ -67,7 +67,7 @@ def collect_downloads(
     elif pypi_downloads.equals(previous):
         msg = f'Skipping update of unmodified CSV file {csv_path}'
         if dry_run:
-            msg += 'because dry_run={dry_run}, meaning no downloads were returned from BigQuery'
+            msg += f' because dry_run={dry_run}, meaning no downloads were returned from BigQuery'
         LOGGER.info(msg)
 
     else:
