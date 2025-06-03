@@ -164,7 +164,7 @@ def load_csv(csv_path):
         read_csv_kwargs = {
             'parse_dates': ['timestamp'],
             'engine': 'pyarrow',
-            'dtype_backend':'pyarrow'
+            'dtype_backend': 'pyarrow',
         }
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)

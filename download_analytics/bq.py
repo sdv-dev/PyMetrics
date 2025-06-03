@@ -68,12 +68,12 @@ def run_query(query, dry_run=False, credentials_file=None):
 
     query_job = client.query(query)
     dataframe_args = {
-        "create_bqstorage_client": True,
-        "bool_dtype": pd.ArrowDtype(pa.bool_()),
-        "int_dtype": pd.ArrowDtype(pa.int64()),
-        "float_dtype": pd.ArrowDtype(pa.float64()),
-        "string_dtype": pd.ArrowDtype(pa.string()),
-        "timestamp_dtype": pd.ArrowDtype(pa.timestamp("s", tz="UTC")),
+        'create_bqstorage_client': True,
+        'bool_dtype': pd.ArrowDtype(pa.bool_()),
+        'int_dtype': pd.ArrowDtype(pa.int64()),
+        'float_dtype': pd.ArrowDtype(pa.float64()),
+        'string_dtype': pd.ArrowDtype(pa.string()),
+        'timestamp_dtype': pd.ArrowDtype(pa.timestamp('s', tz='UTC')),
     }
     data = query_job.to_dataframe(**dataframe_args)
     LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024**3)
