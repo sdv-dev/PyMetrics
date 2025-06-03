@@ -30,7 +30,7 @@ In order add new libraries, it is important to follow these steps to ensure that
 1. Update `config.yaml` with the new libraries (pypi project names only for now)
 2. Run the [Manual collection workflow](https://github.com/datacebo/download-analytics/actions/workflows/manual.yaml) on your branch.
     - Use workflow from **your branch name**.
-    - List the project names you added
+    - List all project names from config.yaml
     - Remove `7` from max days to indicate you want all data
     - Pass any extra arguments (for example `--dry-run` to test your changes)
 3. Let the workflow finish and check that pypi.csv contains the right data.
