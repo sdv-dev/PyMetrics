@@ -29,13 +29,13 @@ collected check the resources below.
 In order add new libraries, it is important to follow these steps to ensure that data is backfilled.
 1. Update `config.yaml` with the new libraries (pypi project names only for now)
 2. Run the [Manual collection workflow](https://github.com/datacebo/download-analytics/actions/workflows/manual.yaml) on your branch.
-  - Use workflow from **your branch name**.
-  - List the project names you added
-  - Put '' for max_days to indicate you want all data
-  - Pass any extra arguments (for example `--dry-run` to test your changes)
+    - Use workflow from **your branch name**.
+    - List the project names you added
+    - Put '' for max_days to indicate you want all data
+    - Pass any extra arguments (for example `--dry-run` to test your changes)
 3. Let the workflow finish and check that pypi.csv contains the right data.
-4. Get your pull request reviewed and merged into `main`. The daily collection workflow will fill the data for the last 30 days.
-  - The collection script looks at timestamps and avoids adding overlapping data.
+4. Get your pull request reviewed and merged into `main`. The daily collection workflow will fill the data for the last 30 days and future days.
+    - Note: The collection script looks at timestamps and avoids adding overlapping data.
 
 ## Resources
 
