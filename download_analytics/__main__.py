@@ -124,6 +124,7 @@ def _get_parser():
         '--projects',
         nargs='*',
         help='List of projects to collect. If not given use the configured ones.',
+        default=None,
     )
     collect.add_argument(
         '-s',

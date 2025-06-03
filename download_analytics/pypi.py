@@ -1,7 +1,7 @@
 """Functions to get PyPI downloads from Google Big Query."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 
@@ -67,9 +67,11 @@ def _get_query(projects, start_date, end_date):
 
 
 def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
-    end_date = datetime.utcnow().date()
+    end_date = datetime.now(timezone.utc).date()
     if start_date is None:
         start_date = end_date - timedelta(days=max_days)
+
+    start_date = start_date.date()
 
     if pd.notna(min_date):
         min_date = pd.Timestamp(min_date).date()
@@ -131,8 +133,8 @@ def get_pypi_downloads(
             projects = (projects,)
 
         previous_projects = previous[previous.project.isin(projects)]
-        min_date = previous_projects.timestamp.min()
-        max_date = previous_projects.timestamp.max()
+        min_date = previous_projects.timestamp.min().date()
+        max_date = previous_projects.timestamp.max().date()
     else:
         previous = pd.DataFrame(columns=OUTPUT_COLUMNS)
         min_date = None
@@ -150,7 +152,7 @@ def get_pypi_downloads(
         if max_date is None:
             all_downloads = new_downloads
         else:
-            if pd.Timestamp(max_date) < pd.Timestamp(end_date):
+            if max_date <= end_date:
                 before = previous[previous.timestamp < new_downloads.timestamp.min()]
                 after = new_downloads
             else:
@@ -160,5 +162,4 @@ def get_pypi_downloads(
             all_downloads = pd.concat([before, after], ignore_index=True)
 
     LOGGER.info('Obtained %s new downloads', len(all_downloads) - len(previous))
-
     return all_downloads
