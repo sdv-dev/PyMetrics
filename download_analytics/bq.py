@@ -70,7 +70,7 @@ def run_query(query, dry_run=False, credentials_file=None):
     dataframe_args = {
         'create_bqstorage_client': True,
         'string_dtype': pd.StringDtype(),
-        'timestamp_dtype': np.dtype('datetime64[ns, UTC]'),
+        'timestamp_dtype': np.dtype('datetime64[ns]')
     }
     data = query_job.to_dataframe(**dataframe_args)
     LOGGER.info('Total processed GBs: %.2f', query_job.total_bytes_processed / 1024**3)
