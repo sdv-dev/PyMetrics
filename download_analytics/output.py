@@ -145,7 +145,7 @@ def load_spreadsheet(spreadsheet):
     return sheets
 
 
-def load_csv(csv_path):
+def load_csv(csv_path, dry_run=False):
     """Load a CSV previously created by download-analytics.
 
     Args:
@@ -166,6 +166,10 @@ def load_csv(csv_path):
             'engine': 'pyarrow',
             'dtype_backend': 'pyarrow',
         }
+        if dry_run:
+            nrows = 1_000_000
+            LOGGER.info('Only reading first 1 million rows')
+            read_csv_kwargs['nrows'] = nrows
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)

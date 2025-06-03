@@ -50,7 +50,7 @@ def collect_downloads(
     LOGGER.info(f'Collecting downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
-    previous = load_csv(csv_path)
+    previous = load_csv(csv_path, dry_run=dry_run)
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,
