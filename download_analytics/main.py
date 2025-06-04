@@ -47,8 +47,10 @@ def collect_downloads(
     if not projects:
         raise ValueError('No projects have been passed')
 
+    LOGGER.info(f'Collecting downloads for projects={projects}')
+
     csv_path = get_path(output_folder, 'pypi.csv')
-    previous = load_csv(csv_path)
+    previous = load_csv(csv_path, dry_run=dry_run)
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,
@@ -63,7 +65,11 @@ def collect_downloads(
     if pypi_downloads.empty:
         LOGGER.info('Not creating empty CSV file %s', csv_path)
     elif pypi_downloads.equals(previous):
-        LOGGER.info('Skipping update of unmodified CSV file %s', csv_path)
+        msg = f'Skipping update of unmodified CSV file {csv_path}'
+        if dry_run:
+            msg += f' because dry_run={dry_run}, meaning no downloads were returned from BigQuery'
+        LOGGER.info(msg)
+
     else:
         create_csv(csv_path, pypi_downloads)
 

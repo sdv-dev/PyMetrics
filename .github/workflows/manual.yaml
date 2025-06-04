@@ -22,7 +22,7 @@ on:
 
 jobs:
   collect:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-large
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -38,7 +38,8 @@ jobs:
         download-analytics collect \
           --verbose \
           --projects ${{ github.event.inputs.projects }} \
-          --max-days ${{ github.event.inputs.max_days }} \
+          ${{ github.event.inputs.max_days && '--max-days ' || '' }} \
+          ${{ github.event.inputs.max_days && github.event.inputs.max_days || '' }} \
           --output-folder gdrive://${{ github.event.inputs.output_folder }} \
           ${{ github.event.inputs.extras }}
       env:

@@ -8,14 +8,16 @@ projects:
   - deepecho
   - sdmetrics
   - sdgym
-  - gretel-synthetics
-  - ydata-synthetic
   - synthesized
   - datomize
-  - gretel-trainer
-  - ydata-sdk
-  - mostlyai
   - synthcity
   - smartnoise-synth
   - realtabformer
   - be-great
+  - ydata-synthetic
+  - ydata-sdk
+  - gretel-synthetics
+  - gretel-trainer
+  - gretel-client
+  - mostlyai
+  - mostlyai-mock

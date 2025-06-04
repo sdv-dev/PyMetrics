@@ -1,10 +1,13 @@
 name: Style Checks
-
 on:
-  push:
   pull_request:
-    types: [opened, reopened]
-
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   lint:
     runs-on: ubuntu-latest

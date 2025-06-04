@@ -145,7 +145,7 @@ def load_spreadsheet(spreadsheet):
     return sheets
 
 
-def load_csv(csv_path):
+def load_csv(csv_path, dry_run=False):
     """Load a CSV previously created by download-analytics.
 
     Args:
@@ -161,13 +161,33 @@ def load_csv(csv_path):
 
     LOGGER.info('Trying to load CSV file %s', csv_path)
     try:
+        read_csv_kwargs = {
+            'parse_dates': ['timestamp'],
+            'dtype': {
+                'country_code': pd.CategoricalDtype(),
+                'project': pd.CategoricalDtype(),
+                'version': pd.CategoricalDtype(),
+                'type': pd.CategoricalDtype(),
+                'installer_name': pd.CategoricalDtype(),
+                'implementation_name': pd.CategoricalDtype(),
+                'implementation_version': pd.CategoricalDtype(),
+                'distro_name': pd.CategoricalDtype(),
+                'distro_version': pd.CategoricalDtype(),
+                'system_name': pd.CategoricalDtype(),
+                'system_release': pd.CategoricalDtype(),
+                'cpu': pd.CategoricalDtype(),
+            },
+        }
+        if dry_run:
+            nrows = 1_000_000
+            LOGGER.info('Only reading first 1 million rows because dry-run')
+            read_csv_kwargs['nrows'] = nrows
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
-            data = pd.read_csv(stream, parse_dates=['timestamp'])
+            data = pd.read_csv(stream, **read_csv_kwargs)
         else:
-            data = pd.read_csv(csv_path, parse_dates=['timestamp'])
-
+            data = pd.read_csv(csv_path, **read_csv_kwargs)
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None
