@@ -1,3 +1,7 @@
+pypi.csv
+bigquery_creds.json
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
