@@ -47,6 +47,7 @@ preview = true
 line-length = 100
 indent-width = 4
 src = ["download_analytics"]
+target-version = "py313"
 exclude = [
     "docs",
     ".tox",

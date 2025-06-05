@@ -108,7 +108,8 @@ def _get_parser():
     action.required = True
 
     # collect
-    collect = action.add_parser('collect', help='Collect downloads data.', parents=[logging_args])
+    collect = action.add_parser('collect', help='Collect downloads data.',
+                                parents=[logging_args])
     collect.set_defaults(action=_collect)
 
     collect.add_argument(
@@ -176,7 +177,8 @@ def _get_parser():
     )
 
     # collect
-    summarize = action.add_parser('summarize', help='Summarize the downloads data.', parents=[logging_args])
+    summarize = action.add_parser('summarize', help='Summarize the downloads data.',
+                                  parents=[logging_args])
     summarize.set_defaults(action=_summarize)
     summarize.add_argument(
         '-c',
@@ -190,7 +192,7 @@ def _get_parser():
         '--input-file',
         type=str,
         default=None,
-        help='Full path to the pypi.csv. Default to None, which means to use the pypi.csv in Google Drive'
+        help='Path to the pypi.csv. Default None, which means to use output-folder in config-file'
     )
     summarize.add_argument(
         '-d',
