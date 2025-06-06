@@ -1,4 +1,4 @@
-"""Functions to query Google Big Query."""
+"""Functions to query Google BigQuery."""
 
 # pylint: disable=E1101
 

@@ -72,7 +72,7 @@ def post_slack_message_in_thread(channel, text, thread_ts):
 def send_alert(args):
     """Send an alert message to a slack channel."""
     url = GITHUB_URL_PREFIX + args.run_id
-    message = f"{args.message} See errors <{url}|here>"
+    message = f'{args.message} See errors <{url}|here>'
     post_slack_message(args.channel, message)
 
 

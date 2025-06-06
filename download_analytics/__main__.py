@@ -73,6 +73,7 @@ def _summarize(args):
         vendors=vendors,
         input_file=args.input_file,
         output_folder=output_folder,
+        dry_run=args.dry_run,
     )
 
 
@@ -107,8 +108,7 @@ def _get_parser():
     action.required = True
 
     # collect
-    collect = action.add_parser('collect', help='Collect downloads data.',
-                                parents=[logging_args])
+    collect = action.add_parser('collect', help='Collect downloads data.', parents=[logging_args])
     collect.set_defaults(action=_collect)
 
     collect.add_argument(
@@ -176,8 +176,9 @@ def _get_parser():
     )
 
     # collect
-    summarize = action.add_parser('summarize', help='Summarize the downloads data.',
-                                  parents=[logging_args])
+    summarize = action.add_parser(
+        'summarize', help='Summarize the downloads data.', parents=[logging_args]
+    )
     summarize.set_defaults(action=_summarize)
     summarize.add_argument(
         '-c',
@@ -191,7 +192,7 @@ def _get_parser():
         '--input-file',
         type=str,
         default=None,
-        help='Path to the pypi.csv. Default None, which means to use output-folder to find pypi.csv'
+        help='Path to the pypi.csv. Default None, which means to use output-folder for pypi.csv',
     )
     summarize.add_argument(
         '-o',
@@ -202,6 +203,12 @@ def _get_parser():
             'Path to the folder where data will be outputted. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
+    )
+    summarize.add_argument(
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not upload the summary results. Just calculate them.',
     )
     return parser
 

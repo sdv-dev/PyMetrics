@@ -1,3 +1,5 @@
+"""Time utility functions."""
+
 from datetime import datetime
 
 

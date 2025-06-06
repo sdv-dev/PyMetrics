@@ -1,3 +1,5 @@
+"""Constant Values."""
+
 pre_bsl_versions = {
     'rdt': [
         '1.2.1',
@@ -114,5 +116,5 @@ pre_bsl_versions = {
         '0.1.0',
         '0.0.0',
     ],
-    'sdmetrics': []
+    'sdmetrics': [],
 }

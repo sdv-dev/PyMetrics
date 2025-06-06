@@ -51,14 +51,12 @@ def _add_sheet(writer, data, sheet_name, add_commas=False):
 
         column_width = max(data[column].astype(str).map(len).max(), column_length)
         col_idx = data.columns.get_loc(column)
-        writer.sheets[sheet_name].set_column(first_col=col_idx,
-                                             last_col=col_idx,
-                                             width=column_width + 2,
-                                             cell_format=cell_format)
+        writer.sheets[sheet_name].set_column(
+            first_col=col_idx, last_col=col_idx, width=column_width + 2, cell_format=cell_format
+        )
 
 
-def create_spreadsheet(output_path, sheets,
-                       add_commas=False):
+def create_spreadsheet(output_path, sheets, add_commas=False):
     """Create a spreadsheet with the indicated name and data.
 
     If the ``output_path`` variable starts with ``gdrive://`` it is interpreted

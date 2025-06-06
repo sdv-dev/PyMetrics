@@ -49,26 +49,26 @@ jobs:
         git commit -m "Upload Download Summary"
         git remote set-url origin https://sdv-team:${{ secrets.GH_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
         git push origin gatsby-home
-  # alert:
-  #   needs: [summarize]
-  #   runs-on: ubuntu-latest
-  #   if: failure()
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Set up latest Python
-  #     uses: actions/setup-python@v5
-  #     with:
-  #       python-version-file: 'pyproject.toml'
-  #   - name: Install slack dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       python -m pip install invoke
-  #       python -m pip install .[dev]
-  #   - name: Slack alert if failure
-  #     run: |
-  #       python -m download_analytics.slack_utils \
-  #       -r ${{ github.run_id }} \
-  #       -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-  #       -m 'Summarize Analytics build failed :fire: :dumpster-fire: :fire:'
-  #     env:
-  #       SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+  alert:
+    needs: [summarize]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up latest Python
+      uses: actions/setup-python@v5
+      with:
+        python-version-file: 'pyproject.toml'
+    - name: Install slack dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install invoke
+        python -m pip install .[dev]
+    - name: Slack alert if failure
+      run: |
+        python -m download_analytics.slack_utils \
+        -r ${{ github.run_id }} \
+        -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
+        -m 'Summarize Analytics build failed :fire: :dumpster-fire: :fire:'
+      env:
+        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
