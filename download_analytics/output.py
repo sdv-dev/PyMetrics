@@ -186,10 +186,6 @@ def load_csv(csv_path, dry_run=False):
                 'cpu': pd.CategoricalDtype(),
             },
         }
-        if dry_run:
-            nrows = 1_000_000
-            LOGGER.info('Only reading first 1 million rows because dry-run')
-            read_csv_kwargs['nrows'] = nrows
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)

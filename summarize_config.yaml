@@ -3,7 +3,7 @@ projects:
   - ecosystem: "sdv"
     base_project: "sdv"
     dependency_projects: ["rdt", "copulas", "ctgan", "deepecho", "sdmetrics"]
-    extra_projects: ["sdgym"]
+    parent_projects: ["sdgym"]
     calculate_breakdown: true
   - ecosystem: "Gretel"
     projects: ["gretel-synthetics", "gretel-trainer"]

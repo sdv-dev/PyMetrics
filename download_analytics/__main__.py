@@ -74,6 +74,7 @@ def _summarize(args):
         input_file=args.input_file,
         output_folder=output_folder,
         dry_run=args.dry_run,
+        verbose=args.verbose,
     )
 
 
