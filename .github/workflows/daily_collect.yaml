@@ -8,7 +8,7 @@ on:
         required: false
         default: "sdv-alerts-debug"
   schedule:
-    - cron:  '0 1 * * *'
+    - cron:  '0 0 * * *'
 
 jobs:
   collect:
@@ -26,7 +26,7 @@ jobs:
         python -m pip install .
     - name: Collect Downloads Data
       run: |
-        download-analytics summarize
+        download-analytics collect
           --verbose \
           --max-days 30 \
           --add-metrics \
