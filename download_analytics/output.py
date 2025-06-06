@@ -34,12 +34,7 @@ def get_path(folder, filename):
     return str(pathlib.Path(folder) / filename)
 
 
-def _add_sheet(writer, data, sheet_name, add_commas=False):
-    workbook = writer.book
-    cell_format = None
-    if add_commas:
-        cell_format = workbook.add_format({'num_format': '#,##'})
-
+def _add_sheet(writer, data, sheet_name):
     data.to_excel(writer, sheet_name=sheet_name, index=False, engine='xlsxwriter')
 
     for column in data:
@@ -52,11 +47,11 @@ def _add_sheet(writer, data, sheet_name, add_commas=False):
         column_width = max(data[column].astype(str).map(len).max(), column_length)
         col_idx = data.columns.get_loc(column)
         writer.sheets[sheet_name].set_column(
-            first_col=col_idx, last_col=col_idx, width=column_width + 2, cell_format=cell_format
+            first_col=col_idx, last_col=col_idx, width=column_width + 2
         )
 
 
-def create_spreadsheet(output_path, sheets, add_commas=False):
+def create_spreadsheet(output_path, sheets):
     """Create a spreadsheet with the indicated name and data.
 
     If the ``output_path`` variable starts with ``gdrive://`` it is interpreted
@@ -79,7 +74,7 @@ def create_spreadsheet(output_path, sheets, add_commas=False):
 
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:  # pylint: disable=E0110
         for title, data in sheets.items():
-            _add_sheet(writer, data, title, add_commas=add_commas)
+            _add_sheet(writer, data, title)
 
     if drive.is_drive_path(output_path):
         LOGGER.info('Creating file %s', output_path)

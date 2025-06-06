@@ -271,10 +271,10 @@ def summarize_downloads(projects, vendors, output_folder, input_file=None, dry_r
 
     # Write to Google Drive/Output folder
     output_path = os.path.join(output_folder, OUTPUT_FILENAME)
-    create_spreadsheet(output_path=output_path, sheets=sheets, add_commas=False)
+    create_spreadsheet(output_path=output_path, sheets=sheets)
     # Write to local directory
     output_path = os.path.join(dir_path, OUTPUT_FILENAME)
-    create_spreadsheet(output_path=output_path, sheets=sheets, add_commas=False)
+    create_spreadsheet(output_path=output_path, sheets=sheets)
 
 
 def _create_all_df():

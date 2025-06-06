@@ -31,4 +31,4 @@ jobs:
           uv pip install -e .[test,dev]
       - name: Run summarize
         run: |
-          uv run pytest -s -vv -x
+          uv run pytest -s -vv tests/unit/

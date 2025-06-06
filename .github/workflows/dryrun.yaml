@@ -1,4 +1,4 @@
-name: Health-check Dry Run
+name: Dry Run Collect and Summarize
 on:
   pull_request:
     types:
