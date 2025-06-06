@@ -19,10 +19,12 @@ jobs:
     - name: Install the latest version of uv
       uses: astral-sh/setup-uv@v6
       with:
+        enable-cache: true
         activate-environment: true
         python-version: "3.13"
     - name: Install dependencies and run summarize
       run: |
+        uv pip install -U pip
         uv pip install -e .
         uv run download-analytics summarize \
           --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
