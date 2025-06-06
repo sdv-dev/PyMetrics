@@ -67,8 +67,8 @@ jobs:
     - name: Slack alert if failure
       run: |
         python -m download_analytics.slack_utils \
-        -r ${{ github.run_id }}
-        -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}
-        -m='Summarize Analytics build failed :fire: :dumpster-fire: :fire:'
+        -r ${{ github.run_id }} \
+        -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
+        -m 'Summarize Analytics build failed :fire: :dumpster-fire: :fire:'
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
