@@ -32,7 +32,7 @@ jobs:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - uses: actions/checkout@v4
       with:
-        repository: '/sdv-dev/sdv-dev.github.io'
+        repository: 'sdv-dev/sdv-dev.github.io'
         ref: 'gatsby-home'
         token: ${{ secrets.GITHUB_TOKEN }}
       env:
