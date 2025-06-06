@@ -93,7 +93,6 @@ def get_parser():
         type=str,
         help='The message to post.',
         default='Download Analytics build failed :fire: :dumpster-fire: :fire:',
-        default=DEFAULT_SLACK_CHANNEL,
     )
     parser.set_defaults(action=send_alert)
 
