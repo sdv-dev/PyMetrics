@@ -66,14 +66,13 @@ def _summarize(args):
     config = _load_config(args.config_file)
     projects = config['projects']
     vendors = config['vendors']
-    output_folder = config.get('output-folder', '.')
+    output_folder = args.output_folder or config.get('output-folder', '.')
 
     summarize_downloads(
         projects=projects,
         vendors=vendors,
         input_file=args.input_file,
         output_folder=output_folder,
-        dry_run=args.dry_run,
     )
 
 
@@ -192,13 +191,17 @@ def _get_parser():
         '--input-file',
         type=str,
         default=None,
-        help='Path to the pypi.csv. Default None, which means to use output-folder in config-file'
+        help='Path to the pypi.csv. Default None, which means to use output-folder to find pypi.csv'
     )
     summarize.add_argument(
-        '-d',
-        '--dry-run',
-        action='store_true',
-        help='Do not upload the summary of the results. Just calculate them.',
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
     )
     return parser
 

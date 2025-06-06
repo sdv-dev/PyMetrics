@@ -155,8 +155,6 @@ def summarize_downloads(projects, vendors,
         extra_projects = project_info.get('extra_projects')
         calculate_breakdown = project_info.get('calculate_breakdown', False)
 
-        vendor_name = project_info.get("name", None)
-
         projects = project_info.get("projects")
         row_info = {
             ECOSYSTEM_COLUMN_NAME: [ecosystem_name]
@@ -215,6 +213,9 @@ def summarize_downloads(projects, vendors,
                 opposite_versions=True,
             )
             bsl_vs_pre_bsl_df = append_row(bsl_vs_pre_bsl_df, version_row)
+    vendor_df = vendor_df.rename(columns={
+        vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME
+    })
     sheets = {
         SHEET_NAMES[0]: all_df,
         SHEET_NAMES[1]: vendor_df,
@@ -224,7 +225,7 @@ def summarize_downloads(projects, vendors,
     output_path = os.path.join(output_folder, OUTPUT_FILENAME)
     create_spreadsheet(output_path=output_path,
                        sheets=sheets,
-                       add_commas=True)
+                       add_commas=False)
 
 
 def _create_all_df():
