@@ -1,6 +1,14 @@
-pypi.csv
+settings.yaml
 bigquery_creds.json
+client_secrets.json
+credentials.json
 
+notebooks
+*.xlsx
+*.csv
+
+secrets/
+*.bak
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -112,13 +120,3 @@ ENV/
 
 # Vim
 .*.swp
-
-notebooks
-*.xlsx
-
-settings.yaml
-credentials.json
-client_secrets.json
-
-secrets/
-*.bak

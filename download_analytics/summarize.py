@@ -19,6 +19,8 @@ SHEET_NAMES = [
 ]
 OUTPUT_FILENAME = "Downloads | Summary"
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 def calculate_projects_count(downloads, projects,
                              max_datetime=None, min_datetime=None,
@@ -226,7 +228,10 @@ def summarize_downloads(projects, vendors,
     create_spreadsheet(output_path=output_path,
                        sheets=sheets,
                        add_commas=False)
-
+    output_path = os.path.join(dir_path, OUTPUT_FILENAME)
+    create_spreadsheet(output_path=output_path,
+                       sheets=sheets,
+                       add_commas=False)
 
 def _create_all_df():
     columns = [ECOSYSTEM_COLUMN_NAME, TOTAL_COLUMN_NAME]
