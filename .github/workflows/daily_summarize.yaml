@@ -11,7 +11,7 @@ on:
     - cron:  '0 0 * * *'
 
 jobs:
-  collect:
+  summarize:
     runs-on: ubuntu-latest-large
     timeout-minutes: 10
     steps:

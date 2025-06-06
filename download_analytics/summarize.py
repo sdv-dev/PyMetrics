@@ -148,7 +148,7 @@ def summarize_downloads(projects, vendors,
     projects.extend(vendors)
 
     for project_info in projects:
-        ecosystem_name = project_info["ecosystem_name"]
+        ecosystem_name = project_info["ecosystem"]
 
         base_project = project_info.get('base_project')
         dependency_projects = project_info.get('dependency_projects')
