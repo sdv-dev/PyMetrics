@@ -32,7 +32,7 @@ jobs:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
 
   alert:
-    needs: [collect]
+    needs: [summarize]
     runs-on: ubuntu-latest
     if: failure()
     steps:
