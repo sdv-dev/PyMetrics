@@ -22,7 +22,7 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install -e .
+        uv pip install .
     - name: Collect Downloads Data - Dry Run
       run: |
         uv run download-analytics collect \
