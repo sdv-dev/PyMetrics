@@ -26,7 +26,7 @@ jobs:
       run: |
         uv pip install -U pip
         uv pip install -e .
-    - name: Run summarize
+    - name: Run Summarize
       run: |
         uv run download-analytics summarize \
           --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n

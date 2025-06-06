@@ -3,12 +3,14 @@ from datetime import datetime
 from download_analytics.time_utils import (
     get_current_year,
     get_first_datetime_in_year,
-    get_min_max_dt_in_year,
     get_last_datetime_in_year,
+    get_min_max_dt_in_year,
 )
+
 
 def test_current_year():
     assert get_current_year() in list(range(2025, 2035))
+
 
 def test_get_first_datetime_in_year():
     year = 2025
@@ -19,8 +21,9 @@ def test_get_first_datetime_in_year():
 def test_get_last_datetime_in_year():
     year = 2030
     dt = get_last_datetime_in_year(year)
-    assert dt == datetime(year=year, month=12, day=31, hour=23, minute=59, second=59,
-                          microsecond=999999, tzinfo=None)
+    assert dt == datetime(
+        year=year, month=12, day=31, hour=23, minute=59, second=59, microsecond=999999, tzinfo=None
+    )
 
 
 def test_get_min_max_dt_in_year():
