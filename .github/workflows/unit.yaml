@@ -1,0 +1,34 @@
+name: Unit Tests
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tests:
+    name: unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          activate-environment: true
+          python-version: "3.13"
+      - name: Install pip and dependencies
+        run: |
+          uv pip install -U pip
+          uv pip install -e .[test,dev]
+      - name: Run summarize
+        run: |
+          uv run pytest -s -vv -x
