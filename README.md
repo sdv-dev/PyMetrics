@@ -1,8 +1,6 @@
 # Download Analytics
 
 The Download Analytics project allows you to extract download metrics from a Python library published on [PyPI](https://pypi.org/).
-The DataCebo team uses these scripts to report growth for the libraries in the [SDV ecosystem](https://sdv.dev/) but you may
-use it for any Python software.
 
 ## Overview
 
