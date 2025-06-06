@@ -1,1 +1,18 @@
+name: Daily Summarize
 
+on:
+  workflow_dispatch:
+    inputs:
+      slack_channel:
+        description: Slack channel to post the error message to if the summarize job fail.
+        required: false
+        default: "sdv-alerts-debug"
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest-large
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v4
