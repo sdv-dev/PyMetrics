@@ -32,13 +32,15 @@ jobs:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - uses: actions/checkout@v4
       with:
-        repository: 'sdv-dev/sdv-dev.github.io'
+        repository: sdv-dev/sdv-dev.github.io
+        path: sdv-dev.github.io
         ref: 'gatsby-home'
         token: ${{ secrets.GITHUB_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
     - name: Write to sdv-dev.github.io repo
       run: |
+        ls
         find ./ -name '*.xlsx' -exec cp -prv '{}' 'sdv-dev.github.io/assets/' ';'
         cd sdv-dev.github.io
         git config --local user.name "github-actions[bot]"
