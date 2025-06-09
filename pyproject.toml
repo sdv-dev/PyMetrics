@@ -24,6 +24,11 @@ dependencies = [
     "google-cloud-bigquery-storage",
     "db-dtypes",
     "httplib2==0.15.0",  # https://stackoverflow.com/questions/59815620/gcloud-upload-httplib2-redirectmissinglocation-redirected-but-the-response-is-m
+    'dask[dataframe]',
+    'pyarrow',
+    's3fs',
+    'boto3',
+    "tqdm",
 ]
 
 [project.urls]
