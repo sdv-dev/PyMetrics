@@ -169,12 +169,12 @@ def summarize_downloads(
 
     Args:
         projects (dict[str, str | list[str]]):
-            List of projects/ecosysems to summarize. Must contain
+            List of projects/ecosysems to summarize. Each project must have ecosystem (str).
             If it is an ecosystem and download counts needs to be adjusted it must have:
                 - base_project (str): This is the base project for the ecosystem.
                 - dependency_projects (list[str]): These are direct dependencies of the base project
                     and maintained by the same org.
-                    The downlaods counts are subtracted from the base project, since they are
+                    The downloads counts are subtracted from the base project, since they are
                     direct dependencies.
                 - parent_projects (list[str]): These are parent projects maintained by the same org.
                     These parent projects have a core dependency on the base project.
@@ -184,7 +184,7 @@ def summarize_downloads(
 
         vendors (dict[str, str | list[str]]):
             The vendors and the projects owned by the Vendors.
-            FOr each vendor, the following must be defined:
+            For each vendor, the following must be defined:
                 - ecosystem (str): The user facing name.
                 - name (str): The actual name of the vendor.
                 - projects (list[str]): The projects owned by the vendor.
