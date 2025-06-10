@@ -5,6 +5,7 @@ import logging
 import pathlib
 
 import pandas as pd
+from packaging.version import parse
 
 from download_analytics import drive
 
@@ -192,6 +193,9 @@ def load_csv(csv_path, dry_run=False):
             data = pd.read_csv(stream, **read_csv_kwargs)
         else:
             data = pd.read_csv(csv_path, **read_csv_kwargs)
+        data['version'] = data['version'].apply(parse)
+        LOGGER.info('Excluding pre-release downloads')
+        data = data[~data['version'].apply(lambda v: v.is_prerelease)]
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None

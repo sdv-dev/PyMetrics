@@ -4,8 +4,8 @@ import logging
 import os
 
 import pandas as pd
+from packaging.version import Version
 
-from download_analytics.constants import pre_bsl_versions
 from download_analytics.output import create_spreadsheet, get_path, load_csv
 from download_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 
@@ -20,6 +20,15 @@ SHEET_NAMES = [
     'PreBSL-vs-BSL',
 ]
 OUTPUT_FILENAME = 'Downloads_Summary'
+pre_bsl_versions = {
+    'rdt': '1.2.1',
+    'copulas': '0.7.0',
+    'ctgan': '0.6.0',
+    'deepecho': '0.3.0.post1',
+    'sdgym': '0.5.0',
+    'sdv': '0.17.2',
+    'sdmetrics': None,
+}
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -31,18 +40,17 @@ def _calculate_projects_count(
     projects,
     max_datetime=None,
     min_datetime=None,
-    versions=None,
-    opposite_versions=False,
+    version=None,
+    version_operator=None,
 ):
     if isinstance(projects, str):
         projects = (projects,)
 
     project_downloads = downloads[downloads['project'].isin(set(projects))]
-    if versions and len(versions) > 0:
-        if opposite_versions is False:
-            project_downloads = project_downloads[project_downloads['version'].isin(set(versions))]
-        else:
-            project_downloads = project_downloads[~project_downloads['version'].isin(set(versions))]
+    if version and version_operator and version_operator == '<=':
+        project_downloads = project_downloads[project_downloads['version'] <= Version(version)]
+    if version and version_operator and version_operator == '>':
+        project_downloads = project_downloads[project_downloads['version'] > Version(version)]
 
     if max_datetime:
         project_downloads = project_downloads[project_downloads['timestamp'] <= max_datetime]
@@ -120,7 +128,7 @@ def _version_count_by_year(
     parent_projects,
     type_,
     project_to_versions,
-    opposite_versions=False,
+    version_operator=False,
 ):
     row_info = {BSL_COLUMN_NAME: [type_]}
     base_count, dep_to_count, parent_to_count = _calculate_adjusted_count(
@@ -129,7 +137,7 @@ def _version_count_by_year(
         dependency_projects=dependency_projects,
         parent_projects=parent_projects,
         project_to_versions=project_to_versions,
-        opposite_versions=opposite_versions,
+        version_operator=version_operator,
     )
     row_info[TOTAL_COLUMN_NAME] = [
         _sum_counts(
@@ -147,7 +155,7 @@ def _version_count_by_year(
             project_to_versions=project_to_versions,
             min_datetime=min_datetime,
             max_datetime=max_datetime,
-            opposite_versions=opposite_versions,
+            version_operator=version_operator,
         )
         row_info[year] = [
             _sum_counts(
@@ -169,12 +177,12 @@ def summarize_downloads(
 
     Args:
         projects (dict[str, str | list[str]]):
-            List of projects/ecosysems to summarize. Must contain
+            List of projects/ecosysems to summarize. Each project must have ecosystem (str).
             If it is an ecosystem and download counts needs to be adjusted it must have:
                 - base_project (str): This is the base project for the ecosystem.
                 - dependency_projects (list[str]): These are direct dependencies of the base project
                     and maintained by the same org.
-                    The downlaods counts are subtracted from the base project, since they are
+                    The downloads counts are subtracted from the base project, since they are
                     direct dependencies.
                 - parent_projects (list[str]): These are parent projects maintained by the same org.
                     These parent projects have a core dependency on the base project.
@@ -184,7 +192,7 @@ def summarize_downloads(
 
         vendors (dict[str, str | list[str]]):
             The vendors and the projects owned by the Vendors.
-            FOr each vendor, the following must be defined:
+            For each vendor, the following must be defined:
                 - ecosystem (str): The user facing name.
                 - name (str): The actual name of the vendor.
                 - projects (list[str]): The projects owned by the vendor.
@@ -262,7 +270,7 @@ def summarize_downloads(
                 parent_projects=parent_projects,
                 type_='Pre-BSL',
                 project_to_versions=pre_bsl_versions,
-                opposite_versions=False,
+                version_operator='<=',
             )
             bsl_vs_pre_bsl_df = append_row(bsl_vs_pre_bsl_df, version_row)
             version_row = _version_count_by_year(
@@ -272,7 +280,7 @@ def summarize_downloads(
                 parent_projects=parent_projects,
                 type_='BSL',
                 project_to_versions=pre_bsl_versions,
-                opposite_versions=True,
+                version_operator='>',
             )
             bsl_vs_pre_bsl_df = append_row(bsl_vs_pre_bsl_df, version_row)
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
@@ -287,10 +295,6 @@ def summarize_downloads(
             LOGGER.info(f'Sheet Name: {sheet_name}')
             LOGGER.info(df)
     if not dry_run:
-        # Write to Google Drive/Output folder
-        output_path = os.path.join(output_folder, OUTPUT_FILENAME)
-        create_spreadsheet(output_path=output_path, sheets=sheets)
-
         # Write to local directory
         output_path = os.path.join(dir_path, OUTPUT_FILENAME)
         create_spreadsheet(output_path=output_path, sheets=sheets)
@@ -321,7 +325,7 @@ def _calculate_adjusted_count(
     max_datetime=None,
     min_datetime=None,
     project_to_versions=None,
-    opposite_versions=False,
+    version_operator=False,
 ):
     dependency_to_count = {}
     parent_to_count = {}
@@ -334,8 +338,8 @@ def _calculate_adjusted_count(
             projects=[parent_project],
             max_datetime=max_datetime,
             min_datetime=min_datetime,
-            versions=project_to_versions.get(parent_project),
-            opposite_versions=opposite_versions,
+            version=project_to_versions.get(parent_project),
+            version_operator=version_operator,
         )
         parent_to_count[parent_project] = project_count
 
@@ -344,8 +348,8 @@ def _calculate_adjusted_count(
         projects=[base_project],
         max_datetime=max_datetime,
         min_datetime=min_datetime,
-        versions=project_to_versions.get(base_project),
-        opposite_versions=opposite_versions,
+        version=project_to_versions.get(base_project),
+        version_operator=version_operator,
     )
 
     for dependency_project in dependency_projects:
@@ -356,21 +360,19 @@ def _calculate_adjusted_count(
             projects=[dependency_project],
             max_datetime=max_datetime,
             min_datetime=min_datetime,
-            versions=project_to_versions.get(dependency_project),
-            opposite_versions=opposite_versions,
+            version=project_to_versions.get(dependency_project),
+            version_operator=version_operator,
         )
         dependency_to_count[dependency_project] = dep_count
 
     # Adjust base project to account for parent projects
     for _, project_count in parent_to_count.items():
-        base_count -= project_count
+        base_count = max(0, base_count - project_count)
 
     # Adjust dependency project to account for base project
     for dependency_project in dependency_projects:
         adjusted_dep_count = dependency_to_count[dependency_project]
-
-        adjusted_dep_count = adjusted_dep_count - base_count
-        adjusted_dep_count = max(0, adjusted_dep_count)
+        adjusted_dep_count = max(0, adjusted_dep_count - base_count)
         dependency_to_count[dependency_project] = adjusted_dep_count
 
     return base_count, dependency_to_count, parent_to_count
