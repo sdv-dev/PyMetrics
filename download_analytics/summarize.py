@@ -295,10 +295,9 @@ def summarize_downloads(
             LOGGER.info(f'Sheet Name: {sheet_name}')
             LOGGER.info(df)
     if not dry_run:
-        # Write to Google Drive/Output folder
-        output_path = os.path.join(output_folder, OUTPUT_FILENAME)
+        # Write to local directory
+        output_path = os.path.join(dir_path, OUTPUT_FILENAME)
         create_spreadsheet(output_path=output_path, sheets=sheets)
-
 
 def _create_all_df():
     columns = [ECOSYSTEM_COLUMN_NAME, TOTAL_COLUMN_NAME]
