@@ -24,7 +24,7 @@ jobs:
         uv pip install .
     - name: Collect Downloads Data - Dry Run
       run: |
-        uv run download-analytics collect \
+        uv run download-analytics collect-pypi \
           --verbose \
           --max-days 30 \
           --add-metrics \

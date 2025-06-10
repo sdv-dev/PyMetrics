@@ -1,15 +1,16 @@
-import pandas as pd
+import logging
+from datetime import date, timedelta
+from functools import lru_cache
+
 import boto3
+import pandas as pd
 from botocore import UNSIGNED
 from botocore.client import Config
-from functools import lru_cache
-from datetime import datetime, timedelta
 from tqdm import tqdm
-import logging
 
-from download_analytics.output import create_csv, get_path, load_csv
+from download_analytics.output import get_path
 from download_analytics.pypi import _get_query_dates
-from datetime import date, timedelta
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -33,6 +34,7 @@ def get_all_s3_keys(bucket):
             break
     return keys
 
+
 @lru_cache()
 def all_files():
     all_keys = get_all_s3_keys("anaconda-package-data")
@@ -41,10 +43,11 @@ def all_files():
     monthly_files = [x for x in all_keys if "monthly" in x]
     return hourly_files, monthly_files
 
+
 def read_anaconda_parquet(URL, pkg_names=None):
     storage_options = None
     if 's3://' in URL:
-        storage_options={"anon": True}
+        storage_options = {"anon": True}
     try:
         df = pd.read_parquet(
             URL,
@@ -54,7 +57,7 @@ def read_anaconda_parquet(URL, pkg_names=None):
         )
         df[TIME_COLUMN] = pd.to_datetime(df[TIME_COLUMN])
         if pkg_names:
-            df = df[df[pkg_name].isin(set(pkg_names))]
+            df = df[df[PKG_COLUMN].isin(set(pkg_names))]
     except FileNotFoundError:
         return pd.DataFrame()
     return df
@@ -69,13 +72,13 @@ def anaconda_package_data_by_day(year, month, day, pkg_names=None):
     URL = f"s3://anaconda-package-data/conda/hourly/{padded_year}/{padded_month}/{filename}"
     return read_anaconda_parquet(URL, pkg_names=pkg_names)
 
+
 def anaconda_package_data_by_year_month(year, month, pkg_names=None):
     padded_year = "{:04d}".format(year)
     padded_month = "{:02d}".format(month)
     filename = f"{padded_year}-{padded_month}.parquet"
     URL = f"s3://anaconda-package-data/conda/monthly/{padded_year}/{filename}"
     return read_anaconda_parquet(URL, pkg_names=pkg_names)
-
 
 
 def get_downloads(input_file, output_folder, dry_run):
@@ -86,10 +89,12 @@ def get_downloads(input_file, output_folder, dry_run):
         downloads = pd.read_csv(csv_path, parse_dates=[TIME_COLUMN])
     return downloads
 
+
 def daterange(start_date: date, end_date: date):
     days = int((end_date - start_date).days)
     for n in range(days):
         yield start_date + timedelta(n)
+
 
 def collect_anaconda_downloads(
     projects,
@@ -122,7 +127,9 @@ def collect_anaconda_downloads(
     min_date = previous[TIME_COLUMN].min().date()
     max_date = previous_projects[TIME_COLUMN].max().date()
 
-    start_date, end_date = _get_query_dates(start_date, min_date, max_date, max_days)
+    start_date, end_date = _get_query_dates(start_date, min_date,
+                                            max_date,
+                                            max_days)
 
     date_ranges = pd.date_range(start=start_date,
                                 end=end_date,
