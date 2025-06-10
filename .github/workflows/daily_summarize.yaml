@@ -39,7 +39,6 @@ jobs:
         token: ${{ secrets.GH_TOKEN }}
     - name: Write to sdv-dev.github.io repo
       run: |
-        ls
         find ./ -name '*.xlsx' -exec cp -prv '{}' 'sdv-dev.github.io/assets/' ';'
         cd sdv-dev.github.io
         git config --local user.name "github-actions[bot]"
