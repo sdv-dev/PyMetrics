@@ -299,6 +299,7 @@ def summarize_downloads(
         output_path = os.path.join(dir_path, OUTPUT_FILENAME)
         create_spreadsheet(output_path=output_path, sheets=sheets)
 
+
 def _create_all_df():
     columns = [ECOSYSTEM_COLUMN_NAME, TOTAL_COLUMN_NAME]
     for year in range(2021, get_current_year() + 1):
