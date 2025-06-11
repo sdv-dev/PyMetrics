@@ -200,7 +200,7 @@ def _get_parser():
         '-c',
         '--config-file',
         type=str,
-        default='config.yaml',
+        default='summarize_config.yaml',
         help='Path to the configuration file.',
     )
     summarize.add_argument(
