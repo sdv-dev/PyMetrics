@@ -30,7 +30,7 @@ def get_min_max_dt_in_year(year):
     return min_datetime, max_datetime
 
 
-def drop_duplicates_by_date(df, time_column, group_by_column):
+def drop_duplicates_by_date(df, time_column, group_by_columns):
     """Keep only the latest record for each day within each group.
 
     For each unique combination of date and group, retains only the row with the
@@ -38,9 +38,9 @@ def drop_duplicates_by_date(df, time_column, group_by_column):
     multiple records may exist for the same day.
 
     Args:
-        df: Input DataFrame containing the data to deduplicate.
-        time_column: Name of the column containing timestamp data.
-        group_by_column: Name of the column to group by when determining duplicates.
+        df (pd.DataFrame): Input DataFrame containing the data to deduplicate.
+        time_column (str): Name of the column containing timestamp data.
+        group_by_column (list[str]): Name of the column to group by when determining duplicates.
 
     """
     df_copy = df.copy()
@@ -50,7 +50,8 @@ def drop_duplicates_by_date(df, time_column, group_by_column):
         original_dtype = df_copy[time_column].dtype
         df_copy[time_column] = pd.to_datetime(df_copy[time_column], utc=True)
     df_copy[date_column] = df_copy[time_column].dt.date
-    df_copy = df_copy.loc[df_copy.groupby([date_column, group_by_column])[time_column].idxmax()]
+    columns = [date_column] + group_by_columns
+    df_copy = df_copy.loc[df_copy.groupby(columns)[time_column].idxmax()]
     df_copy = df_copy.drop(columns=date_column)
     if original_dtype:
         df_copy[time_column] = df[time_column].astype(original_dtype)

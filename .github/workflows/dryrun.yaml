@@ -37,7 +37,7 @@ jobs:
       run: |
         uv run download-analytics collect-anaconda \
           --output-folder gdrive://1UnDYovLkL4gletOF5328BG1X59mSHF-Z \
-          --max-days 90 \
+          --max-days 60 \
           --verbose \
           --dry-run
       env:

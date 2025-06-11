@@ -127,12 +127,12 @@ def _collect_ananconda_downloads_from_website(projects, output_folder):
     )
     overall_df = pd.concat([previous_overall, new_overall_downloads], ignore_index=True)
     overall_df = drop_duplicates_by_date(
-        overall_df, time_column=TIME_COLUMN, group_by_column=PKG_COLUMN
+        overall_df, time_column=TIME_COLUMN, group_by_columns=[PKG_COLUMN]
     )
 
     version_downloads = pd.concat([previous_version, new_version_downloads], ignore_index=True)
     version_downloads = drop_duplicates_by_date(
-        version_downloads, time_column=TIME_COLUMN, group_by_column=PKG_COLUMN
+        version_downloads, time_column=TIME_COLUMN, group_by_columns=[PKG_COLUMN]
     )
     return overall_df, version_downloads
 
@@ -142,6 +142,7 @@ def collect_anaconda_downloads(
     output_folder,
     max_days=90,
     dry_run=False,
+    verbose=False,
 ):
     """Pull data about the downloads of a list of projects from Anaconda.
 
@@ -180,24 +181,29 @@ def collect_anaconda_downloads(
             pkg_names=projects,
         )
         if len(new_downloads) > 0:
-            # Keep only the newest data (on a per day basis)
+            # Keep only the newest data (on a per day basis) for all packages
             previous = previous[previous[TIME_COLUMN].dt.date != iteration_datetime.date()]
             previous = pd.concat([previous, new_downloads], ignore_index=True)
 
     previous = previous.sort_values(TIME_COLUMN)
     LOGGER.info('Obtained %s new downloads', all_downloads_count - len(previous))
 
+    if verbose:
+        LOGGER.info(f'{PREVIOUS_ANACONDA_FILENAME} tail')
+        LOGGER.info(previous.tail(5).to_string())
+        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME} head')
+        LOGGER.info(overall_df.head(5).to_string(), 'head')
+        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_VERSION_FILENAME} head')
+        LOGGER.info(version_downloads.head(5).to_string())
+
     if not dry_run:
         csv_path = get_path(output_folder, PREVIOUS_ANACONDA_FILENAME)
-        output_path = os.path.join(dir_path, csv_path)
-        create_csv(output_path=output_path, data=previous)
+        create_csv(output_path=os.path.join(dir_path, csv_path), data=previous)
 
         csv_path = get_path(output_folder, PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME)
-        output_path = os.path.join(dir_path, csv_path)
-        create_csv(output_path=output_path, data=overall_df)
+        create_csv(output_path=os.path.join(dir_path, csv_path), data=overall_df)
 
         csv_path = get_path(output_folder, PREVIOUS_ANACONDA_ORG_VERSION_FILENAME)
-        output_path = os.path.join(dir_path, csv_path)
-        create_csv(output_path=output_path, data=version_downloads)
+        create_csv(output_path=os.path.join(dir_path, csv_path), data=version_downloads)
 
     return None

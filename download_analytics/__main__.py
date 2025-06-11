@@ -72,6 +72,7 @@ def _collect_anaconda(args):
         output_folder=output_folder,
         max_days=args.max_days,
         dry_run=args.dry_run,
+        verbose=args.verbose,
     )
 
 
