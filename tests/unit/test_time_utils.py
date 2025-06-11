@@ -65,7 +65,7 @@ def test_drop_duplicates_by_date_basic():
     })
 
     # Run
-    result = drop_duplicates_by_date(df, 'timestamp', 'pkg_name')
+    result = drop_duplicates_by_date(df, 'timestamp', ['pkg_name'])
 
     # Assert
     assert len(result) == 2
@@ -87,7 +87,7 @@ def test_drop_duplicates_by_date_multiple_groups():
     })
 
     # Run
-    result = drop_duplicates_by_date(df, 'timestamp', 'pkg_name')
+    result = drop_duplicates_by_date(df, 'timestamp', ['pkg_name'])
 
     # Assert
     assert len(result) == 2
@@ -106,7 +106,7 @@ def test_drop_duplicates_by_date_no_duplicates():
     })
 
     # Run
-    result = drop_duplicates_by_date(df, 'timestamp', 'pkg_name')
+    result = drop_duplicates_by_date(df, 'timestamp', ['pkg_name'])
 
     # Assert
     assert len(result) == 3
