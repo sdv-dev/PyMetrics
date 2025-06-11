@@ -66,12 +66,11 @@ def _collect_pypi(args):
 def _collect_anaconda(args):
     config = _load_config(args.config_file)
     projects = config['projects']
-    output_folder = config.get('output-folder', '.')
+    output_folder = args.output_folder or config.get('output-folder', '.')
     collect_anaconda_downloads(
         projects=projects,
         output_folder=output_folder,
         max_days=args.max_days,
-        input_file=args.input_file,
         dry_run=args.dry_run,
     )
 
@@ -234,11 +233,14 @@ def _get_parser():
         help='Path to the configuration file.',
     )
     collect_anaconda.add_argument(
-        '-i',
-        '--input-file',
+        '-o',
+        '--output-folder',
         type=str,
-        default=None,
-        help='Path to the anaconda.csv. Default None to mean use output-folder/anaconda.csv',
+        required=False,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
     )
     collect_anaconda.add_argument(
         '-m',

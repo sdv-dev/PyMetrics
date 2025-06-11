@@ -78,7 +78,6 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
 
 
 
-
 def get_previous_pypi_downloads(input_file, output_folder, dry_run):
     """Read pypi.csv and return a DataFrame of the downloads."""
     csv_path = input_file or get_path(output_folder, 'pypi.csv')

@@ -1,7 +1,8 @@
 """Time utility functions."""
 
 from datetime import datetime
-
+import pandas as pd
+from pandas.api.types import is_datetime64_any_dtype
 
 def get_current_year(tz=None):
     """Get the current year."""
@@ -25,3 +26,10 @@ def get_min_max_dt_in_year(year):
     min_datetime = get_first_datetime_in_year(year)
     max_datetime = get_last_datetime_in_year(year)
     return min_datetime, max_datetime
+
+def drop_duplicates_by_date(dataframe, time_column,
+                            group_by_column):
+    if not is_datetime64_any_dtype(dataframe[time_column].dtype):
+        dataframe[time_column] = pd.to_datetime(dataframe[time_column], utc=True)
+    dataframe['date'] = dataframe[time_column].dt.date
+    dataframe = dataframe.loc[dataframe.groupby(['date', group_by_column])[time_column].idxmax()]

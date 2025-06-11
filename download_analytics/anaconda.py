@@ -8,33 +8,15 @@ from tqdm import tqdm
 import requests
 from zoneinfo import ZoneInfo
 from datetime import datetime
-from download_analytics.output import create_spreadsheet, append_row, get_path, load_csv
-
-
-
-for pkg in PKG_NAMES:
-    URL = f'https://api.anaconda.org/package/conda-forge/{pkg}'
-    response = requests.get(URL)
-    row_info = {
-        'pkg_name': [pkg],
-        'timestamp': [datetime.now(ZoneInfo("America/New_York"))],
-    }
-    data = response.json()
-    downloads = 0
-    if 'error' in data and 'could not be found' in data['error']:
-        row_info['total_ndownloads'] = downloads
-    else:
-        for files_info in data['files']:
-            downloads += files_info['ndownloads']
-        row_info['total_ndownloads'] = downloads
-    projects_metadata = append_row(projects_metadata, row_info)
-from download_analytics.output import get_path
+from download_analytics.output import load_csv, append_row, get_path, load_csv
 
 LOGGER = logging.getLogger(__name__)
 
 
 BUCKET_NAME = 'anaconda-package-data'
-PREVIOUS_FILENAME = 'anaconda.csv'
+PREVIOUS_ANACONDA_FILENAME = 'anaconda.csv'
+PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME = 'anaconda_org_overall.csv'
+PREVIOUS_ANACONDA_ORG_VERSION_FILENAME = 'anaconda_org_per_version.csv'
 TIME_COLUMN = 'time'
 PKG_COLUMN = 'pkg_name'
 
@@ -87,26 +69,32 @@ def anaconda_package_data_by_year_month(year, month, pkg_names=None):
     return _read_anaconda_parquet(URL, pkg_names=pkg_names)
 
 
-def _get_previous_anaconda_downloads(input_file, output_folder):
+def _get_previous_anaconda_downloads(output_folder, filename):
     """Read anaconda.csv to get previous downloads."""
-    LOGGER.info(f'Loading previous anaconda downloads: {input_file}')
-    csv_path = input_file or get_path(output_folder, PREVIOUS_FILENAME)
-    LOGGER.info('Loaded previous anaconda downloads')
-    return pd.read_csv(csv_path, parse_dates=[TIME_COLUMN])
+    read_csv_kwargs = {
+        'parse_dates': [TIME_COLUMN],
+    }
+    csv_path = get_path(output_folder, filename)
+    previous = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
+    return previous
 
 
 def _get_downloads_from_anaconda_org(packages,
                                      channel='conda-forge'):
-    downloads_df = pd.DataFrame(
-        columns=['pkg_name', 'timestamp', 'total_ndownloads']
+    overall_downloads = pd.DataFrame(
+        columns=['pkg_name', TIME_COLUMN, 'total_ndownloads']
+    )
+    per_version_downloads = pd.DataFrame(
+        columns=['pkg_name', TIME_COLUMN, 'version', 'ndownloads']
     )
 
     for pkg_name in packages:
         URL = f'https://api.anaconda.org/package/{channel}/{pkg_name}'
+        timestamp = datetime.now(ZoneInfo("UTC"))
         response = requests.get(URL)
         row_info = {
             'pkg_name': [pkg_name],
-            'timestamp': [datetime.now(ZoneInfo("America/New_York"))],
+            TIME_COLUMN: [timestamp],
         }
         data = response.json()
         downloads = 0
@@ -115,22 +103,49 @@ def _get_downloads_from_anaconda_org(packages,
         else:
             for files_info in data['files']:
                 downloads += files_info['ndownloads']
-            row_info['total_ndownloads'] = downloads
-        downloads_df = append_row(downloads_df, row_info)
-    return downloads_df
 
-def _collect_ananconda_downloads_from_website(projects):
-    previous =
-    downloads_df = _get_downloads_from_anaconda_org(
-        projects
+                per_release_row = {
+                    'pkg_name': [pkg_name],
+                    'version': [files_info.get('version', None)],
+                    'ndownloads': [files_info.get('ndownloads', 0)],
+                    TIME_COLUMN: [timestamp],
+                }
+                per_version_downloads = append_row(per_version_downloads, per_release_row)
+
+            row_info['total_ndownloads'] = downloads
+        overall_downloads = append_row(overall_downloads, row_info)
+    return overall_downloads, per_version_downloads
+
+def _collect_ananconda_downloads_from_website(projects, output_folder):
+    previous_overall = _get_previous_anaconda_downloads(
+        output_folder=output_folder,
+        filename=PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME
     )
+    previous_version = _get_previous_anaconda_downloads(
+        output_folder=output_folder,
+        filename=PREVIOUS_ANACONDA_ORG_VERSION_FILENAME
+    )
+    new_overall_downloads, new_version_downloads = _get_downloads_from_anaconda_org(
+        projects,
+    )
+    overall_df = pd.concat([previous_overall, new_overall_downloads], ignore_index=True)
+    overall_df[TIME_COLUMN] = pd.to_datetime(overall_df[TIME_COLUMN], utc=True)
+    overall_df['date'] = overall_df[TIME_COLUMN].dt.date
+
+    overall_df = overall_df.loc[overall_df.groupby(['pkg_name', 'date'])['timestamp'].idxmax()]
+
+    overall_df = overall_df.drop_duplicates(subset=[TIME_COLUMN], keep='last')
+    # latest_per_day = df.loc[df.groupby('date')['timestamp'].idxmax()]
+    version_downloads = pd.concat([previous_version, new_version_downloads],
+                                  ignore_index=True)
+    version_downloads = version_downloads.drop_duplicates(subset=[TIME_COLUMN], keep='last')
+    breakpoint()
 
 def collect_anaconda_downloads(
     projects,
     output_folder,
     max_days=60,
     previous=None,
-    input_file=None,
     dry_run=False,
 ):
     """Pull data about the downloads of a list of projects from Anaconda.
@@ -149,27 +164,30 @@ def collect_anaconda_downloads(
             If `True`, do not run the actual query. Defaults to `False`.
     """
 
+    _collect_ananconda_downloads_from_website(projects,
+                                              output_folder=output_folder)
 
-    previous = _get_previous_anaconda_downloads(input_file, output_folder)
-    previous = previous.sort_values(TIME_COLUMN)
+    # previous = _get_previous_anaconda_downloads(output_folder,
+    #                                             filename=PREVIOUS_ANACONDA_FILENAME)
+    # previous = previous.sort_values(TIME_COLUMN)
 
-    end_date = datetime.now(tz=None).date()
-    start_date = end_date - timedelta(days=max_days)
-    LOGGER.info(f'Getting daily anaconda downloads for start_date>={start_date} to end_date<{end_date}')
-    date_ranges = pd.date_range(start=start_date, end=end_date, freq='D')
-    all_downloads_count = len(previous)
-    for iteration_datetime in tqdm(date_ranges):
-        new_downloads = _anaconda_package_data_by_day(
-            year=iteration_datetime.year,
-            month=iteration_datetime.month,
-            day=iteration_datetime.day,
-            pkg_names=projects,
-        )
-        if len(new_downloads) > 0:
-            # Keep only the newest data (on a per day basis)
-            previous = previous[previous[TIME_COLUMN].dt.date != iteration_datetime.date()]
-            previous = pd.concat([previous, new_downloads], ignore_index=True)
+    # end_date = datetime.now(tz=None).date()
+    # start_date = end_date - timedelta(days=max_days)
+    # LOGGER.info(f'Getting daily anaconda downloads for start_date>={start_date} to end_date<{end_date}')
+    # date_ranges = pd.date_range(start=start_date, end=end_date, freq='D')
+    # all_downloads_count = len(previous)
+    # for iteration_datetime in tqdm(date_ranges):
+    #     new_downloads = _anaconda_package_data_by_day(
+    #         year=iteration_datetime.year,
+    #         month=iteration_datetime.month,
+    #         day=iteration_datetime.day,
+    #         pkg_names=projects,
+    #     )
+    #     if len(new_downloads) > 0:
+    #         # Keep only the newest data (on a per day basis)
+    #         previous = previous[previous[TIME_COLUMN].dt.date != iteration_datetime.date()]
+    #         previous = pd.concat([previous, new_downloads], ignore_index=True)
 
-    previous = previous.sort_values(TIME_COLUMN)
-    LOGGER.info('Obtained %s new downloads', all_downloads_count - len(previous))
-    return previous
+    # previous = previous.sort_values(TIME_COLUMN)
+    # LOGGER.info('Obtained %s new downloads', all_downloads_count - len(previous))
+    return None
