@@ -194,8 +194,8 @@ def load_csv(csv_path, dry_run=False):
         else:
             data = pd.read_csv(csv_path, **read_csv_kwargs)
         data['version'] = data['version'].apply(parse)
-        LOGGER.info('Excluding pre-release downloads')
-        data = data[~data['version'].apply(lambda v: v.is_prerelease)]
+        # LOGGER.info('Excluding pre-release downloads')
+        # data = data[~data['version'].apply(lambda v: v.is_prerelease)]
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None
