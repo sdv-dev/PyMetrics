@@ -141,7 +141,6 @@ def collect_anaconda_downloads(
     projects,
     output_folder,
     max_days=90,
-    previous=None,
     dry_run=False,
 ):
     """Pull data about the downloads of a list of projects from Anaconda.
@@ -153,11 +152,13 @@ def collect_anaconda_downloads(
             Folder in which project downloads will be stored.
             It can be passed as a local folder or as a Google Drive path in the format
             `gdrive://{folder_id}`.
+            The folder must contain 'anaconda.csv', 'anaconda_org_overall.csv',
+            and 'anaconda_org_per_version.csv'.
         max_days (int):
             Maximum amount of days to include in the query from current date back, in case
-            `start_date` has not been provided. Defaults to 90.
+            `start_date` has not been provided. Defaults to 90 days.
         dry_run (bool):
-            If `True`, do not run the actual query. Defaults to `False`.
+            If `True`, do not upload the results. Defaults to `False`.
     """
     overall_df, version_downloads = _collect_ananconda_downloads_from_website(
         projects, output_folder=output_folder
