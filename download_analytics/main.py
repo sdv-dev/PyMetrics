@@ -1,6 +1,8 @@
 """Main script."""
-import pandas as pd
+
 import logging
+
+import pandas as pd
 
 from download_analytics.metrics import compute_metrics
 from download_analytics.output import create_csv, get_path, load_csv

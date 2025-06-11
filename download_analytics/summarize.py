@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from packaging.version import Version
 
-from download_analytics.output import create_spreadsheet, append_row, get_path, load_csv
+from download_analytics.output import append_row, create_spreadsheet, get_path, load_csv
 from download_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
@@ -74,8 +74,6 @@ def _create_counts_list(
 def _sum_counts(base_count, dep_to_count, parent_to_count):
     # Do not adjust counts, as _calculate_adjusted_count already did that
     return base_count + sum(parent_to_count.values()) + sum(dep_to_count.values())
-
-
 
 
 def get_previous_pypi_downloads(input_file, output_folder, dry_run):

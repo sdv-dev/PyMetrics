@@ -1,8 +1,10 @@
 """Time utility functions."""
 
 from datetime import datetime
+
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
+
 
 def get_current_year(tz=None):
     """Get the current year."""
@@ -27,9 +29,39 @@ def get_min_max_dt_in_year(year):
     max_datetime = get_last_datetime_in_year(year)
     return min_datetime, max_datetime
 
-def drop_duplicates_by_date(dataframe, time_column,
-                            group_by_column):
-    if not is_datetime64_any_dtype(dataframe[time_column].dtype):
-        dataframe[time_column] = pd.to_datetime(dataframe[time_column], utc=True)
-    dataframe['date'] = dataframe[time_column].dt.date
-    dataframe = dataframe.loc[dataframe.groupby(['date', group_by_column])[time_column].idxmax()]
+
+def drop_duplicates_by_date(df, time_column, group_by_column):
+    """Keep only the latest record for each day within each group.
+
+    For each unique combination of date and group, retains only the row with the
+    latest timestamp. This is useful for deduplicating time series data where
+    multiple records may exist for the same day.
+
+    Args:
+        df: Input DataFrame containing the data to deduplicate.
+        time_column: Name of the column containing timestamp data.
+        group_by_column: Name of the column to group by when determining duplicates.
+
+    """
+    df_copy = df.copy()
+    date_column = _create_unique_name('date', df_copy.columns.tolist())
+    original_dtype = None
+    if not is_datetime64_any_dtype(df_copy[time_column].dtype):
+        original_dtype = df_copy[time_column].dtype
+        df_copy[time_column] = pd.to_datetime(df_copy[time_column], utc=True)
+    df_copy[date_column] = df_copy[time_column].dt.date
+    df_copy = df_copy.loc[df_copy.groupby([date_column, group_by_column])[time_column].idxmax()]
+    df_copy = df_copy.drop(columns=date_column)
+    if original_dtype:
+        df_copy[time_column] = df[time_column].astype(original_dtype)
+    return df_copy
+
+
+def _create_unique_name(name, list_names):
+    # Copied from https://github.com/sdv-dev/SDV/blob/dcc95725af4f249fc8e9015c6d2617184de95041/sdv/_utils.py#L184
+    """Modify the ``name`` parameter if it already exists in the list of names."""
+    result = name
+    while result in list_names:
+        result += '_'
+
+    return result

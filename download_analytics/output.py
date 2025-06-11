@@ -170,7 +170,6 @@ def load_csv(csv_path, dry_run=False, read_csv_kwargs=None):
 
     LOGGER.info('Trying to load CSV file %s', csv_path)
     try:
-
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
@@ -188,6 +187,7 @@ def load_csv(csv_path, dry_run=False, read_csv_kwargs=None):
     LOGGER.info('Loaded CSV %s', csv_path)
 
     return data
+
 
 def append_row(df, row):
     """Append a dictionary as a row to a DataFrame."""

@@ -247,7 +247,7 @@ def _get_parser():
         '--max-days',
         type=int,
         required=False,
-        default=60,
+        default=90,
         help='Max days of data to pull.',
     )
     return parser
