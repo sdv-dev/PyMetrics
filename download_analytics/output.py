@@ -203,3 +203,7 @@ def load_csv(csv_path, dry_run=False):
     LOGGER.info('Loaded CSV %s', csv_path)
 
     return data
+
+def append_row(df, row):
+    """Append a dictionary as a row to a DataFrame."""
+    return pd.concat([df, pd.DataFrame(data=row)], ignore_index=True)

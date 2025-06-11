@@ -110,9 +110,7 @@ def _get_parser():
         help='Be verbose. Use `-vv` for increased verbosity.',
     )
     logging_args.add_argument(
-         '-l',
-         '--logfile',
-         help='If given, file where the logs will be written.'
+        '-l', '--logfile', help='If given, file where the logs will be written.'
     )
     logging_args.add_argument(
         '-d',
@@ -130,9 +128,9 @@ def _get_parser():
     action.required = True
 
     # collect
-    collect_pypi = action.add_parser('collect-pypi',
-                                     help='Collect download data from PyPi.',
-                                     parents=[logging_args])
+    collect_pypi = action.add_parser(
+        'collect-pypi', help='Collect download data from PyPi.', parents=[logging_args]
+    )
     collect_pypi.set_defaults(action=_collect_pypi)
 
     collect_pypi.add_argument(
@@ -224,9 +222,9 @@ def _get_parser():
     )
 
     # collect
-    collect_anaconda = action.add_parser('collect-anaconda',
-                                         help='Collect download data from Anaconda.',
-                                         parents=[logging_args])
+    collect_anaconda = action.add_parser(
+        'collect-anaconda', help='Collect download data from Anaconda.', parents=[logging_args]
+    )
     collect_anaconda.set_defaults(action=_collect_anaconda)
     collect_anaconda.add_argument(
         '-c',
@@ -240,7 +238,7 @@ def _get_parser():
         '--input-file',
         type=str,
         default=None,
-        help='Path to the anaconda.csv. Default None, which means to use output-folder for anaconda.csv',
+        help='Path to the anaconda.csv. Default None to mean use output-folder/anaconda.csv',
     )
     collect_anaconda.add_argument(
         '-m',
