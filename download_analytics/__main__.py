@@ -129,8 +129,7 @@ def _get_parser():
 
     # collect
     collect_pypi = action.add_parser(
-        'collect-pypi', help='Collect download data from PyPi.',
-        parents=[logging_args]
+        'collect-pypi', help='Collect download data from PyPi.', parents=[logging_args]
     )
     collect_pypi.set_defaults(action=_collect_pypi)
 
@@ -194,8 +193,7 @@ def _get_parser():
 
     # collect
     summarize = action.add_parser(
-        'summarize', help='Summarize the downloads data.',
-        parents=[logging_args]
+        'summarize', help='Summarize the downloads data.', parents=[logging_args]
     )
     summarize.set_defaults(action=_summarize)
     summarize.add_argument(
