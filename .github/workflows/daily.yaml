@@ -27,7 +27,7 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install -e .
+        uv pip install . --force-reinstall
     - name: Collect PyPI Downloads
       run: |
         uv run download-analytics collect-pypi
