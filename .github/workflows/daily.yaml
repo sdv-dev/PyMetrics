@@ -21,6 +21,9 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
+        cache-dependency-glob: |
+          **/pyproject.toml
+          **/__main__.py
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
@@ -43,9 +46,6 @@ jobs:
           --verbose
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
-        BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
-
-
   alert:
     needs: [collect]
     runs-on: ubuntu-latest

@@ -18,6 +18,9 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
+        cache-dependency-glob: |
+          **/pyproject.toml
+          **/__main__.py
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
