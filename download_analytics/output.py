@@ -169,6 +169,8 @@ def load_csv(csv_path, dry_run=False, read_csv_kwargs=None):
         csv_path += '.csv'
 
     LOGGER.info('Trying to load CSV file %s', csv_path)
+    if not read_csv_kwargs:
+        read_csv_kwargs = {}
     try:
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
