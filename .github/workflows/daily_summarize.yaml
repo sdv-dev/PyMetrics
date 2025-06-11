@@ -27,7 +27,7 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install . --force-reinstall
+        uv pip install .
     - name: Run Summarize
       run: |
         uv run download-analytics summarize \

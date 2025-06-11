@@ -27,10 +27,10 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install . --force-reinstall
+        uv pip install .
     - name: Collect PyPI Downloads
       run: |
-        uv run download-analytics collect-pypi
+        uv run download-analytics collect-pypi \
           --verbose \
           --max-days 30 \
           --add-metrics \
