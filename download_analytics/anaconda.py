@@ -84,33 +84,30 @@ def _get_previous_anaconda_downloads(output_folder, filename):
 
 def _get_downloads_from_anaconda_org(packages, channel='conda-forge'):
     overall_downloads = pd.DataFrame(columns=['pkg_name', TIME_COLUMN, 'total_ndownloads'])
-    per_version_downloads = pd.DataFrame(columns=['pkg_name', TIME_COLUMN, 'version', 'ndownloads'])
+    per_version_downloads = pd.DataFrame(columns=['pkg_name', 'version', TIME_COLUMN, 'ndownloads'])
 
     for pkg_name in packages:
         URL = f'https://api.anaconda.org/package/{channel}/{pkg_name}'
         timestamp = datetime.now(ZoneInfo('UTC'))
         response = requests.get(URL)
-        row_info = {
-            'pkg_name': [pkg_name],
-            TIME_COLUMN: [timestamp],
-        }
+        row_info = {'pkg_name': [pkg_name], TIME_COLUMN: [timestamp], 'total_ndownloads': 0}
         data = response.json()
-        downloads = 0
+        total_ndownloads = 0
         if 'could not be found' in data.get('error', ''):
-            row_info['total_ndownloads'] = downloads
+            pass
         else:
             for files_info in data['files']:
-                downloads += files_info['ndownloads']
+                total_ndownloads += files_info['ndownloads']
 
                 per_release_row = {
                     'pkg_name': [pkg_name],
                     'version': [files_info.get('version', None)],
-                    'ndownloads': [files_info.get('ndownloads', 0)],
                     TIME_COLUMN: [timestamp],
+                    'ndownloads': [files_info.get('ndownloads', 0)],
                 }
                 per_version_downloads = append_row(per_version_downloads, per_release_row)
 
-            row_info['total_ndownloads'] = downloads
+            row_info['total_ndownloads'] = total_ndownloads
         overall_downloads = append_row(overall_downloads, row_info)
     return overall_downloads, per_version_downloads
 
@@ -192,7 +189,7 @@ def collect_anaconda_downloads(
         LOGGER.info(f'{PREVIOUS_ANACONDA_FILENAME} tail')
         LOGGER.info(previous.tail(5).to_string())
         LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME} head')
-        LOGGER.info(overall_df.head(5).to_string(), 'head')
+        LOGGER.info(overall_df.head(5).to_string())
         LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_VERSION_FILENAME} head')
         LOGGER.info(version_downloads.head(5).to_string())
 
