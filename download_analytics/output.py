@@ -5,6 +5,7 @@ import logging
 import pathlib
 
 import pandas as pd
+from packaging.version import parse
 
 from download_analytics import drive
 
@@ -34,13 +35,21 @@ def get_path(folder, filename):
     return str(pathlib.Path(folder) / filename)
 
 
-def _add_sheet(writer, data, sheet):
-    data.to_excel(writer, sheet_name=sheet, index=False)
+def _add_sheet(writer, data, sheet_name):
+    data.to_excel(writer, sheet_name=sheet_name, index=False, engine='xlsxwriter')
 
     for column in data:
-        column_width = max(data[column].astype(str).map(len).max(), len(column))
+        column_length = None
+        if isinstance(column, (int, float)):
+            column_length = len(str(column))
+        else:
+            column_length = len(column)
+
+        column_width = max(data[column].astype(str).map(len).max(), column_length)
         col_idx = data.columns.get_loc(column)
-        writer.sheets[sheet].set_column(col_idx, col_idx, column_width + 2)
+        writer.sheets[sheet_name].set_column(
+            first_col=col_idx, last_col=col_idx, width=column_width + 2
+        )
 
 
 def create_spreadsheet(output_path, sheets):
@@ -178,16 +187,13 @@ def load_csv(csv_path, dry_run=False):
                 'cpu': pd.CategoricalDtype(),
             },
         }
-        if dry_run:
-            nrows = 1_000_000
-            LOGGER.info('Only reading first 1 million rows because dry-run')
-            read_csv_kwargs['nrows'] = nrows
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
             data = pd.read_csv(stream, **read_csv_kwargs)
         else:
             data = pd.read_csv(csv_path, **read_csv_kwargs)
+        data['version'] = data['version'].apply(parse)
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None

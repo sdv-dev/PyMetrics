@@ -72,9 +72,7 @@ def post_slack_message_in_thread(channel, text, thread_ts):
 def send_alert(args):
     """Send an alert message to a slack channel."""
     url = GITHUB_URL_PREFIX + args.run_id
-    message = (
-        f'Download Analytics build failed :fire: :dumpster-fire: :fire: See errors <{url}|here>'
-    )
+    message = f'{args.message} See errors <{url}|here>'
     post_slack_message(args.channel, message)
 
 
@@ -88,6 +86,13 @@ def get_parser():
         type=str,
         help='The slack channel to post to.',
         default=DEFAULT_SLACK_CHANNEL,
+    )
+    parser.add_argument(
+        '-m',
+        '--message',
+        type=str,
+        help='The message to post.',
+        default='Download Analytics build failed :fire: :dumpster-fire: :fire:',
     )
     parser.set_defaults(action=send_alert)
 

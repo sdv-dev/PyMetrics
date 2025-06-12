@@ -10,6 +10,7 @@ from datetime import datetime
 import yaml
 
 from download_analytics.main import collect_downloads
+from download_analytics.summarize import summarize_downloads
 
 LOGGER = logging.getLogger(__name__)
 
@@ -58,6 +59,22 @@ def _collect(args):
         dry_run=args.dry_run,
         force=args.force,
         add_metrics=args.add_metrics,
+    )
+
+
+def _summarize(args):
+    config = _load_config(args.config_file)
+    projects = config['projects']
+    vendors = config['vendors']
+    output_folder = args.output_folder or config.get('output-folder', '.')
+
+    summarize_downloads(
+        projects=projects,
+        vendors=vendors,
+        input_file=args.input_file,
+        output_folder=output_folder,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
     )
 
 
@@ -159,6 +176,41 @@ def _get_parser():
         help='Compute the aggregation metrics and create the corresponding spreadsheets.',
     )
 
+    # collect
+    summarize = action.add_parser(
+        'summarize', help='Summarize the downloads data.', parents=[logging_args]
+    )
+    summarize.set_defaults(action=_summarize)
+    summarize.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='summarize_config.yaml',
+        help='Path to the configuration file.',
+    )
+    summarize.add_argument(
+        '-i',
+        '--input-file',
+        type=str,
+        default=None,
+        help='Path to the pypi.csv. Default None, which means to use output-folder for pypi.csv',
+    )
+    summarize.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
+    )
+    summarize.add_argument(
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not upload the summary results. Just calculate them.',
+    )
     return parser
 
 
