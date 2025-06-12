@@ -41,12 +41,16 @@ dev = [
     "invoke",
     "slack-sdk>=3.34,<4.0",
 ]
+test = [
+    'pytest >= 8.1.1',
+]
 
 [tool.ruff]
 preview = true
 line-length = 100
 indent-width = 4
 src = ["download_analytics"]
+target-version = "py313"
 exclude = [
     "docs",
     ".tox",
