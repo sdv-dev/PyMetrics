@@ -79,7 +79,24 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
 def get_previous_pypi_downloads(input_file, output_folder, dry_run):
     """Read pypi.csv and return a DataFrame of the downloads."""
     csv_path = input_file or get_path(output_folder, 'pypi.csv')
-    return load_csv(csv_path, dry_run=dry_run)
+    read_csv_kwargs = {
+        'parse_dates': ['timestamp'],
+        'dtype': {
+            'country_code': pd.CategoricalDtype(),
+            'project': pd.CategoricalDtype(),
+            'version': pd.CategoricalDtype(),
+            'type': pd.CategoricalDtype(),
+            'installer_name': pd.CategoricalDtype(),
+            'implementation_name': pd.CategoricalDtype(),
+            'implementation_version': pd.CategoricalDtype(),
+            'distro_name': pd.CategoricalDtype(),
+            'distro_version': pd.CategoricalDtype(),
+            'system_name': pd.CategoricalDtype(),
+            'system_release': pd.CategoricalDtype(),
+            'cpu': pd.CategoricalDtype(),
+        },
+    }
+    return load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
 
 
 def _ecosystem_count_by_year(downloads, base_project, dependency_projects, parent_projects):

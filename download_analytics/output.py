@@ -154,7 +154,7 @@ def load_spreadsheet(spreadsheet):
     return sheets
 
 
-def load_csv(csv_path, dry_run=False, read_csv_kwargs=None):
+def load_csv(csv_path, read_csv_kwargs=None):
     """Load a CSV previously created by download-analytics.
 
     Args:
