@@ -188,19 +188,19 @@ def collect_anaconda_downloads(
     if verbose:
         LOGGER.info(f'{PREVIOUS_ANACONDA_FILENAME} tail')
         LOGGER.info(previous.tail(5).to_string())
-        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME} head')
-        LOGGER.info(overall_df.head(5).to_string())
-        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_VERSION_FILENAME} head')
-        LOGGER.info(version_downloads.head(5).to_string())
+        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME} tail')
+        LOGGER.info(overall_df.tail(5).to_string())
+        LOGGER.info(f'{PREVIOUS_ANACONDA_ORG_VERSION_FILENAME} tail')
+        LOGGER.info(version_downloads.tail(5).to_string())
 
     if not dry_run:
-        csv_path = get_path(output_folder, PREVIOUS_ANACONDA_FILENAME)
-        create_csv(output_path=os.path.join(dir_path, csv_path), data=previous)
+        gfolder_path = f'{output_folder}/{PREVIOUS_ANACONDA_FILENAME}'
+        create_csv(output_path=gfolder_path, data=previous)
 
-        csv_path = get_path(output_folder, PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME)
-        create_csv(output_path=os.path.join(dir_path, csv_path), data=overall_df)
+        gfolder_path = f'{output_folder}/{PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME}'
+        create_csv(output_path=gfolder_path, data=overall_df)
 
-        csv_path = get_path(output_folder, PREVIOUS_ANACONDA_ORG_VERSION_FILENAME)
-        create_csv(output_path=os.path.join(dir_path, csv_path), data=version_downloads)
+        gfolder_path = f'{output_folder}/{PREVIOUS_ANACONDA_ORG_VERSION_FILENAME}'
+        create_csv(output_path=gfolder_path, data=version_downloads)
 
     return None

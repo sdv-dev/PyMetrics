@@ -96,6 +96,7 @@ def upload(content, filename, folder, convert=False):
         drive_file = drive.CreateFile(file_config)
 
     drive_file.content = content
+    breakpoint()
     drive_file.Upload({'convert': convert})
     LOGGER.info('Uploaded file %s', drive_file.metadata['alternateLink'])
 
