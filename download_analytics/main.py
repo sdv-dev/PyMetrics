@@ -51,25 +51,7 @@ def collect_downloads(
     LOGGER.info(f'Collecting new downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
-    # read_csv_kwargs = {
-    #     'parse_dates': ['timestamp'],
-    #     'dtype': {
-    #         'country_code': pd.CategoricalDtype(),
-    #         'project': pd.CategoricalDtype(),
-    #         'version': pd.CategoricalDtype(),
-    #         'type': pd.CategoricalDtype(),
-    #         'installer_name': pd.CategoricalDtype(),
-    #         'implementation_name': pd.CategoricalDtype(),
-    #         'implementation_version': pd.CategoricalDtype(),
-    #         'distro_name': pd.CategoricalDtype(),
-    #         'distro_version': pd.CategoricalDtype(),
-    #         'system_name': pd.CategoricalDtype(),
-    #         'system_release': pd.CategoricalDtype(),
-    #         'cpu': pd.CategoricalDtype(),
-    #     },
-    # }
     previous = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
-    # previous = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,
