@@ -11,6 +11,7 @@ concurrency:
 jobs:
   dry_run:
     runs-on: ubuntu-latest-large
+    timeout-minutes: 25
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
