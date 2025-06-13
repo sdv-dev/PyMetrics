@@ -27,7 +27,7 @@ jobs:
         uv pip install -e .
     - name: Collect Downloads Data
       run: |
-        uv run download-analytics collect
+        uv run download-analytics collect \
           --verbose \
           --max-days 30 \
           --add-metrics \
