@@ -44,7 +44,7 @@ This PyPI download metrics are computed along several dimensions:
 - **By Full Python Version**: The number of downloads per full Python version (eg. 3.9.1).
 - **And more!**
 
-### Daily Summary
+### Daily Summarize
 
 On a daily basis, this workflow summarizes the PyPI download data from `pypi.csv` and calculates downloads for libraries.
 
