@@ -30,9 +30,6 @@ Currently, the download data is collected from the following distributions:
 In the future, we may expand the source distributions to include:
 * [GitHub Releases](https://github.com/): Information about the project downloads from GitHub releases.
 
-For more information about how to configure and use the software, or about the data that is being
-collected, check the resources below.
-
 ## Workflows
 
 ### Daily Collection
