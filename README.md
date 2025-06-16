@@ -70,3 +70,27 @@ For more information about the configuration, workflows, and metrics, see the re
 | :gear:        | [SETUP](docs/SETUP.md)                   | How to generate credentials to access BigQuery and Google Drive and add them to GitHub Actions. |
 | :keyboard:    | [DEVELOPMENT](docs/DEVELOPMENT.md)       | How to install and run the scripts locally. Overview of the project implementation. |
 | :floppy_disk: | [COLLECTED DATA](docs/COLLECTED_DATA.md) | Explanation about the data that is being collected. |
+
+
+---
+
+<div align="center">
+  <a href="https://datacebo.com"><picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo-dark-mode.png">
+      <img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo.png"></img>
+  </picture></a>
+</div>
+<br/>
+<br/>
+
+[The Synthetic Data Vault Project](https://sdv.dev) was first created at MIT's [Data to AI Lab](
+https://dai.lids.mit.edu/) in 2016. After 4 years of research and traction with enterprise, we
+created [DataCebo](https://datacebo.com) in 2020 with the goal of growing the project.
+Today, DataCebo is the proud developer of SDV, the largest ecosystem for
+synthetic data generation & evaluation. It is home to multiple libraries that support synthetic
+data, including:
+
+* 🔄 Data discovery & transformation. Reverse the transforms to reproduce realistic data.
+* 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
+  multi table and time series data.
+* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
