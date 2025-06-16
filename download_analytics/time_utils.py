@@ -40,7 +40,7 @@ def drop_duplicates_by_date(df, time_column, group_by_columns):
     Args:
         df (pd.DataFrame): Input DataFrame containing the data to deduplicate.
         time_column (str): Name of the column containing timestamp data.
-        group_by_column (list[str]): Name of the column to group by when determining duplicates.
+        group_by_columns (list[str]): Name of the column to group by when determining duplicates.
 
     """
     df_copy = df.copy()
