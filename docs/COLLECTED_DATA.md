@@ -8,7 +8,7 @@ the aggregations metrics that are computed on them.
 ## PyPI Downloads
 
 Download Analytics collects information about the downloads from PyPI by making queries to the
-[public PyPI download statistics dataset on Big Query](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=pypi&page=dataset)
+[public PyPI download statistics dataset on BigQuery](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=pypi&page=dataset)
 by running the following query:
 
 ```
