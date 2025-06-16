@@ -49,14 +49,13 @@ This PyPI download metrics are computed along several dimensions:
 
 ### Daily Summary
 
-On a daily basis, this workflow summarizes the PyPI download data from `pypi.csv` and calculates downloads for ecosystems/libraries.
-An ecosystem is defined as a collection of libraries, which may depend on each other.
+On a daily basis, this workflow summarizes the PyPI download data from `pypi.csv` and calculates downloads for libraries.
 
 The summarized data is uploaded to a GitHub repo:
 - [Downloads_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/Downloads_Summary.xlsx)
 
-#### SDV Ecosystem Calculation
-Installing the main SDV library also installs all the other libraries as dependencies. To calculate SDV ecosystem downloads, we use an exclusive download methodology:
+#### SDV Calculation
+Installing the main SDV library also installs all the other libraries as dependencies. To calculate SDV downloads, we use an exclusive download methodology:
 
 1. Get download counts for `sdgym` and `sdv`.
 2. Adjust `sdv` downloads by subtracting `sdgym` downloads (since sdgym depends on sdv).
