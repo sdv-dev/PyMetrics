@@ -89,7 +89,8 @@ def _calculate_projects_count(
         project_downloads = project_downloads[
             ~project_downloads['version'].apply(lambda v: v.is_prerelease)
         ]
-
+    else:
+        LOGGER.info(f'Including pre-release downloads for {projects}')
     return len(project_downloads)
 
 
