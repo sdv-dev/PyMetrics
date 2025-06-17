@@ -141,6 +141,7 @@ def get_previous_pypi_downloads(input_file, output_folder):
     data = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
     LOGGER.info('Parsing version column to Version class objects')
     data['version'] = data['version'].apply(parse)
+    return data
 
 
 def _ecosystem_count_by_year(downloads, base_project, dependency_projects, parent_projects):
