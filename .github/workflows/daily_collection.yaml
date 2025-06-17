@@ -7,13 +7,23 @@ on:
         description: Slack channel to post the error message to if the builds fail.
         required: false
         default: "sdv-alerts-debug"
+      max_days_pypi:
+        description: 'Maximum number of days to collect, starting from today for PyPI.'
+        required: false
+        type: number
+        default: 30
+      max_days_anaconda:
+        description: 'Maximum number of days to collect, starting from today for Anaconda'
+        required: false
+        type: number
+        default: 90
   schedule:
     - cron:  '0 0 * * *'
 
 jobs:
   collect:
     runs-on: ubuntu-latest-large
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -21,21 +31,31 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
+        cache-dependency-glob: |
+          **/pyproject.toml
+          **/__main__.py
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install -e .
-    - name: Collect Downloads Data
+        uv pip install .
+    - name: Collect PyPI Downloads
       run: |
-        uv run download-analytics collect \
+        uv run download-analytics collect-pypi \
           --verbose \
-          --max-days 30 \
+          --max-days ${{ inputs.max_days_pypi || 30 }} \
           --add-metrics \
           --output-folder gdrive://***REMOVED***
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
-
+    - name: Collect Anaconda Downloads
+      run: |
+        uv run download-analytics collect-anaconda \
+          --output-folder gdrive://***REMOVED***-Z \
+          --max-days ${{ inputs.max_days_anaconda || 90 }} \
+          --verbose
+      env:
+        PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:
     needs: [collect]
     runs-on: ubuntu-latest

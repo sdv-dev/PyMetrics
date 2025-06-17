@@ -10,7 +10,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   dry_run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-large
+    timeout-minutes: 25
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -18,13 +19,16 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
+        cache-dependency-glob: |
+          **/pyproject.toml
+          **/__main__.py
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
         uv pip install .
-    - name: Collect Downloads Data - Dry Run
+    - name: Collect PyPI Downloads - Dry Run
       run: |
-        uv run download-analytics collect \
+        uv run download-analytics collect-pypi \
           --verbose \
           --max-days 30 \
           --add-metrics \
@@ -33,7 +37,16 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
-    - name: Run Summarize - Dry Run
+    - name: Collect Anaconda Downloads - Dry Run
+      run: |
+        uv run download-analytics collect-anaconda \
+          --output-folder gdrive://***REMOVED***-Z \
+          --max-days 90 \
+          --verbose \
+          --dry-run
+      env:
+        PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+    - name: Summarize - Dry Run
       run: |
         uv run download-analytics summarize \
           --verbose \

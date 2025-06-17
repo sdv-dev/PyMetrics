@@ -3,8 +3,9 @@
 import logging
 
 from download_analytics.metrics import compute_metrics
-from download_analytics.output import create_csv, get_path, load_csv
+from download_analytics.output import create_csv, get_path
 from download_analytics.pypi import get_pypi_downloads
+from download_analytics.summarize import get_previous_pypi_downloads
 
 LOGGER = logging.getLogger(__name__)
 
@@ -47,10 +48,10 @@ def collect_downloads(
     if not projects:
         raise ValueError('No projects have been passed')
 
-    LOGGER.info(f'Collecting downloads for projects={projects}')
+    LOGGER.info(f'Collecting new downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
-    previous = load_csv(csv_path, dry_run=dry_run)
+    previous = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,

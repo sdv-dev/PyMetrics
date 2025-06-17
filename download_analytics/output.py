@@ -154,7 +154,7 @@ def load_spreadsheet(spreadsheet):
     return sheets
 
 
-def load_csv(csv_path, dry_run=False):
+def load_csv(csv_path, read_csv_kwargs=None):
     """Load a CSV previously created by download-analytics.
 
     Args:
@@ -169,31 +169,17 @@ def load_csv(csv_path, dry_run=False):
         csv_path += '.csv'
 
     LOGGER.info('Trying to load CSV file %s', csv_path)
+    if not read_csv_kwargs:
+        read_csv_kwargs = {}
     try:
-        read_csv_kwargs = {
-            'parse_dates': ['timestamp'],
-            'dtype': {
-                'country_code': pd.CategoricalDtype(),
-                'project': pd.CategoricalDtype(),
-                'version': pd.CategoricalDtype(),
-                'type': pd.CategoricalDtype(),
-                'installer_name': pd.CategoricalDtype(),
-                'implementation_name': pd.CategoricalDtype(),
-                'implementation_version': pd.CategoricalDtype(),
-                'distro_name': pd.CategoricalDtype(),
-                'distro_version': pd.CategoricalDtype(),
-                'system_name': pd.CategoricalDtype(),
-                'system_release': pd.CategoricalDtype(),
-                'cpu': pd.CategoricalDtype(),
-            },
-        }
         if drive.is_drive_path(csv_path):
             folder, filename = drive.split_drive_path(csv_path)
             stream = drive.download(folder, filename)
             data = pd.read_csv(stream, **read_csv_kwargs)
         else:
             data = pd.read_csv(csv_path, **read_csv_kwargs)
-        data['version'] = data['version'].apply(parse)
+        if 'version' in data.columns:
+            data['version'] = data['version'].apply(parse)
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None
@@ -201,3 +187,8 @@ def load_csv(csv_path, dry_run=False):
     LOGGER.info('Loaded CSV %s', csv_path)
 
     return data
+
+
+def append_row(df, row):
+    """Append a dictionary as a row to a DataFrame."""
+    return pd.concat([df, pd.DataFrame(data=row)], ignore_index=True)

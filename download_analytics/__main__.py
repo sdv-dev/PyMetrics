@@ -9,6 +9,7 @@ from datetime import datetime
 
 import yaml
 
+from download_analytics.anaconda import collect_anaconda_downloads
 from download_analytics.main import collect_downloads
 from download_analytics.summarize import summarize_downloads
 
@@ -44,7 +45,7 @@ def _load_config(config_path):
     return config
 
 
-def _collect(args):
+def _collect_pypi(args):
     config = _load_config(args.config_file)
     projects = args.projects or config['projects']
     output_folder = args.output_folder or config.get('output-folder', '.')
@@ -59,6 +60,19 @@ def _collect(args):
         dry_run=args.dry_run,
         force=args.force,
         add_metrics=args.add_metrics,
+    )
+
+
+def _collect_anaconda(args):
+    config = _load_config(args.config_file)
+    projects = config['projects']
+    output_folder = args.output_folder or config.get('output-folder', '.')
+    collect_anaconda_downloads(
+        projects=projects,
+        output_folder=output_folder,
+        max_days=args.max_days,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
     )
 
 
@@ -98,7 +112,12 @@ def _get_parser():
     logging_args.add_argument(
         '-l', '--logfile', help='If given, file where the logs will be written.'
     )
-
+    logging_args.add_argument(
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not upload the results. Just calculate them.',
+    )
     parser = argparse.ArgumentParser(
         prog='download-analytics',
         description='Download Analytics Command Line Interface',
@@ -109,10 +128,12 @@ def _get_parser():
     action.required = True
 
     # collect
-    collect = action.add_parser('collect', help='Collect downloads data.', parents=[logging_args])
-    collect.set_defaults(action=_collect)
+    collect_pypi = action.add_parser(
+        'collect-pypi', help='Collect download data from PyPi.', parents=[logging_args]
+    )
+    collect_pypi.set_defaults(action=_collect_pypi)
 
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-o',
         '--output-folder',
         type=str,
@@ -122,54 +143,48 @@ def _get_parser():
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-a',
         '--authentication-credentials',
         type=str,
         required=False,
         help='Path to the GCP (BigQuery) credentials file to use.',
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-c',
         '--config-file',
         type=str,
         default='config.yaml',
         help='Path to the configuration file.',
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-p',
         '--projects',
         nargs='*',
         help='List of projects to collect. If not given use the configured ones.',
         default=None,
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-s',
         '--start-date',
         type=_valid_date,
         required=False,
         help='Date from which to start pulling data.',
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-m',
         '--max-days',
         type=int,
         required=False,
         help='Max days of data to pull if start-date is not given.',
     )
-    collect.add_argument(
-        '-d',
-        '--dry-run',
-        action='store_true',
-        help='Do not run the actual query, only simulate it.',
-    )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-f',
         '--force',
         action='store_true',
         help='Force the download even if the data already exists or there is a gap',
     )
-    collect.add_argument(
+    collect_pypi.add_argument(
         '-M',
         '--add-metrics',
         action='store_true',
@@ -205,11 +220,36 @@ def _get_parser():
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )
-    summarize.add_argument(
-        '-d',
-        '--dry-run',
-        action='store_true',
-        help='Do not upload the summary results. Just calculate them.',
+
+    # collect
+    collect_anaconda = action.add_parser(
+        'collect-anaconda', help='Collect download data from Anaconda.', parents=[logging_args]
+    )
+    collect_anaconda.set_defaults(action=_collect_anaconda)
+    collect_anaconda.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='config.yaml',
+        help='Path to the configuration file.',
+    )
+    collect_anaconda.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
+    )
+    collect_anaconda.add_argument(
+        '-m',
+        '--max-days',
+        type=int,
+        required=False,
+        default=90,
+        help='Max days of data to pull.',
     )
     return parser
 

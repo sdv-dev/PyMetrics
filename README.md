@@ -10,16 +10,24 @@ engagement metrics.
 
 ### Data sources
 
-Currently the download data is coming from the following distributions:
+Currently the download data is collected from the following distributions:
 
 * [PyPI](https://pypi.org/): Information about the project downloads from [PyPI](https://pypi.org/)
   obtained from the public Big Query dataset, equivalent to the information shown on
   [pepy.tech](https://pepy.tech).
+* [conda-forge](https://conda-forge.org/): Information about the project downloads from the
+  `conda-forge` channel on `conda`.
+  - The conda package download data provided by Anaconda. It includes package download counts
+    starting from January 2017. More information:
+    - https://github.com/anaconda/anaconda-package-data
+  - The conda package metadata data provided by Anaconda. There is a public API which allows for
+    the retrieval of package information, including current number of downloads.
+    - https://api.anaconda.org/package/{username}/{package_name}
+    - Replace {username} with the Anaconda username (`conda-forge`) and {package_name} with
+    the specific package name (`sdv`).
 
 In the future, we may also expand the source distributions to include:
 
-* [conda-forge](https://conda-forge.org/): Information about the project downloads from the
-  `conda-forge` channel on `conda`.
 * [github](https://github.com/): Information about the project downloads from github releases.
 
 For more information about how to configure and use the software, or about the data that is being
