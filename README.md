@@ -61,6 +61,49 @@ Installing the main SDV library also installs all the other libraries as depende
 5. Ensure no download count goes negative using `max(0, adjusted_count)` for each library.
 
 This methodology prevents double-counting downloads while providing an accurate representation of SDV usage.
+=======
+Currently the download data is collected from the following distributions:
+
+* [PyPI](https://pypi.org/): Information about the project downloads from [PyPI](https://pypi.org/)
+  obtained from the public Big Query dataset, equivalent to the information shown on
+  [pepy.tech](https://pepy.tech).
+* [conda-forge](https://conda-forge.org/): Information about the project downloads from the
+  `conda-forge` channel on `conda`.
+  - The conda package download data provided by Anaconda. It includes package download counts
+    starting from January 2017. More information:
+    - https://github.com/anaconda/anaconda-package-data
+  - The conda package metadata data provided by Anaconda. There is a public API which allows for
+    the retrieval of package information, including current number of downloads.
+    - https://api.anaconda.org/package/{username}/{package_name}
+    - Replace {username} with the Anaconda username (`conda-forge`) and {package_name} with
+    the specific package name (`sdv`).
+
+In the future, we may also expand the source distributions to include:
+
+* [github](https://github.com/): Information about the project downloads from github releases.
+
+For more information about how to configure and use the software, or about the data that is being
+collected check the resources below.
+
+### Add new libraries
+In order add new libraries, it is important to follow these steps to ensure that data is backfilled.
+1. Update `config.yaml` with the new libraries (pypi project names only for now)
+2. Run the [Manual collection workflow](https://github.com/datacebo/download-analytics/actions/workflows/manual.yaml) on your branch.
+    - Use workflow from **your branch name**.
+    - List all project names from config.yaml
+    - Remove `7` from max days to indicate you want all data
+    - Pass any extra arguments (for example `--dry-run` to test your changes)
+3. Let the workflow finish and check that pypi.csv contains the right data.
+4. Get your pull request reviewed and merged into `main`. The daily collection workflow will fill the data for the last 30 days and future days.
+    - Note: The collection script looks at timestamps and avoids adding overlapping data.
+
+### Metrics
+This library collects the number of downloads for your chosen software. You can break these up along several dimensions:
+
+- **By Month**: The number of downloads per month
+- **By Version**: The number of downloads per version of the software, as determine by the software maintainers
+- **By Python Version**: The number of downloads per minor Python version (eg. 3.8)
+- **And more!** See the resources below for more information.
 
 ## Resources
 For more information about the configuration, workflows, and metrics, see the resources below.
