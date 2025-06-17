@@ -22,6 +22,7 @@ PREVIOUS_ANACONDA_ORG_OVERALL_FILENAME = 'anaconda_org_overall.csv'
 PREVIOUS_ANACONDA_ORG_VERSION_FILENAME = 'anaconda_org_per_version.csv'
 TIME_COLUMN = 'time'
 PKG_COLUMN = 'pkg_name'
+ANACONDA_BUCKET_PATH = 's3://anaconda-package-data/conda'
 
 
 def _read_anaconda_parquet(URL, pkg_names=None):
@@ -55,7 +56,7 @@ def _anaconda_package_data_by_day(year, month, day, pkg_names=None):
     padded_day = '{:02d}'.format(day)
 
     filename = f'{padded_year}-{padded_month}-{padded_day}.parquet'
-    URL = f's3://anaconda-package-data/conda/hourly/{padded_year}/{padded_month}/{filename}'
+    URL = f'{ANACONDA_BUCKET_PATH}/hourly/{padded_year}/{padded_month}/{filename}'
     return _read_anaconda_parquet(URL, pkg_names=pkg_names)
 
 
@@ -68,7 +69,7 @@ def anaconda_package_data_by_year_month(year, month, pkg_names=None):
     padded_year = '{:04d}'.format(year)
     padded_month = '{:02d}'.format(month)
     filename = f'{padded_year}-{padded_month}.parquet'
-    URL = f's3://anaconda-package-data/conda/monthly/{padded_year}/{filename}'
+    URL = f'{ANACONDA_BUCKET_PATH}/monthly/{padded_year}/{filename}'
     return _read_anaconda_parquet(URL, pkg_names=pkg_names)
 
 

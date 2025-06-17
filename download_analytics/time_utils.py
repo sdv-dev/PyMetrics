@@ -33,7 +33,7 @@ def get_min_max_dt_in_year(year):
 def drop_duplicates_by_date(df, time_column, group_by_columns):
     """Keep only the latest record for each day within each group.
 
-    For each unique combination of date and group, retains only the row with the
+    For each unique combination of date and group, retain only the row with the
     latest timestamp. This is useful for deduplicating time series data where
     multiple records may exist for the same day.
 

@@ -7,6 +7,16 @@ on:
         description: Slack channel to post the error message to if the builds fail.
         required: false
         default: "sdv-alerts-debug"
+      max_days_pypi:
+        description: 'Maximum number of days to collect, starting from today for PyPI.'
+        required: false
+        type: number
+        default: 30
+      max_days_anaconda:
+        description: 'Maximum number of days to collect, starting from today for Anaconda'
+        required: false
+        type: number
+        default: 90
   schedule:
     - cron:  '0 0 * * *'
 
@@ -32,7 +42,7 @@ jobs:
       run: |
         uv run download-analytics collect-pypi \
           --verbose \
-          --max-days 30 \
+          --max-days ${{ inputs.max_days_pypi || 30 }} \
           --add-metrics \
           --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
       env:
@@ -42,7 +52,7 @@ jobs:
       run: |
         uv run download-analytics collect-anaconda \
           --output-folder gdrive://1UnDYovLkL4gletOF5328BG1X59mSHF-Z \
-          --max-days 90 \
+          --max-days ${{ inputs.max_days_pypi || 90 }} \
           --verbose
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
