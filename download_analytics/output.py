@@ -5,7 +5,6 @@ import logging
 import pathlib
 
 import pandas as pd
-from packaging.version import parse
 
 from download_analytics import drive
 
@@ -178,8 +177,6 @@ def load_csv(csv_path, read_csv_kwargs=None):
             data = pd.read_csv(stream, **read_csv_kwargs)
         else:
             data = pd.read_csv(csv_path, **read_csv_kwargs)
-        if 'version' in data.columns:
-            data['version'] = data['version'].apply(parse)
     except FileNotFoundError:
         LOGGER.info('Failed to load CSV file %s: not found', csv_path)
         return None
