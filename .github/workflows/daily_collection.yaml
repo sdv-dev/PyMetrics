@@ -52,7 +52,7 @@ jobs:
       run: |
         uv run download-analytics collect-anaconda \
           --output-folder gdrive://1UnDYovLkL4gletOF5328BG1X59mSHF-Z \
-          --max-days ${{ inputs.max_days_pypi || 90 }} \
+          --max-days ${{ inputs.max_days_anaconda || 90 }} \
           --verbose
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
