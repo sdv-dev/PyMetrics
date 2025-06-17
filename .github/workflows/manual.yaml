@@ -36,7 +36,7 @@ jobs:
         uv pip install .
     - name: Collect Downloads Data
       run: |
-        uv run download-analytics collect \
+        uv run download-analytics collect-pypi \
           --verbose \
           --projects ${{ github.event.inputs.projects }} \
           ${{ github.event.inputs.max_days && '--max-days ' || '' }} \

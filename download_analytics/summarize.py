@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from packaging.version import Version
 
-from download_analytics.output import create_spreadsheet, get_path, load_csv
+from download_analytics.output import append_row, create_spreadsheet, get_path, load_csv
 from download_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
@@ -76,19 +76,27 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
     return base_count + sum(parent_to_count.values()) + sum(dep_to_count.values())
 
 
-def append_row(df, row):
-    """Append a dictionary as a row to a DataFrame."""
-    return pd.concat([df, pd.DataFrame(data=row)], ignore_index=True)
-
-
-def get_downloads(input_file, output_folder, dry_run):
+def get_previous_pypi_downloads(input_file, output_folder):
     """Read pypi.csv and return a DataFrame of the downloads."""
-    if input_file:
-        downloads = load_csv(input_file, dry_run=dry_run)
-    else:
-        csv_path = get_path(output_folder, 'pypi.csv')
-        downloads = load_csv(csv_path, dry_run=dry_run)
-    return downloads
+    csv_path = input_file or get_path(output_folder, 'pypi.csv')
+    read_csv_kwargs = {
+        'parse_dates': ['timestamp'],
+        'dtype': {
+            'country_code': pd.CategoricalDtype(),
+            'project': pd.CategoricalDtype(),
+            'version': pd.CategoricalDtype(),
+            'type': pd.CategoricalDtype(),
+            'installer_name': pd.CategoricalDtype(),
+            'implementation_name': pd.CategoricalDtype(),
+            'implementation_version': pd.CategoricalDtype(),
+            'distro_name': pd.CategoricalDtype(),
+            'distro_version': pd.CategoricalDtype(),
+            'system_name': pd.CategoricalDtype(),
+            'system_release': pd.CategoricalDtype(),
+            'cpu': pd.CategoricalDtype(),
+        },
+    }
+    return load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
 
 
 def _ecosystem_count_by_year(downloads, base_project, dependency_projects, parent_projects):
@@ -204,7 +212,7 @@ def summarize_downloads(
             `gdrive://{folder_id}`.
 
     """
-    downloads = get_downloads(input_file, output_folder, dry_run)
+    downloads = get_previous_pypi_downloads(input_file, output_folder)
 
     vendor_df = pd.DataFrame.from_records(vendors)
     all_df = _create_all_df()

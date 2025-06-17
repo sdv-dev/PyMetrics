@@ -31,10 +31,10 @@ if contains the application KEY which should never be made public.
 
 Once the file is created, you can follow these steps:
 
-1. Run the `download-analytics collect` command. If the `settings.yaml` file has been properly
+1. Run the `download-analytics collect-pypi` command. If the `settings.yaml` file has been properly
    created, this will **open a new tab on your web browser**, where you need to authenticate.
 
-   | ![pydrive-collect](imgs/pydrive-collect.png "Run the `download-analytics collect` Command") |
+   | ![pydrive-collect](imgs/pydrive-collect.png "Run the `download-analytics collect-pypi` Command") |
    | - |
 
 2. Click on the Google account which you which to authenticate with. Notice that the account that
@@ -67,7 +67,7 @@ be provided to you by a privileged admin.
 Once you have this JSON file, you have two options:
 
 1. Pass the path to the authentication file with the `-a` or `--authentication-credentials`
-   argument to the `download-analytics collect` command.
+   argument to the `download-analytics collect-pypi` command.
 
    | ![bigquery-a](imgs/bigquery-a.png "Pass the credentials on command line") |
    | - |

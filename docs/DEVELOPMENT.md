@@ -33,14 +33,14 @@ For development, run `make install-develop` instead.
 ## Command Line Interface
 
 After the installation, a new `download-analytics` command will have been registered inside your
-`virtualenv`. This command can be used in conjunction with the `collect` action to collect
+`virtualenv`. This command can be used in conjunction with the `collect-pypi` action to collect
 downloads data from BigQuery and store the output locally or in Google Drive.
 
 Here is the entire list of arguments that the command line has:
 
 ```bash
-$ download-analytics collect --help
-usage: download-analytics collect [-h] [-v] [-l LOGFILE] [-o OUTPUT_FOLDER] [-a AUTHENTICATION_CREDENTIALS]
+$ download-analytics collect-pypi --help
+usage: download-analytics collect-pypi [-h] [-v] [-l LOGFILE] [-o OUTPUT_FOLDER] [-a AUTHENTICATION_CREDENTIALS]
                                   [-c CONFIG_FILE] [-p [PROJECTS [PROJECTS ...]]] [-s START_DATE]
                                   [-m MAX_DAYS] [-d] [-f] [-M]
 
@@ -73,7 +73,7 @@ and store the downloads data into a Google Drive folder alongside the correspond
 metric spreadsheets would look like this:
 
 ```bash
-$ download-analytics collect --verbose --projects sdv ctgan --start-date 2021-01-01 \
+$ download-analytics collect-pypi --verbose --projects sdv ctgan --start-date 2021-01-01 \
         --add-metrics --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
 ```
 
