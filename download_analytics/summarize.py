@@ -4,7 +4,7 @@ import logging
 import os
 
 import pandas as pd
-from packaging.version import Version
+from packaging.version import Version, parse
 
 from download_analytics.output import append_row, create_spreadsheet, get_path, load_csv
 from download_analytics.time_utils import get_current_year, get_min_max_dt_in_year
@@ -42,7 +42,30 @@ def _calculate_projects_count(
     min_datetime=None,
     version=None,
     version_operator=None,
+    exclude_prereleases=False,
 ):
+    """Get number of PyPI downloads for specified project(s).
+
+    Args:
+        downloads (pd.DataFrame): PyPI Download data. It must contain the project, version,
+            and timestamp column. The version column must be packaging Version objects.
+        projects (str, tuple(str), list[str]): The project name or list of project names to filter
+            the download for.
+        max_datetime (datetime): The maximum datetime to include downloads for (inclusive).
+            Downloads after this datetime will be excluded.
+        min_datetime (datetime): The minimum datetime to include downloads for (inclusive).
+            Downloads before this datetime will be excluded.
+        version (str): The version string to compare against when filtering by version.
+            Must be used in conjunction with version_operator.
+        version_operator (str): The comparison operator to use with version filtering.
+            Supported operators: '<=', '>', '>=', '<'. Must be used in conjunction with version.
+        exclude_prereleases (bool): If True, excludes pre-release versions from the count.
+            Defaults to False, which means to include downloads for pre-releases.
+
+    Returns:
+        int: The number of downloads matching the specified criteria.
+
+    """
     if isinstance(projects, str):
         projects = (projects,)
 
@@ -51,12 +74,23 @@ def _calculate_projects_count(
         project_downloads = project_downloads[project_downloads['version'] <= Version(version)]
     if version and version_operator and version_operator == '>':
         project_downloads = project_downloads[project_downloads['version'] > Version(version)]
+    if version and version_operator and version_operator == '>=':
+        project_downloads = project_downloads[project_downloads['version'] >= Version(version)]
+    if version and version_operator and version_operator == '<':
+        project_downloads = project_downloads[project_downloads['version'] < Version(version)]
 
     if max_datetime:
         project_downloads = project_downloads[project_downloads['timestamp'] <= max_datetime]
     if min_datetime:
         project_downloads = project_downloads[project_downloads['timestamp'] >= min_datetime]
 
+    if exclude_prereleases is True:
+        LOGGER.info(f'Excluding pre-release downloads for {projects}')
+        project_downloads = project_downloads[
+            ~project_downloads['version'].apply(lambda v: v.is_prerelease)
+        ]
+    else:
+        LOGGER.info(f'Including pre-release downloads for {projects}')
     return len(project_downloads)
 
 
@@ -77,7 +111,15 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
 
 
 def get_previous_pypi_downloads(input_file, output_folder):
-    """Read pypi.csv and return a DataFrame of the downloads."""
+    """Read pypi.csv and return a DataFrame of the downloads.
+
+    Args:
+        input_file (str): Location of the pypi.csv to use as the previous downloads.
+
+        output_folder (str): If input_file is None, this directory location must contain
+            pypi.csv file to use.
+
+    """
     csv_path = input_file or get_path(output_folder, 'pypi.csv')
     read_csv_kwargs = {
         'parse_dates': ['timestamp'],
@@ -96,7 +138,10 @@ def get_previous_pypi_downloads(input_file, output_folder):
             'cpu': pd.CategoricalDtype(),
         },
     }
-    return load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
+    data = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
+    LOGGER.info('Parsing version column to Version class objects')
+    data['version'] = data['version'].apply(parse)
+    return data
 
 
 def _ecosystem_count_by_year(downloads, base_project, dependency_projects, parent_projects):
