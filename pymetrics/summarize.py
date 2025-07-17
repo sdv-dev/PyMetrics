@@ -114,10 +114,11 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
     """Read pypi.csv and return a DataFrame of the downloads.
 
     Args:
-        input_file (str): Location of the pypi.csv to use as the previous downloads.
-
         output_folder (str): If input_file is None, this directory location must contain
             pypi.csv file to use.
+
+        dry_run (bool): If True, will reduce the number of rows read. Defaults to False,
+            which will read all rows.
 
     """
     csv_path = get_path(output_folder, 'pypi.csv')
