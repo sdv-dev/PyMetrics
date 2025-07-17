@@ -1,30 +1,30 @@
-# Download Analytics Development Guide
+# PyMetrics Development Guide
 
-This guide covers how to download and install **Download Analytics** to run it locally and
+This guide covers how to download and install **PyMetrics** to run it locally and
 modify its code.
 
 ## Install
 
-**Download Analytics** is not released to any public Python package repository, so the only
+**PyMetrics** is not released to any public Python package repository, so the only
 way to run it is to download the code from Github and install from source.
 
-1. Clone the [github repository](https://github.com/datacebo/download-analytics)
+1. Clone the [github repository](https://github.com/datacebo/pymetrics)
 
 ```bash
-git clone git@github.com:datacebo/download-analytics
+git clone git@github.com:datacebo/pymetrics
 ```
 
 2. Create a `virtualenv` (or `conda` env) to host the project and its dependencies. The example
    below covers the creation of a `virtualenv` using `virtualenvwrapper` with Python 3.8.
 
 ```bash
-mkvirtualenv download-analytics -p $(which python3.8)
+mkvirtualenv pymetrics -p $(which python3.8)
 ```
 
 3. Enter the project folder and install the project:
 
 ```bash
-cd download-analytics
+cd pymetrics
 make install
 ```
 
@@ -32,15 +32,15 @@ For development, run `make install-develop` instead.
 
 ## Command Line Interface
 
-After the installation, a new `download-analytics` command will have been registered inside your
+After the installation, a new `pymetrics` command will have been registered inside your
 `virtualenv`. This command can be used in conjunction with the `collect-pypi` action to collect
 downloads data from BigQuery and store the output locally or in Google Drive.
 
 Here is the entire list of arguments that the command line has:
 
 ```bash
-$ download-analytics collect-pypi --help
-usage: download-analytics collect-pypi [-h] [-v] [-l LOGFILE] [-o OUTPUT_FOLDER] [-a AUTHENTICATION_CREDENTIALS]
+$ pymetrics collect-pypi --help
+usage: pymetrics collect-pypi [-h] [-v] [-l LOGFILE] [-o OUTPUT_FOLDER] [-a AUTHENTICATION_CREDENTIALS]
                                   [-c CONFIG_FILE] [-p [PROJECTS [PROJECTS ...]]] [-s START_DATE]
                                   [-m MAX_DAYS] [-d] [-f] [-M]
 
@@ -73,7 +73,7 @@ and store the downloads data into a Google Drive folder alongside the correspond
 metric spreadsheets would look like this:
 
 ```bash
-$ download-analytics collect-pypi --verbose --projects sdv ctgan --start-date 2021-01-01 \
+$ pymetrics collect-pypi --verbose --projects sdv ctgan --start-date 2021-01-01 \
         --add-metrics --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
 ```
 
@@ -83,7 +83,7 @@ have a look at the [COLLECTED_DATA.md](COLLECTED_DATA.md) document.
 ## Python Interface
 
 The Python entry point that is equivalent to the CLI explained above is the function
-`download_analytics.main.collect_downloads`.
+`pymetrics.main.collect_downloads`.
 
 This function has the following interface:
 

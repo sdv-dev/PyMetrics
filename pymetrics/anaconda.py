@@ -9,8 +9,8 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-from download_analytics.output import append_row, create_csv, get_path, load_csv
-from download_analytics.time_utils import drop_duplicates_by_date
+from pymetrics.output import append_row, create_csv, get_path, load_csv
+from pymetrics.time_utils import drop_duplicates_by_date
 
 LOGGER = logging.getLogger(__name__)
 dir_path = os.path.dirname(os.path.realpath(__file__))

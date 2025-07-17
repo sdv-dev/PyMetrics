@@ -1,4 +1,4 @@
-# Download Analytics Workflows
+# PyMetrics Workflows
 
 This document describes how to perform the two most common workflows:
 
@@ -65,13 +65,13 @@ after it is merged, the downloads of the new library will start to be added to t
 
 ## One Shot - Collecting data over a specific period.
 
-Download Analytics is prepared to collect data for one or more libraries over a specific period
-using a [GitHub Actions Workflow](https://github.com/datacebo/download-analytics/actions/workflows/manual.yaml).
+PyMetrics is prepared to collect data for one or more libraries over a specific period
+using a [GitHub Actions Workflow](https://github.com/datacebo/pymetrics/actions/workflows/manual.yaml).
 
 In order to do this, you will need to follow these steps:
 
-1. Enter the [GitHub Actions Section of the repository](https://github.com/datacebo/download-analytics/actions)
-   and click on the [Manual Collection Workflow](https://github.com/datacebo/download-analytics/actions/workflows/manual.yaml).
+1. Enter the [GitHub Actions Section of the repository](https://github.com/datacebo/pymetrics/actions)
+   and click on the [Manual Collection Workflow](https://github.com/datacebo/pymetrics/actions/workflows/manual.yaml).
 
    | ![manual-collection](imgs/manual-collection.png "Manual Collection Workflow") |
    | - |

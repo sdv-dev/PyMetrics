@@ -1,6 +1,6 @@
-# Download Analytics Setup
+# PyMetrics Setup
 
-The Download Analytics project requires privileged access to the following resources:
+The PyMetrics project requires privileged access to the following resources:
 - Google Drive, which is accessed via the `PyDrive` library.
 - Google Big Query, which is accessed via the `google-cloud-bigquery` library.
 
@@ -31,10 +31,10 @@ if contains the application KEY which should never be made public.
 
 Once the file is created, you can follow these steps:
 
-1. Run the `download-analytics collect-pypi` command. If the `settings.yaml` file has been properly
+1. Run the `pymetrics collect-pypi` command. If the `settings.yaml` file has been properly
    created, this will **open a new tab on your web browser**, where you need to authenticate.
 
-   | ![pydrive-collect](imgs/pydrive-collect.png "Run the `download-analytics collect-pypi` Command") |
+   | ![pydrive-collect](imgs/pydrive-collect.png "Run the `pymetrics collect-pypi` Command") |
    | - |
 
 2. Click on the Google account which you which to authenticate with. Notice that the account that
@@ -67,7 +67,7 @@ be provided to you by a privileged admin.
 Once you have this JSON file, you have two options:
 
 1. Pass the path to the authentication file with the `-a` or `--authentication-credentials`
-   argument to the `download-analytics collect-pypi` command.
+   argument to the `pymetrics collect-pypi` command.
 
    | ![bigquery-a](imgs/bigquery-a.png "Pass the credentials on command line") |
    | - |
@@ -80,12 +80,12 @@ Once you have this JSON file, you have two options:
 
 ## Github Actions Setup
 
-When using Download Analytics via Github Actions, the authentication credentials for Google
+When using PyMetrics via Github Actions, the authentication credentials for Google
 Drive and Big Query must be passed as repository `secrets`, which will later on be declared
 as environment variables.
 
-1. Open the [Settings page of the Download Analytics repository](
-   https://github.com/datacebo/download-analytics/settings/secrets/actions) and click on `Secrets`.
+1. Open the [Settings page of the PyMetrics repository](
+   https://github.com/datacebo/pymetrics/settings/secrets/actions) and click on `Secrets`.
 
    | ![secrets](imgs/secrets.png "Open the secrets page of the repository") |
    | - |

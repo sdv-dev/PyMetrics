@@ -5,7 +5,7 @@ import os
 
 from slack_sdk import WebClient
 
-GITHUB_URL_PREFIX = 'https://github.com/datacebo/download-analytics/actions/runs/'
+GITHUB_URL_PREFIX = 'https://github.com/datacebo/pymetrics/actions/runs/'
 DEFAULT_SLACK_CHANNEL = 'sdv-alerts-debug'
 
 
@@ -92,7 +92,7 @@ def get_parser():
         '--message',
         type=str,
         help='The message to post.',
-        default='Download Analytics build failed :fire: :dumpster-fire: :fire:',
+        default='PyMetrics build failed :fire: :dumpster-fire: :fire:',
     )
     parser.set_defaults(action=send_alert)
 
