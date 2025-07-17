@@ -120,6 +120,9 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
         dry_run (bool): If True, will reduce the number of rows read. Defaults to False,
             which will read all rows.
 
+    Returns:
+        pd.DataFrame: The DataFrame containing the PyPI download data.
+
     """
     csv_path = get_path(output_folder, 'pypi.csv')
     read_csv_kwargs = {
