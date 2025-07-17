@@ -5,7 +5,7 @@ import re
 
 import pandas as pd
 
-from download_analytics.output import create_spreadsheet
+from pymetrics.output import create_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 

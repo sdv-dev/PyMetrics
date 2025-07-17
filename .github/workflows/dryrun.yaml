@@ -28,7 +28,7 @@ jobs:
         uv pip install .
     - name: Collect PyPI Downloads - Dry Run
       run: |
-        uv run download-analytics collect-pypi \
+        uv run pymetrics collect-pypi \
           --verbose \
           --max-days 30 \
           --add-metrics \
@@ -39,7 +39,7 @@ jobs:
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
     - name: Collect Anaconda Downloads - Dry Run
       run: |
-        uv run download-analytics collect-anaconda \
+        uv run pymetrics collect-anaconda \
           --output-folder gdrive://***REMOVED***-Z \
           --max-days 90 \
           --verbose \
@@ -48,7 +48,7 @@ jobs:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - name: Summarize - Dry Run
       run: |
-        uv run download-analytics summarize \
+        uv run pymetrics summarize \
           --verbose \
           --output-folder gdrive://***REMOVED*** \
           --dry-run
