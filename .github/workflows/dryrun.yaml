@@ -31,7 +31,7 @@ jobs:
         uv run pymetrics collect-pypi \
           --max-days 30 \
           --add-metrics \
-          --output-folder $${{ secrets.PYPI_OUTPUT_FOLDER }} \
+          --output-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
