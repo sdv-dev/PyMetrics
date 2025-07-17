@@ -3,12 +3,9 @@
 <p align="center">
     <i>This repository is part of <a href="https://sdv.dev">The Synthetic Data Vault Project</a>, a project from <a href="https://datacebo.com">DataCebo</a>.</i>
 </p>
-
 <div align="left">
-<br/>
 
 # PyMetrics
-
 The PyMetrics project allows you to extract download metrics for Python libraries published on [PyPI](https://pypi.org/) and [Anaconda](https://www.anaconda.com/).
 
 The DataCebo team uses these scripts to report download counts for the libraries in the [SDV ecosystem](https://sdv.dev/) and other libraries.

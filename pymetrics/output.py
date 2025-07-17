@@ -25,9 +25,6 @@ def get_path(folder, filename):
 
     Aware of both local and Google Drive path formats.
     """
-    if not folder:
-        return None
-
     if folder.endswith('/'):
         folder = folder[:-1]
 
@@ -167,9 +164,6 @@ def load_csv(csv_path, read_csv_kwargs=None):
         pd.DataFrame:
             CSV contents.
     """
-    if not csv_path:
-        return None
-
     if not csv_path.endswith('.csv'):
         csv_path += '.csv'
 
