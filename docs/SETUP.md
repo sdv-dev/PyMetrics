@@ -1,6 +1,6 @@
-# Download Analytics Setup
+# PyMetrics Setup
 
-The Download Analytics project requires privileged access to the following resources:
+The PyMetrics project requires privileged access to the following resources:
 - Google Drive, which is accessed via the `PyDrive` library.
 - Google Big Query, which is accessed via the `google-cloud-bigquery` library.
 
@@ -80,11 +80,11 @@ Once you have this JSON file, you have two options:
 
 ## Github Actions Setup
 
-When using Download Analytics via Github Actions, the authentication credentials for Google
+When using PyMetrics via Github Actions, the authentication credentials for Google
 Drive and Big Query must be passed as repository `secrets`, which will later on be declared
 as environment variables.
 
-1. Open the [Settings page of the Download Analytics repository](
+1. Open the [Settings page of the PyMetrics repository](
    https://github.com/datacebo/pymetrics/settings/secrets/actions) and click on `Secrets`.
 
    | ![secrets](imgs/secrets.png "Open the secrets page of the repository") |

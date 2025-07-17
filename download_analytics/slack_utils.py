@@ -92,7 +92,7 @@ def get_parser():
         '--message',
         type=str,
         help='The message to post.',
-        default='Download Analytics build failed :fire: :dumpster-fire: :fire:',
+        default='PyMetrics build failed :fire: :dumpster-fire: :fire:',
     )
     parser.set_defaults(action=send_alert)
 

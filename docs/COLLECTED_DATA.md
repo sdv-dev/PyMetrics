@@ -1,13 +1,13 @@
-# Data collected by Download Analytics
+# Data collected by PyMetrics
 
-The Download Analytics project collects data about downloads from multiple sources.
+The PyMetrics project collects data about downloads from multiple sources.
 
 This guide explains the exact data that is being collected from each source, as well as
 the aggregations metrics that are computed on them.
 
 ## PyPI Downloads
 
-Download Analytics collects information about the downloads from PyPI by making queries to the
+PyMetrics collects information about the downloads from PyPI by making queries to the
 [public PyPI download statistics dataset on BigQuery](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=pypi&page=dataset)
 by running the following query:
 

@@ -1,4 +1,4 @@
-"""Download Analytics CLI."""
+"""PyMetrics CLI."""
 
 import argparse
 import logging
@@ -120,7 +120,7 @@ def _get_parser():
     )
     parser = argparse.ArgumentParser(
         prog='pymetrics',
-        description='Download Analytics Command Line Interface',
+        description='PyMetrics Command Line Interface',
         parents=[logging_args],
     )
     parser.set_defaults(action=None)
@@ -255,7 +255,7 @@ def _get_parser():
 
 
 def main():
-    """Run the Download Analytics CLI."""
+    """Run the PyMetrics CLI."""
     parser = _get_parser()
     if len(sys.argv) < 2:
         parser.print_help()

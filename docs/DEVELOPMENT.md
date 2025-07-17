@@ -1,11 +1,11 @@
-# Download Analytics Development Guide
+# PyMetrics Development Guide
 
-This guide covers how to download and install **Download Analytics** to run it locally and
+This guide covers how to download and install **PyMetrics** to run it locally and
 modify its code.
 
 ## Install
 
-**Download Analytics** is not released to any public Python package repository, so the only
+**PyMetrics** is not released to any public Python package repository, so the only
 way to run it is to download the code from Github and install from source.
 
 1. Clone the [github repository](https://github.com/datacebo/pymetrics)
