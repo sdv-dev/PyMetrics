@@ -23,6 +23,15 @@ PREVIOUS_ANACONDA_ORG_VERSION_FILENAME = 'anaconda_org_per_version.csv'
 TIME_COLUMN = 'time'
 PKG_COLUMN = 'pkg_name'
 ANACONDA_BUCKET_PATH = 's3://anaconda-package-data/conda'
+ANACONDA_COLUMNS = [
+    TIME_COLUMN,
+    'data_source',
+    PKG_COLUMN,
+    'pkg_version',
+    'pkg_platform',
+    'pkg_python',
+    'counts',
+]
 
 
 def _read_anaconda_parquet(URL, pkg_names=None):
@@ -80,6 +89,9 @@ def _get_previous_anaconda_downloads(output_folder, filename):
     }
     csv_path = get_path(output_folder, filename)
     previous = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
+    if not previous:
+        previous = pd.DataFrame(columns=ANACONDA_COLUMNS)
+        previous[TIME_COLUMN] = pd.to_datetime(previous[TIME_COLUMN])
     return previous
 
 
@@ -179,9 +191,12 @@ def collect_anaconda_downloads(
             pkg_names=projects,
         )
         if len(new_downloads) > 0:
-            # Keep only the newest data (on a per day basis) for all packages
-            previous = previous[previous[TIME_COLUMN].dt.date != iteration_datetime.date()]
-            previous = pd.concat([previous, new_downloads], ignore_index=True)
+            if len(previous) == 0:
+                previous = new_downloads
+            else:
+                # Keep only the newest data (on a per day basis) for all packages
+                previous = previous[previous[TIME_COLUMN].dt.date != iteration_datetime.date()]
+                previous = pd.concat([previous, new_downloads], ignore_index=True)
 
     previous = previous.sort_values(TIME_COLUMN)
     LOGGER.info('Obtained %s new downloads', all_downloads_count - len(previous))
