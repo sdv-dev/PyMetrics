@@ -85,7 +85,6 @@ def _summarize(args):
     summarize_downloads(
         projects=projects,
         vendors=vendors,
-        input_file=args.input_file,
         output_folder=output_folder,
         dry_run=args.dry_run,
         verbose=args.verbose,
@@ -127,7 +126,7 @@ def _get_parser():
     action = parser.add_subparsers(title='action')
     action.required = True
 
-    # collect
+    # collect PyPI
     collect_pypi = action.add_parser(
         'collect-pypi', help='Collect download data from PyPi.', parents=[logging_args]
     )
@@ -137,7 +136,7 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
             'Path to the folder where data will be stored. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
@@ -191,7 +190,7 @@ def _get_parser():
         help='Compute the aggregation metrics and create the corresponding spreadsheets.',
     )
 
-    # collect
+    # summarize
     summarize = action.add_parser(
         'summarize', help='Summarize the downloads data.', parents=[logging_args]
     )
@@ -204,24 +203,17 @@ def _get_parser():
         help='Path to the configuration file.',
     )
     summarize.add_argument(
-        '-i',
-        '--input-file',
-        type=str,
-        default=None,
-        help='Path to the pypi.csv. Default None, which means to use output-folder for pypi.csv',
-    )
-    summarize.add_argument(
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
-            'Path to the folder where data will be outputted. It can be a local path or a'
+            'Path to the folder where data will be pypi.csv exists. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )
 
-    # collect
+    # collect Anaconda
     collect_anaconda = action.add_parser(
         'collect-anaconda', help='Collect download data from Anaconda.', parents=[logging_args]
     )
@@ -237,7 +229,7 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
             'Path to the folder where data will be outputted. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'

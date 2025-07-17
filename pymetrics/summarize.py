@@ -142,6 +142,8 @@ def get_previous_pypi_downloads(input_file, output_folder):
     LOGGER.info('Parsing version column to Version class objects')
     if data and 'version' in data.columns:
         data['version'] = data['version'].apply(parse)
+    if not data:
+        data = pd.DataFrame()
     return data
 
 
@@ -223,7 +225,6 @@ def summarize_downloads(
     projects,
     vendors,
     output_folder,
-    input_file=None,
     dry_run=False,
     verbose=False,
 ):
