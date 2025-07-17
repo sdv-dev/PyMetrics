@@ -89,9 +89,6 @@ def _get_previous_anaconda_downloads(output_folder, filename):
     }
     csv_path = get_path(output_folder, filename)
     previous = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
-    if not previous:
-        previous = pd.DataFrame(columns=ANACONDA_COLUMNS)
-        previous[TIME_COLUMN] = pd.to_datetime(previous[TIME_COLUMN])
     return previous
 
 
