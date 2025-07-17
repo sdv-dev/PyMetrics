@@ -137,7 +137,7 @@ def _collect_ananconda_downloads_from_website(projects, output_folder):
 
 def collect_anaconda_downloads(
     projects,
-    input_folder,
+    output_folder,
     max_days=90,
     dry_run=False,
     verbose=False,
