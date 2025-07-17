@@ -259,7 +259,7 @@ def summarize_downloads(
             `gdrive://{folder_id}`.
 
     """
-    downloads = get_previous_pypi_downloads(input_file, output_folder)
+    downloads = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
 
     vendor_df = pd.DataFrame.from_records(vendors)
     all_df = _create_all_df()
