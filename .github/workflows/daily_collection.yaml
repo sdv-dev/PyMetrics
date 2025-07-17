@@ -43,7 +43,7 @@ jobs:
         uv run pymetrics collect-pypi \
           --max-days ${{ inputs.max_days_pypi || 30 }} \
           --add-metrics \
-          --output-folder $${{ secrets.PYPI_OUTPUT_FOLDER }}
+          --output-folder ${{ secrets.PYPI_OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
@@ -51,7 +51,7 @@ jobs:
     - name: Collect Anaconda Downloads
       run: |
         uv run pymetrics collect-anaconda \
-          --output-folder $${{ secrets.ANACONDA_OUTPUT_FOLDER }} \
+          --output-folder ${{ secrets.ANACONDA_OUTPUT_FOLDER }} \
           --max-days ${{ inputs.max_days_anaconda || 90 }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}

@@ -41,7 +41,7 @@ jobs:
       run: |
         uv run pymetrics collect-anaconda \
           --max-days 90 \
-          --output-folder $${{ secrets.ANACONDA_OUTPUT_FOLDER }} \
+          --output-folder ${{ secrets.ANACONDA_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
@@ -49,6 +49,8 @@ jobs:
     - name: Summarize - Dry Run
       run: |
         uv run pymetrics summarize \
+          --input-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+        PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}

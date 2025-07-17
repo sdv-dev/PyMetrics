@@ -30,7 +30,7 @@ jobs:
     - name: Run Summarize
       run: |
         uv run pymetrics summarize \
-          --input-folder $${{ secrets.PYPI_OUTPUT_FOLDER }}
+          --input-folder ${{ secrets.PYPI_OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}
