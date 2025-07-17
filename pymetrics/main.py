@@ -51,7 +51,9 @@ def collect_pypi_downloads(
     LOGGER.info(f'Collecting new downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
-    previous = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
+    previous = get_previous_pypi_downloads(
+        input_file=None, output_folder=output_folder, dry_run=dry_run
+    )
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,

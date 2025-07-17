@@ -2,6 +2,7 @@
 
 import logging
 import os
+import random
 
 import pandas as pd
 from packaging.version import Version, parse
@@ -110,7 +111,7 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
     return base_count + sum(parent_to_count.values()) + sum(dep_to_count.values())
 
 
-def get_previous_pypi_downloads(input_file, output_folder):
+def get_previous_pypi_downloads(input_file, output_folder, dry_run=False):
     """Read pypi.csv and return a DataFrame of the downloads.
 
     Args:
@@ -138,12 +139,12 @@ def get_previous_pypi_downloads(input_file, output_folder):
             'cpu': pd.CategoricalDtype(),
         },
     }
+    if dry_run:
+        read_csv_kwargs['nrows'] = 10_000
     data = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
     LOGGER.info('Parsing version column to Version class objects')
-    if data and 'version' in data.columns:
+    if 'version' in data.columns:
         data['version'] = data['version'].apply(parse)
-    if not data:
-        data = pd.DataFrame()
     return data
 
 
