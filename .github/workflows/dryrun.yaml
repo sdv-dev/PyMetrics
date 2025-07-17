@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   dry_run:
+    environment: dry
     runs-on: ubuntu-latest-large
     timeout-minutes: 25
     steps:
@@ -24,15 +25,12 @@ jobs:
           **/__main__.py
     - name: Install pip and dependencies
       run: |
-        uv pip install -U pip
         uv pip install .
     - name: Collect PyPI Downloads - Dry Run
       run: |
         uv run pymetrics collect-pypi \
-          --verbose \
           --max-days 30 \
           --add-metrics \
-          --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
@@ -40,17 +38,13 @@ jobs:
     - name: Collect Anaconda Downloads - Dry Run
       run: |
         uv run pymetrics collect-anaconda \
-          --output-folder gdrive://1UnDYovLkL4gletOF5328BG1X59mSHF-Z \
           --max-days 90 \
-          --verbose \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - name: Summarize - Dry Run
       run: |
         uv run pymetrics summarize \
-          --verbose \
-          --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}

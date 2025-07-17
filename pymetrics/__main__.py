@@ -235,11 +235,11 @@ def _get_parser():
     )
     collect_anaconda.add_argument(
         '-o',
-        '--output-folder',
+        '--input-folder',
         type=str,
         required=False,
         help=(
-            'Path to the folder where data will be outputted. It can be a local path or a'
+            'Path to the folder where pypi.csv exists. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )

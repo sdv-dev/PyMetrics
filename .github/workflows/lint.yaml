@@ -20,7 +20,6 @@ jobs:
         activate-environment: true
     - name: Install pip and dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Run lint checks
       run: uv run invoke lint

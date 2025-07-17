@@ -63,7 +63,9 @@ def collect_downloads(
         force=force,
     )
 
-    if pypi_downloads.empty:
+    if dry_run and pypi_downloads.empty:
+        LOGGER.info(f'dry_run={dry_run} thus no downloads were returned from BigQuery %s', csv_path)
+    elif pypi_downloads.empty:
         LOGGER.info('Not creating empty CSV file %s', csv_path)
     elif pypi_downloads.equals(previous):
         msg = f'Skipping update of unmodified CSV file {csv_path}'

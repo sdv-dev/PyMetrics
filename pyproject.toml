@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pymetrics"
-version = "0.0.1.dev0"
-description = "Scripts to extract metrics about OSS project downloads."
+version = "0.1.0"
+description = "Scripts to extract metrics about python project downloads."
 readme = "README.md"
 authors = [
     { name = "DataCebo", email = "info@datacebo.com" }
@@ -66,10 +66,29 @@ exclude = [
 
 [tool.ruff.lint]
 select = [
-    "F", "E", "W", "D", "I001", "T201", "PD", "NPY201"
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # pydocstyle
+    "D",
+    # isort
+    "I001",
+    # print statements
+    "T201",
+    # pandas-vet
+    "PD",
+    # numpy 2.0
+    "NPY201"
+
 ]
 ignore = [
-    "D107", "D417", "PD901", "PD101"
+    # pydocstyle
+    "D107",  # Missing docstring in __init__
+    "D417",   # Missing argument descriptions in the docstring, this is a bug from pydocstyle: https://github.com/PyCQA/pydocstyle/issues/449
+    "PD901",
+    "PD101",
 ]
 
 [tool.ruff.format]

@@ -12,6 +12,7 @@ on:
 
 jobs:
   summarize:
+    environment: prod
     runs-on: ubuntu-latest-large
     timeout-minutes: 10
     steps:
@@ -25,15 +26,14 @@ jobs:
           **/pyproject.toml
           **/__main__.py
     - name: Install pip and dependencies
-      run: |
-        uv pip install -U pip
-        uv pip install .
+      run: uv pip install .
     - name: Run Summarize
       run: |
         uv run pymetrics summarize \
-          --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
+          --input-folder $${{ secrets.PYPI_OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+        PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}
     - uses: actions/checkout@v4
       with:
         repository: sdv-dev/sdv-dev.github.io
@@ -63,13 +63,12 @@ jobs:
         activate-environment: true
     - name: Install pip and dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Slack alert if failure
       run: |
         uv run python -m pymetrics.slack_utils \
         -r ${{ github.run_id }} \
         -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-        -m 'Summarize Analytics build failed :fire: :dumpster-fire: :fire:'
+        -m 'Daily Summarize PyMetrics failed :fire: :dumpster-fire: :fire:'
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}

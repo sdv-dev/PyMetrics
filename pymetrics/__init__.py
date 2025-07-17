@@ -1,1 +1,1 @@
-"""Scripts to extract metrics about OSS project downloads."""
+"""Scripts to extract metrics about python project downloads."""

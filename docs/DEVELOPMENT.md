@@ -74,7 +74,7 @@ metric spreadsheets would look like this:
 
 ```bash
 $ pymetrics collect-pypi --verbose --projects sdv ctgan --start-date 2021-01-01 \
-        --add-metrics --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
+        --add-metrics --output-folder 'gdrive://{folder_id}'
 ```
 
 For more details about the data that this would collect and which files would be generated
@@ -97,8 +97,7 @@ collect_downloads(projects, output_folder, start_date=None, max_days=1, credenti
             List of projects to analyze.
         output_folder (str):
             Folder in which project downloads will be stored.
-            It can be passed as a local folder or as a Google Drive path in the format
-            `gdrive://{folder_id}`.
+            It can be passed as a local folder or as a Google Drive path in the format `gdrive://{folder_id}`.
         start_date (datetime or None):
             Date from which to start collecting data. If `None`,
             start_date will be current date - `max_days`.

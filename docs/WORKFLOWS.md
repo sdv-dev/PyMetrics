@@ -16,7 +16,7 @@ The configuration about which libraries are collected is written in the [config.
 
 ```yaml
 # Name or Google Drive ID of the output folder
-output-path: gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
+output-path: gdrive://{folder_id}
 
 # Maximum number of days to include in the query
 max-days: 7
