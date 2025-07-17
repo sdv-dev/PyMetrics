@@ -6,8 +6,8 @@ import os
 import pandas as pd
 from packaging.version import Version, parse
 
-from download_analytics.output import append_row, create_spreadsheet, get_path, load_csv
-from download_analytics.time_utils import get_current_year, get_min_max_dt_in_year
+from pymetrics.output import append_row, create_spreadsheet, get_path, load_csv
+from pymetrics.time_utils import get_current_year, get_min_max_dt_in_year
 
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 ECOSYSTEM_COLUMN_NAME = 'Ecosystem'

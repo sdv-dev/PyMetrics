@@ -83,7 +83,7 @@ have a look at the [COLLECTED_DATA.md](COLLECTED_DATA.md) document.
 ## Python Interface
 
 The Python entry point that is equivalent to the CLI explained above is the function
-`download_analytics.main.collect_downloads`.
+`pymetrics.main.collect_downloads`.
 
 This function has the following interface:
 

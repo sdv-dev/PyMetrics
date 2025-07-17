@@ -9,9 +9,9 @@ from datetime import datetime
 
 import yaml
 
-from download_analytics.anaconda import collect_anaconda_downloads
-from download_analytics.main import collect_downloads
-from download_analytics.summarize import summarize_downloads
+from pymetrics.anaconda import collect_anaconda_downloads
+from pymetrics.main import collect_downloads
+from pymetrics.summarize import summarize_downloads
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def _env_setup(logfile, verbosity):
     format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger('download_analytics').setLevel(level)
+    logging.getLogger('pymetrics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 

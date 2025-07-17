@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 
-from download_analytics.bq import run_query
+from pymetrics.bq import run_query
 
 LOGGER = logging.getLogger(__name__)
 

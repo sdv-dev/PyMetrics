@@ -2,10 +2,10 @@
 
 import logging
 
-from download_analytics.metrics import compute_metrics
-from download_analytics.output import create_csv, get_path
-from download_analytics.pypi import get_pypi_downloads
-from download_analytics.summarize import get_previous_pypi_downloads
+from pymetrics.metrics import compute_metrics
+from pymetrics.output import create_csv, get_path
+from pymetrics.pypi import get_pypi_downloads
+from pymetrics.summarize import get_previous_pypi_downloads
 
 LOGGER = logging.getLogger(__name__)
 

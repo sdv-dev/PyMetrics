@@ -34,10 +34,10 @@ dependencies = [
 Homepage = "https://github.com/DataCebo/pymetrics"
 
 [project.scripts]
-pymetrics = "download_analytics.__main__:main"
+pymetrics = "pymetrics.__main__:main"
 
 [tool.setuptools.packages.find]
-include = ['download_analytics', 'download_analytics.*']
+include = ['pymetrics', 'pymetrics.*']
 
 [project.optional-dependencies]
 dev = [
@@ -53,7 +53,7 @@ test = [
 preview = true
 line-length = 100
 indent-width = 4
-src = ["download_analytics"]
+src = ["pymetrics"]
 target-version = "py313"
 exclude = [
     "docs",
@@ -80,7 +80,7 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 
 [tool.ruff.lint.isort]
-known-first-party = ["download_analytics"]
+known-first-party = ["pymetrics"]
 lines-between-types = 0
 
 [tool.ruff.lint.per-file-ignores]

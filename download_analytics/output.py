@@ -6,7 +6,7 @@ import pathlib
 
 import pandas as pd
 
-from download_analytics import drive
+from pymetrics import drive
 
 LOGGER = logging.getLogger(__name__)
 

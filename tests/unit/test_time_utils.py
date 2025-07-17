@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from download_analytics.time_utils import (
+from pymetrics.time_utils import (
     drop_duplicates_by_date,
     get_current_year,
     get_first_datetime_in_year,
