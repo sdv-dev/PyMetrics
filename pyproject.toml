@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "download-analytics"
+name = "pymetrics"
 version = "0.0.1.dev0"
 description = "Scripts to extract metrics about OSS project downloads."
 readme = "README.md"
@@ -31,10 +31,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DataCebo/download-analytics"
+Homepage = "https://github.com/DataCebo/pymetrics"
 
 [project.scripts]
-download-analytics = "download_analytics.__main__:main"
+pymetrics = "download_analytics.__main__:main"
 
 [tool.setuptools.packages.find]
 include = ['download_analytics', 'download_analytics.*']

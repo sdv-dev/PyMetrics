@@ -30,7 +30,7 @@ jobs:
         uv pip install .
     - name: Run Summarize
       run: |
-        uv run download-analytics summarize \
+        uv run pymetrics summarize \
           --output-folder gdrive://10QHbqyvptmZX4yhu2Y38YJbVHqINRr0n
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}

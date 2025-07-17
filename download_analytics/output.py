@@ -118,7 +118,7 @@ def create_csv(output_path, data):
 
 
 def load_spreadsheet(spreadsheet):
-    """Load a spreadsheet previously created by download-analytics.
+    """Load a spreadsheet previously created by pymetrics.
 
     Args:
         spreadsheet (str or stream):
@@ -154,7 +154,7 @@ def load_spreadsheet(spreadsheet):
 
 
 def load_csv(csv_path, read_csv_kwargs=None):
-    """Load a CSV previously created by download-analytics.
+    """Load a CSV previously created by pymetrics.
 
     Args:
         csv_path (str):

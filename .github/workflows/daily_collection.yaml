@@ -40,7 +40,7 @@ jobs:
         uv pip install .
     - name: Collect PyPI Downloads
       run: |
-        uv run download-analytics collect-pypi \
+        uv run pymetrics collect-pypi \
           --verbose \
           --max-days ${{ inputs.max_days_pypi || 30 }} \
           --add-metrics \
@@ -50,7 +50,7 @@ jobs:
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
     - name: Collect Anaconda Downloads
       run: |
-        uv run download-analytics collect-anaconda \
+        uv run pymetrics collect-anaconda \
           --output-folder gdrive://1UnDYovLkL4gletOF5328BG1X59mSHF-Z \
           --max-days ${{ inputs.max_days_anaconda || 90 }} \
           --verbose

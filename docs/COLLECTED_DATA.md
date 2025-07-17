@@ -51,7 +51,7 @@ the given time period, with the following columns:
 
 ## Aggregation Metrics
 
-If the `--add-metrics` option is passed to `download-analytics`, a spreadsheet with aggregation
+If the `--add-metrics` option is passed to `pymetrics`, a spreadsheet with aggregation
 metrics will be created alongside the raw PyPI downloads CSV file for each individual project.
 
 The aggregation metrics spreasheets contain the following tabs:

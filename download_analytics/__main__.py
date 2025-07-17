@@ -119,7 +119,7 @@ def _get_parser():
         help='Do not upload the results. Just calculate them.',
     )
     parser = argparse.ArgumentParser(
-        prog='download-analytics',
+        prog='pymetrics',
         description='Download Analytics Command Line Interface',
         parents=[logging_args],
     )
