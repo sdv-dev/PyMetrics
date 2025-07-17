@@ -49,7 +49,7 @@ jobs:
     - name: Summarize - Dry Run
       run: |
         uv run pymetrics summarize \
-          --input-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
+          --output-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
