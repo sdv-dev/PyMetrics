@@ -2,7 +2,6 @@
 
 import logging
 import os
-import random
 
 import pandas as pd
 from packaging.version import Version, parse
