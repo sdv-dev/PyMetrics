@@ -48,7 +48,7 @@ def _load_config(config_path):
 def _collect_pypi(args):
     config = _load_config(args.config_file)
     projects = args.projects or config['projects']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
     max_days = args.max_days or config.get('max-days')
 
     collect_downloads(
@@ -66,7 +66,7 @@ def _collect_pypi(args):
 def _collect_anaconda(args):
     config = _load_config(args.config_file)
     projects = config['projects']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
     collect_anaconda_downloads(
         projects=projects,
         output_folder=output_folder,
@@ -80,7 +80,7 @@ def _summarize(args):
     config = _load_config(args.config_file)
     projects = config['projects']
     vendors = config['vendors']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
 
     summarize_downloads(
         projects=projects,
@@ -235,11 +235,11 @@ def _get_parser():
     )
     collect_anaconda.add_argument(
         '-o',
-        '--input-folder',
+        '--output-folder',
         type=str,
         required=False,
         help=(
-            'Path to the folder where pypi.csv exists. It can be a local path or a'
+            'Path to the folder where data will be outputted. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )
