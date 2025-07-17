@@ -110,7 +110,7 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
     return base_count + sum(parent_to_count.values()) + sum(dep_to_count.values())
 
 
-def get_previous_pypi_downloads(input_file, output_folder, dry_run=False):
+def get_previous_pypi_downloads(output_folder, dry_run=False):
     """Read pypi.csv and return a DataFrame of the downloads.
 
     Args:
@@ -120,7 +120,7 @@ def get_previous_pypi_downloads(input_file, output_folder, dry_run=False):
             pypi.csv file to use.
 
     """
-    csv_path = input_file or get_path(output_folder, 'pypi.csv')
+    csv_path = get_path(output_folder, 'pypi.csv')
     read_csv_kwargs = {
         'parse_dates': ['timestamp'],
         'dtype': {
@@ -259,7 +259,7 @@ def summarize_downloads(
             `gdrive://{folder_id}`.
 
     """
-    downloads = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
+    downloads = get_previous_pypi_downloads(output_folder=output_folder)
 
     vendor_df = pd.DataFrame.from_records(vendors)
     all_df = _create_all_df()
