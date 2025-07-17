@@ -10,7 +10,7 @@ from datetime import datetime
 import yaml
 
 from pymetrics.anaconda import collect_anaconda_downloads
-from pymetrics.main import collect_downloads
+from pymetrics.main import collect_pypi_downloads
 from pymetrics.summarize import summarize_downloads
 
 LOGGER = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ def _collect_pypi(args):
     output_folder = args.output_folder
     max_days = args.max_days or config.get('max-days')
 
-    collect_downloads(
+    collect_pypi_downloads(
         projects=projects,
         start_date=args.start_date,
         output_folder=output_folder,

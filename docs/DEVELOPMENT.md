@@ -83,12 +83,12 @@ have a look at the [COLLECTED_DATA.md](COLLECTED_DATA.md) document.
 ## Python Interface
 
 The Python entry point that is equivalent to the CLI explained above is the function
-`pymetrics.main.collect_downloads`.
+`pymetrics.main.collect_pypi_downloads`.
 
 This function has the following interface:
 
 ```
-collect_downloads(projects, output_folder, start_date=None, max_days=1, credentials_file=None,
+collect_pypi_downloads(projects, output_folder, start_date=None, max_days=1, credentials_file=None,
                   dry_run=False, force=False, add_metrics=True)
     Pull data about the downloads of a list of projects.
 
@@ -137,7 +137,7 @@ following modules:
 * `bq.py`: Implements the code to run queries on Big Query.
 * `drive.py`: Implements the functions to upload files to and download files from Google Drive.
 * `__main__.py`: Implements the Command Line Interface of the project.
-* `main.py`: Implements the `collect_downloads` function.
+* `main.py`: Implements the `collect_pypi_downloads` function.
 * `metrics.py`: Implements the functions to compute the aggregation metrics and trigger the
   creation of the corresponding spreadsheets.
 * `output.py`: Implements the functions to read and write CSV files and spreadsheets, both

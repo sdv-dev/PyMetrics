@@ -10,7 +10,7 @@ from pymetrics.summarize import get_previous_pypi_downloads
 LOGGER = logging.getLogger(__name__)
 
 
-def collect_downloads(
+def collect_pypi_downloads(
     projects,
     output_folder,
     start_date=None,
