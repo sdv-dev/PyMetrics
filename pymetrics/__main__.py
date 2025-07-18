@@ -10,7 +10,7 @@ from datetime import datetime
 import yaml
 
 from pymetrics.anaconda import collect_anaconda_downloads
-from pymetrics.main import collect_downloads
+from pymetrics.main import collect_pypi_downloads
 from pymetrics.summarize import summarize_downloads
 
 LOGGER = logging.getLogger(__name__)
@@ -48,10 +48,10 @@ def _load_config(config_path):
 def _collect_pypi(args):
     config = _load_config(args.config_file)
     projects = args.projects or config['projects']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
     max_days = args.max_days or config.get('max-days')
 
-    collect_downloads(
+    collect_pypi_downloads(
         projects=projects,
         start_date=args.start_date,
         output_folder=output_folder,
@@ -66,7 +66,7 @@ def _collect_pypi(args):
 def _collect_anaconda(args):
     config = _load_config(args.config_file)
     projects = config['projects']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
     collect_anaconda_downloads(
         projects=projects,
         output_folder=output_folder,
@@ -80,12 +80,11 @@ def _summarize(args):
     config = _load_config(args.config_file)
     projects = config['projects']
     vendors = config['vendors']
-    output_folder = args.output_folder or config.get('output-folder', '.')
+    output_folder = args.output_folder
 
     summarize_downloads(
         projects=projects,
         vendors=vendors,
-        input_file=args.input_file,
         output_folder=output_folder,
         dry_run=args.dry_run,
         verbose=args.verbose,
@@ -127,7 +126,7 @@ def _get_parser():
     action = parser.add_subparsers(title='action')
     action.required = True
 
-    # collect
+    # collect PyPI
     collect_pypi = action.add_parser(
         'collect-pypi', help='Collect download data from PyPi.', parents=[logging_args]
     )
@@ -137,7 +136,7 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
             'Path to the folder where data will be stored. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
@@ -191,7 +190,7 @@ def _get_parser():
         help='Compute the aggregation metrics and create the corresponding spreadsheets.',
     )
 
-    # collect
+    # summarize
     summarize = action.add_parser(
         'summarize', help='Summarize the downloads data.', parents=[logging_args]
     )
@@ -204,24 +203,17 @@ def _get_parser():
         help='Path to the configuration file.',
     )
     summarize.add_argument(
-        '-i',
-        '--input-file',
-        type=str,
-        default=None,
-        help='Path to the pypi.csv. Default None, which means to use output-folder for pypi.csv',
-    )
-    summarize.add_argument(
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
-            'Path to the folder where data will be outputted. It can be a local path or a'
+            'Path to the folder where data will be pypi.csv exists. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'
         ),
     )
 
-    # collect
+    # collect Anaconda
     collect_anaconda = action.add_parser(
         'collect-anaconda', help='Collect download data from Anaconda.', parents=[logging_args]
     )
@@ -237,7 +229,7 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
+        required=True,
         help=(
             'Path to the folder where data will be outputted. It can be a local path or a'
             ' Google Drive folder path in the format gdrive://<folder-id>'

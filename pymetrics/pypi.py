@@ -129,7 +129,6 @@ def get_pypi_downloads(
     if previous is not None:
         if isinstance(projects, str):
             projects = (projects,)
-
         previous_projects = previous[previous.project.isin(projects)]
         min_date = previous_projects.timestamp.min().date()
         max_date = previous_projects.timestamp.max().date()

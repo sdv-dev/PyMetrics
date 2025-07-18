@@ -26,7 +26,6 @@ jobs:
           activate-environment: true
       - name: Install pip and dependencies
         run: |
-          uv pip install -U pip
           uv pip install -e .[test,dev]
       - name: Run summarize
         run: |

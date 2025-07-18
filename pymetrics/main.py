@@ -10,7 +10,7 @@ from pymetrics.summarize import get_previous_pypi_downloads
 LOGGER = logging.getLogger(__name__)
 
 
-def collect_downloads(
+def collect_pypi_downloads(
     projects,
     output_folder,
     start_date=None,
@@ -51,7 +51,7 @@ def collect_downloads(
     LOGGER.info(f'Collecting new downloads for projects={projects}')
 
     csv_path = get_path(output_folder, 'pypi.csv')
-    previous = get_previous_pypi_downloads(input_file=None, output_folder=output_folder)
+    previous = get_previous_pypi_downloads(output_folder=output_folder, dry_run=dry_run)
 
     pypi_downloads = get_pypi_downloads(
         projects=projects,
@@ -63,7 +63,9 @@ def collect_downloads(
         force=force,
     )
 
-    if pypi_downloads.empty:
+    if dry_run and pypi_downloads.empty:
+        LOGGER.info(f'dry_run={dry_run} thus no downloads were returned from BigQuery %s', csv_path)
+    elif pypi_downloads.empty:
         LOGGER.info('Not creating empty CSV file %s', csv_path)
     elif pypi_downloads.equals(previous):
         msg = f'Skipping update of unmodified CSV file {csv_path}'

@@ -110,17 +110,21 @@ def _sum_counts(base_count, dep_to_count, parent_to_count):
     return base_count + sum(parent_to_count.values()) + sum(dep_to_count.values())
 
 
-def get_previous_pypi_downloads(input_file, output_folder):
+def get_previous_pypi_downloads(output_folder, dry_run=False):
     """Read pypi.csv and return a DataFrame of the downloads.
 
     Args:
-        input_file (str): Location of the pypi.csv to use as the previous downloads.
-
         output_folder (str): If input_file is None, this directory location must contain
             pypi.csv file to use.
 
+        dry_run (bool): If True, will reduce the number of rows read. Defaults to False,
+            which will read all rows.
+
+    Returns:
+        pd.DataFrame: The DataFrame containing the PyPI download data.
+
     """
-    csv_path = input_file or get_path(output_folder, 'pypi.csv')
+    csv_path = get_path(output_folder, 'pypi.csv')
     read_csv_kwargs = {
         'parse_dates': ['timestamp'],
         'dtype': {
@@ -138,9 +142,12 @@ def get_previous_pypi_downloads(input_file, output_folder):
             'cpu': pd.CategoricalDtype(),
         },
     }
+    if dry_run:
+        read_csv_kwargs['nrows'] = 10_000
     data = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
     LOGGER.info('Parsing version column to Version class objects')
-    data['version'] = data['version'].apply(parse)
+    if 'version' in data.columns:
+        data['version'] = data['version'].apply(parse)
     return data
 
 
@@ -222,7 +229,6 @@ def summarize_downloads(
     projects,
     vendors,
     output_folder,
-    input_file=None,
     dry_run=False,
     verbose=False,
 ):
@@ -257,7 +263,7 @@ def summarize_downloads(
             `gdrive://{folder_id}`.
 
     """
-    downloads = get_previous_pypi_downloads(input_file, output_folder)
+    downloads = get_previous_pypi_downloads(output_folder=output_folder)
 
     vendor_df = pd.DataFrame.from_records(vendors)
     all_df = _create_all_df()

@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   dry_run:
+    environment: stage
     runs-on: ubuntu-latest-large
     timeout-minutes: 25
     steps:
@@ -24,33 +25,32 @@ jobs:
           **/__main__.py
     - name: Install pip and dependencies
       run: |
-        uv pip install -U pip
         uv pip install .
     - name: Collect PyPI Downloads - Dry Run
       run: |
         uv run pymetrics collect-pypi \
-          --verbose \
           --max-days 30 \
           --add-metrics \
-          --output-folder gdrive://***REMOVED*** \
+          --output-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
+        PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}
     - name: Collect Anaconda Downloads - Dry Run
       run: |
         uv run pymetrics collect-anaconda \
-          --output-folder gdrive://***REMOVED***-Z \
           --max-days 90 \
-          --verbose \
+          --output-folder ${{ secrets.ANACONDA_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+        ANACONDA_OUTPUT_FOLDER: ${{ secrets.ANACONDA_OUTPUT_FOLDER }}
     - name: Summarize - Dry Run
       run: |
         uv run pymetrics summarize \
-          --verbose \
-          --output-folder gdrive://***REMOVED*** \
+          --output-folder ${{ secrets.PYPI_OUTPUT_FOLDER }} \
           --dry-run
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+        PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}

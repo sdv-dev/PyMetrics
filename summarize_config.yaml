@@ -1,4 +1,3 @@
-output-folder: gdrive://***REMOVED***
 projects:
   - ecosystem: "sdv"
     base_project: "sdv"
