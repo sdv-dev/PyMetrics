@@ -64,16 +64,6 @@ Installing the main SDV library also installs all the other libraries as depende
 
 This methodology prevents double-counting downloads while providing an accurate representation of SDV usage.
 
-## Resources
-For more information about the configuration, workflows, and metrics, see the resources below.
-|               | Document                            | Description |
-| ------------- | ----------------------------------- | ----------- |
-| :pilot:       | [WORKFLOWS](docs/WORKFLOWS.md)           | How to collect data and add new libraries to the GitHub actions. |
-| :gear:        | [SETUP](docs/SETUP.md)                   | How to generate credentials to access BigQuery and Google Drive and add them to GitHub Actions. |
-| :keyboard:    | [DEVELOPMENT](docs/DEVELOPMENT.md)       | How to install and run the scripts locally. Overview of the project implementation. |
-| :floppy_disk: | [COLLECTED DATA](docs/COLLECTED_DATA.md) | Explanation about the data that is being collected. |
-
-
 ## Known Issues
 1. The conda package download data for Anaconda does not match the download count shown on the website. This is due to missing download data in the conda package download data. See this: https://github.com/anaconda/anaconda-package-data/issues/45
 
