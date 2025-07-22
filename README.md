@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 <p align="center">
-    <i>This repository is part of <a href="https://sdv.dev">The Synthetic Data Vault Project</a>, a project from <a href="https://datacebo.com">DataCebo</a>.</i>
+    <i>An open source project by Engineering at <a href="https://datacebo.com">DataCebo</a>.</i>
 </p>
 
 [![Dev Status](https://img.shields.io/badge/Dev%20Status-5%20--%20Production%2fStable-green)](https://pypi.org/search/?c=Development+Status+%3A%3A+5+-+Production%2FStable)
@@ -79,28 +79,3 @@ This methodology prevents double-counting downloads while providing an accurate 
 
 ## Known Issues
 1. The conda package download data for Anaconda does not match the download count shown on the website. This is due to missing download data in the conda package download data. See this: https://github.com/anaconda/anaconda-package-data/issues/45
-
----
-
-<div align="left">
-<br/>
-<p align="center">
-<a href="https://github.com/sdv-dev/SDV">
-<img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/SDV-logo.png"></img>
-</a>
-</p>
-</div>
-
-</div>
-
-[The Synthetic Data Vault Project](https://sdv.dev) was first created at MIT's [Data to AI Lab](
-https://dai.lids.mit.edu/) in 2016. After 4 years of research and traction with enterprise, we
-created [DataCebo](https://datacebo.com) in 2020 with the goal of growing the project.
-Today, DataCebo is the proud developer of SDV, the largest ecosystem for
-synthetic data generation & evaluation. It is home to multiple libraries that support synthetic
-data, including:
-
-* 🔄 Data discovery & transformation. Reverse the transforms to reproduce realistic data.
-* 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
-  multi table and time series data.
-* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
