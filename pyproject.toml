@@ -41,7 +41,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DataCebo/pymetrics"
+Homepage = "https://github.com/sdv-dev/pymetrics"
 
 [project.scripts]
 pymetrics = "pymetrics.__main__:main"
