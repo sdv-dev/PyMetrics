@@ -20,7 +20,7 @@ classifiers = [
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.13',
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering",
 ]
 dependencies = [
     "pandas>=2.2.3",
