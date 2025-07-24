@@ -25,6 +25,7 @@ SELECT
     details.system.name             as system_name,
     details.system.release          as system_release,
     details.cpu                     as cpu,
+    details.ci                      as ci,
 FROM `bigquery-public-data.pypi.file_downloads`
 WHERE file.project in {projects}
     AND timestamp > '{start_date}'
@@ -44,6 +45,7 @@ OUTPUT_COLUMNS = [
     'system_name',
     'system_release',
     'cpu',
+    'ci',
 ]
 
 
@@ -129,9 +131,9 @@ def get_pypi_downloads(
     if previous is not None:
         if isinstance(projects, str):
             projects = (projects,)
-        previous_projects = previous[previous.project.isin(projects)]
-        min_date = previous_projects.timestamp.min().date()
-        max_date = previous_projects.timestamp.max().date()
+        previous_projects = previous[previous['project'].isin(projects)]
+        min_date = previous_projects['timestamp'].min().date()
+        max_date = previous_projects['timestamp'].max().date()
     else:
         previous = pd.DataFrame(columns=OUTPUT_COLUMNS)
         min_date = None

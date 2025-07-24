@@ -140,6 +140,7 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
             'system_name': pd.CategoricalDtype(),
             'system_release': pd.CategoricalDtype(),
             'cpu': pd.CategoricalDtype(),
+            'ci': pd.BooleanDtype(),
         },
     }
     if dry_run:
@@ -148,6 +149,9 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
     LOGGER.info('Parsing version column to Version class objects')
     if 'version' in data.columns:
         data['version'] = data['version'].apply(parse)
+    if 'PROJECT' in data.columns:
+        data = data.rename(columns={'PROJECT': 'project'})
+        data['project'] = data['project'].astype('category')
     return data
 
 

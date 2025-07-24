@@ -11,7 +11,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _groupby(downloads, groupby, index_name=None, percent=True):
-    grouped = downloads.groupby(groupby).size().reset_index()
+    grouped = downloads.groupby(groupby, dropna=False).size().reset_index()
     grouped.columns = [index_name or groupby, 'downloads']
     if percent:
         grouped['percent'] = (grouped.downloads * 100 / grouped.downloads.sum()).round(3)
@@ -78,6 +78,7 @@ GROUPBY_COLUMNS = [
     'distro_kernel',
     'OS_type',
     'cpu',
+    'ci',
 ]
 SORT_BY_DOWNLOADS = [
     'country_code',
