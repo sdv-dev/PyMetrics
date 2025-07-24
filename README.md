@@ -55,7 +55,7 @@ pip install git+ssh://git@github.com/sdv-dev/pymetrics
 ```
 
 ## Local Usage
-Collect metrics from PyPI by running `gitmetrics` on your computer. You need to provide the following:
+Collect metrics from PyPI by running `pymetrics` on your computer. You need to provide the following:
 
 1. BigQuery Credentials. In order to get PyPI download data, you need to execute queries on Google BigQuery.
   Therefore, you will need an authentication JSON file, which must be provided to you by a privileged admin.
