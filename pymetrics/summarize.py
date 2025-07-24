@@ -149,9 +149,6 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
     LOGGER.info('Parsing version column to Version class objects')
     if 'version' in data.columns:
         data['version'] = data['version'].apply(parse)
-    if 'PROJECT' in data.columns:
-        data = data.rename(columns={'PROJECT': 'project'})
-        data['project'] = data['project'].astype('category')
     return data
 
 
