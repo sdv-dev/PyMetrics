@@ -175,8 +175,7 @@ def _get_parser():
         '--max-days',
         type=int,
         required=False,
-        default=30,
-        help='Max days of data to pull if start-date is not given. Default to last 30 days.',
+        help='Max days of data to pull if start-date is not given',
     )
     collect_pypi.add_argument(
         '-f',
