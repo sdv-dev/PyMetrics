@@ -76,15 +76,7 @@ pymetrics collect-pypi --max-days 30 --add-metrics --output-folder {OUTPUT_FOLDE
 ## Workflows
 
 ### Daily Collection
-On a daily basis, this workflow collects download data from PyPI and Anaconda. The data is then published in CSV format (`pypi.csv`). In addition, it computes metrics for the PyPI downloads (see below).
-
-#### Metrics
-This PyPI download metrics are computed along several dimensions:
-
-- **By Month**: The number of downloads per month.
-- **By Version**: The number of downloads per version of the software, as determined by the software maintainers.
-- **By Python Version**: The number of downloads per minor Python version (eg. 3.8).
-- **And more!**
+On a daily basis, this workflow collects download data from PyPI and Anaconda. The data is then published in CSV format (`pypi.csv`). In addition, it computes metrics for the PyPI downloads (see [#Aggregation Metrics](#aggregation-metrics))
 
 ### Daily Summarize
 
