@@ -61,11 +61,11 @@ Collect metrics from PyPI by running `pymetrics` on your computer. You need to p
   Therefore, you will need an authentication JSON file, which must be provided to you by a privileged admin.
   Once you have this JSON file, export the contents of the credentials file into a
   `BIGQUERY_CREDENTIALS` environment variable.
-2. A set of Google Drive Credentials need to be provided in the format required by `PyDrive`. The
-   credentials must be passed via the `PYDRIVE_CREDENTIALS` environment variable.
-   - See [instructions from PyDrive](https://pythonhosted.org/PyDrive/quickstart.html).
-3. A list of PyPI projects for which to collect the download metrics, defined in a YAML file.
+2. A list of PyPI projects for which to collect the download metrics, defined in a YAML file.
    See [config.yaml](./config.yaml) for an example.
+3. Optional. A set of Google Drive Credentials can be provided in the format required by `PyDrive`. The
+   credentials can be passed via the `PYDRIVE_CREDENTIALS` environment variable.
+   - See [instructions from PyDrive](https://pythonhosted.org/PyDrive/quickstart.html).
 
 You can run pymetrics with the following CLI command:
 
