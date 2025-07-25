@@ -44,9 +44,8 @@ Currently, the download data is collected from the following distributions:
       - Replace `{package_name}` with the specific package (`sdv`) in the Anaconda channel
     - For each file returned by the API endpoint, the current number of downloads is saved. Over time, a historical download recording can be built.
 
-### Future Data Sources
-In the future, we may expand the source distributions to include:
-* [GitHub Releases](https://github.com/): Information about the project downloads from GitHub releases.
+* [GitHub Releases](https://github.com/): Information about the project downloads from GitHub release assets.
+  See this [GitHub API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-a-release).
 
 # Install
 Install pymetrics using pip (or uv):

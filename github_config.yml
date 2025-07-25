@@ -1,0 +1,28 @@
+projects:
+  sdv-dev:
+  - sdv-dev/SDV
+  - sdv-dev/RDT
+  - sdv-dev/SDMetrics
+  - sdv-dev/SDGym
+  - sdv-dev/Copulas
+  - sdv-dev/CTGAN
+  - sdv-dev/DeepEcho
+  gretel:
+  - gretelai/gretel-python-client
+  - gretelai/trainer
+  - gretelai/gretel-synthetics
+  mostly-ai:
+  - mostly-ai/mostlyai
+  - mostly-ai/mostlyai-mock
+  ydata:
+  - ydataai/ydata-synthetic
+  - ydataai/ydata-quality
+  - ydataai/ydata-fabric-sdk
+  realtabformer:
+  - worldbank/REaLTabFormer
+  synthcity:
+  - vanderschaarlab/synthcity
+  smartnoise-sdk:
+  - opendp/smartnoise-sdk
+  be_great:
+  - kathrinse/be_great
