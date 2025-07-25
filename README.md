@@ -78,7 +78,7 @@ pymetrics collect-pypi --max-days 30 --add-metrics --output-folder {OUTPUT_FOLDE
 ### Daily Collection
 On a daily basis, this workflow collects download data from PyPI and Anaconda. The data is then published in CSV format (`pypi.csv`). In addition, it computes metrics for the PyPI downloads (see [#Aggregation Metrics](#aggregation-metrics))
 
-### Daily Summarize
+### Daily Summarization
 
 On a daily basis, this workflow summarizes the PyPI download data from `pypi.csv` and calculates downloads for libraries. The summarized data is published to a GitHub repo:
 - [Downloads_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/Downloads_Summary.xlsx)
