@@ -97,7 +97,7 @@ def upload(content, filename, folder, convert=False):
 
     drive_file.content = content
     drive_file.Upload({'convert': convert})
-    LOGGER.info('Uploaded file %s', drive_file.metadata['alternateLink'])
+    LOGGER.info(f'Uploaded filename {filename}')
 
 
 def download(folder, filename, xlsx=False):

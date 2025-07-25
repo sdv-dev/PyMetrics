@@ -34,8 +34,8 @@ def get_path(folder, filename):
     return str(pathlib.Path(folder) / filename)
 
 
-def _add_sheet(writer, data, sheet_name):
-    data.to_excel(writer, sheet_name=sheet_name, index=False, engine='xlsxwriter')
+def _add_sheet(writer, data, sheet_name, na_rep=''):
+    data.to_excel(writer, sheet_name=sheet_name, index=False, engine='xlsxwriter', na_rep=na_rep)
 
     for column in data:
         column_length = None
@@ -51,7 +51,7 @@ def _add_sheet(writer, data, sheet_name):
         )
 
 
-def create_spreadsheet(output_path, sheets):
+def create_spreadsheet(output_path, sheets, na_rep=''):
     """Create a spreadsheet with the indicated name and data.
 
     If the ``output_path`` variable starts with ``gdrive://`` it is interpreted
@@ -74,11 +74,11 @@ def create_spreadsheet(output_path, sheets):
 
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:  # pylint: disable=E0110
         for title, data in sheets.items():
-            _add_sheet(writer, data, title)
+            _add_sheet(writer, data, title, na_rep=na_rep)
 
     if drive.is_drive_path(output_path):
-        LOGGER.info('Creating file %s', output_path)
         folder, filename = drive.split_drive_path(output_path)
+        LOGGER.info(f'Creating filename {filename}')
         drive.upload(output, filename, folder, convert=True)
     else:
         if not output_path.endswith('.xlsx'):

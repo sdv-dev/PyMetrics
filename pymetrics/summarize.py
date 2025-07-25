@@ -140,14 +140,14 @@ def get_previous_pypi_downloads(output_folder, dry_run=False):
             'system_name': pd.CategoricalDtype(),
             'system_release': pd.CategoricalDtype(),
             'cpu': pd.CategoricalDtype(),
+            'ci': pd.BooleanDtype(),
         },
     }
     if dry_run:
         read_csv_kwargs['nrows'] = 10_000
     data = load_csv(csv_path, read_csv_kwargs=read_csv_kwargs)
     LOGGER.info('Parsing version column to Version class objects')
-    if 'version' in data.columns:
-        data['version'] = data['version'].apply(parse)
+    data['version'] = data['version'].apply(parse)
     return data
 
 

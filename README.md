@@ -48,20 +48,37 @@ Currently, the download data is collected from the following distributions:
 In the future, we may expand the source distributions to include:
 * [GitHub Releases](https://github.com/): Information about the project downloads from GitHub releases.
 
+# Install
+Install pymetrics using pip (or uv):
+```shell
+pip install git+ssh://git@github.com/sdv-dev/pymetrics
+```
+
+## Local Usage
+Collect metrics from PyPI by running `pymetrics` on your computer. You need to provide the following:
+
+1. BigQuery Credentials. In order to get PyPI download data, you need to execute queries on Google BigQuery.
+  Therefore, you will need an authentication JSON file, which must be provided to you by a privileged admin.
+  Once you have this JSON file, export the contents of the credentials file into a
+  `BIGQUERY_CREDENTIALS` environment variable.
+2. A list of PyPI projects for which to collect the download metrics, defined in a YAML file.
+   See [config.yaml](./config.yaml) for an example.
+3. Optional. A set of Google Drive Credentials can be provided in the format required by `PyDrive`. The
+   credentials can be passed via the `PYDRIVE_CREDENTIALS` environment variable.
+   - See [instructions from PyDrive](https://pythonhosted.org/PyDrive/quickstart.html).
+
+You can run pymetrics with the following CLI command:
+
+```shell
+pymetrics collect-pypi --max-days 30 --add-metrics --output-folder {OUTPUT_FOLDER}
+```
+
 ## Workflows
 
 ### Daily Collection
-On a daily basis, this workflow collects download data from PyPI and Anaconda. The data is then published in CSV format (`pypi.csv`). In addition, it computes metrics for the PyPI downloads (see below).
+On a daily basis, this workflow collects download data from PyPI and Anaconda. The data is then published in CSV format (`pypi.csv`). In addition, it computes metrics for the PyPI downloads (see [#Aggregation Metrics](#aggregation-metrics))
 
-#### Metrics
-This PyPI download metrics are computed along several dimensions:
-
-- **By Month**: The number of downloads per month.
-- **By Version**: The number of downloads per version of the software, as determined by the software maintainers.
-- **By Python Version**: The number of downloads per minor Python version (eg. 3.8).
-- **And more!**
-
-### Daily Summarize
+### Daily Summarization
 
 On a daily basis, this workflow summarizes the PyPI download data from `pypi.csv` and calculates downloads for libraries. The summarized data is published to a GitHub repo:
 - [Downloads_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/Downloads_Summary.xlsx)
@@ -76,6 +93,56 @@ Installing the main SDV library also installs all the other libraries as depende
 5. Ensure no download count goes negative using `max(0, adjusted_count)` for each library.
 
 This methodology prevents double-counting downloads while providing an accurate representation of SDV usage.
+
+## PyPI Data
+PyMetrics collects download information from PyPI by querying the [public PyPI download statistics dataset on BigQuery](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=pypi&page=dataset). The following data fields are captured for each download event:
+
+**Temporal & Geographic Data:**
+* `timestamp`: The timestamp at which the download happened
+* `country_code`: The 2-letter country code
+
+**Package Information:**
+* `project`: The name of the PyPI project (library) that is being downloaded
+* `version`: The downloaded version
+* `type`: The type of file that was downloaded (source or wheel)
+
+**Installation Environment:**
+* `installer_name`: The installer used for the download, like `pip` or `bandersnatch` or `uv`
+* `implementation_name`: The name of the Python implementation, such as `cpython`
+* `implementation_version`: The Python version
+* `ci`: A boolean flag indicating whether the download originated from a CI system (True, False, or null). This is determined by checking for specific environment variables set by CI platforms such as Azure Pipelines (`BUILD_BUILDID`), Jenkins (`BUILD_ID`), or general CI indicators (`CI`, `PIP_IS_CI`)
+
+**System Information:**
+* `distro_name`: Name of the Linux or Mac distribution (empty if Windows)
+* `distro_version`: Distribution version (empty for Windows)
+* `system_name`: Type of OS, like Linux, Darwin (for Mac), or Windows
+* `system_release`: OS version in case of Windows, kernel version in case of Unix
+* `cpu`: CPU architecture used
+
+## Aggregation Metrics
+
+If the `--add-metrics` option is passed to `pymetrics`, a spreadsheet with aggregation
+metrics will be created alongside the raw PyPI downloads CSV file for each individual project.
+
+The aggregation metrics spreasheets contain the following tabs:
+
+* **By Month:** Number of downloads per month and increase in the number of downloads from month to month.
+* **By Version:** Absolute and relative number of downloads per version.
+* **By Country Code:** Absolute and relative number of downloads per Country.
+* **By Python Version:** Absolute and relative number of downloads per minor Python Version (X.Y, like 3.8).
+* **By Full Python Version:** Absolute and relative number of downloads per Python Version, including
+  the patch number (X.Y.Z, like 3.8.1).
+* **By Installer Name:** Absolute and relative number of downloads per Installer (e.g. pip)
+* **By Distro Name:** Absolute and relative number of downloads per Distribution Name (e.g. Ubuntu)
+* **By Distro Name:** Absolute and relative number of downloads per Distribution Name AND Version (e.g. Ubuntu 20.04)
+* **By Distro Kernel:** Absolute and relative number of downloads per Distribution Name, Version AND Kernel (e.g. Ubuntu 18.04 - 5.4.104+)
+* **By OS Type:** Absolute and relative number of downloads per OS Type (e.g. Linux)
+* **By Cpu:** Absolute and relative number of downloads per CPU Version (e.g. AMD64)
+* **By CI**: Absolute and relative number of downloads by CI status (automated vs. manual installations)
+* **By Month and Version:** Absolute number of downloads per month and version.
+* **By Month and Python Version:** Absolute number of downloads per month and Python version.
+* **By Month and Country Code:** Absolute number of downloads per month and country.
+* **By Month and Installer Name:** Absolute number of downloads per month and Installer.
 
 ## Known Issues
 1. The conda package download data for Anaconda does not match the download count shown on the website. This is due to missing download data in the conda package download data. See this: https://github.com/anaconda/anaconda-package-data/issues/45

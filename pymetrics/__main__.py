@@ -49,7 +49,7 @@ def _collect_pypi(args):
     config = _load_config(args.config_file)
     projects = args.projects or config['projects']
     output_folder = args.output_folder
-    max_days = args.max_days or config.get('max-days')
+    max_days = args.max_days
 
     collect_pypi_downloads(
         projects=projects,
@@ -175,7 +175,7 @@ def _get_parser():
         '--max-days',
         type=int,
         required=False,
-        help='Max days of data to pull if start-date is not given.',
+        help='Max days of data to pull if start-date is not given',
     )
     collect_pypi.add_argument(
         '-f',
@@ -241,7 +241,7 @@ def _get_parser():
         type=int,
         required=False,
         default=90,
-        help='Max days of data to pull.',
+        help='Max days of data to pull. Default to last 90 days.',
     )
     return parser
 

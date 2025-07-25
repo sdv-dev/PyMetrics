@@ -1,9 +1,10 @@
 """Functions to compute aggregation metrics over raw downloads."""
 
 import logging
-import re
 
+import numpy as np
 import pandas as pd
+from packaging.version import InvalidVersion, Version
 
 from pymetrics.output import create_spreadsheet
 
@@ -11,7 +12,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _groupby(downloads, groupby, index_name=None, percent=True):
-    grouped = downloads.groupby(groupby).size().reset_index()
+    grouped = downloads.groupby(groupby, dropna=False).size().reset_index()
     grouped.columns = [index_name or groupby, 'downloads']
     if percent:
         grouped['percent'] = (grouped.downloads * 100 / grouped.downloads.sum()).round(3)
@@ -78,6 +79,7 @@ GROUPBY_COLUMNS = [
     'distro_kernel',
     'OS_type',
     'cpu',
+    'ci',
 ]
 SORT_BY_DOWNLOADS = [
     'country_code',
@@ -104,34 +106,6 @@ HISTORICAL_COLUMNS = [
 ]
 
 
-RE_NUMERIC = re.compile(r'^\d+')
-
-
-def _version_element_order_key(version):
-    components = []
-    last_component = None
-    last_numeric = None
-    for component in version.split('.', 2):
-        if RE_NUMERIC.match(component):
-            try:
-                numeric = RE_NUMERIC.match(component).group(0)
-                components.append(int(numeric))
-                last_component = component
-                last_numeric = numeric
-            except AttributeError:
-                # From time to time this errors out in github actions
-                # while it shouldn't enter the `if`.
-                pass
-
-    components.append(last_component[len(last_numeric) :])
-
-    return components
-
-
-def _version_order_key(version_column):
-    return version_column.apply(_version_element_order_key)
-
-
 def _mangle_columns(downloads):
     downloads = downloads.rename(columns=RENAME_COLUMNS)
     for col in [
@@ -153,6 +127,32 @@ def _mangle_columns(downloads):
     return downloads
 
 
+def _safe_version_parse(version_str):
+    if pd.isna(version_str):
+        return np.nan
+
+    try:
+        version = Version(str(version_str))
+    except InvalidVersion:
+        cleaned = str(version_str).rstrip('+~')
+        try:
+            version = Version(cleaned)
+        except (InvalidVersion, TypeError):
+            LOGGER.info(f'Unable to parse version: {version_str}')
+            version = np.nan
+
+    return version
+
+
+def _version_order_key(version_column):
+    return version_column.apply(_safe_version_parse)
+
+
+def _sort_by_version(data, column, ascending=False):
+    data = data.sort_values(by=column, key=_version_order_key, ascending=ascending)
+    return data
+
+
 def compute_metrics(downloads, output_path=None):
     """Compute aggregation metrics over the given downloads.
 
@@ -171,8 +171,7 @@ def compute_metrics(downloads, output_path=None):
         if column in SORT_BY_DOWNLOADS:
             sheet = sheet.sort_values('downloads', ascending=False)
         elif column in SORT_BY_VERSION:
-            sheet = sheet.sort_values(column, ascending=False, key=_version_order_key)
-
+            sheet = _sort_by_version(sheet, column=column, ascending=False)
         sheets[name] = sheet
 
     for column in HISTORICAL_COLUMNS:
@@ -181,7 +180,7 @@ def compute_metrics(downloads, output_path=None):
         sheets[name] = _historical_groupby(downloads, [column])
 
     if output_path:
-        create_spreadsheet(output_path, sheets)
+        create_spreadsheet(output_path, sheets, na_rep='<NaN>')
         return None
 
     return sheets

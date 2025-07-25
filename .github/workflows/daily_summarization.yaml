@@ -1,4 +1,4 @@
-name: Daily Summarize
+name: Daily Summarization
 
 on:
   workflow_dispatch:
