@@ -77,8 +77,8 @@ def create_spreadsheet(output_path, sheets, na_rep=''):
             _add_sheet(writer, data, title, na_rep=na_rep)
 
     if drive.is_drive_path(output_path):
-        LOGGER.info('Creating file %s', output_path)
         folder, filename = drive.split_drive_path(output_path)
+        LOGGER.info(f'Creating filename {filename}')
         drive.upload(output, filename, folder, convert=True)
     else:
         if not output_path.endswith('.xlsx'):
