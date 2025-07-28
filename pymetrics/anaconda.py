@@ -2,8 +2,7 @@
 
 import logging
 import os
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from datetime import timedelta
 
 import pandas as pd
 import requests
@@ -168,7 +167,7 @@ def collect_anaconda_downloads(
     previous = _get_previous_anaconda_downloads(output_folder, filename=PREVIOUS_ANACONDA_FILENAME)
     previous = previous.sort_values(TIME_COLUMN)
 
-    end_date = datetime.now(tz=ZoneInfo('UTC')).date()
+    end_date = get_current_utc().date()
     start_date = end_date - timedelta(days=max_days)
     LOGGER.info(f'Getting daily anaconda data for start_date>={start_date} to end_date<{end_date}')
     date_ranges = pd.date_range(start=start_date, end=end_date, freq='D')

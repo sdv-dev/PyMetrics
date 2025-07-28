@@ -1,11 +1,12 @@
 """Functions to get PyPI downloads from Google Big Query."""
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 
 import pandas as pd
 
 from pymetrics.bq import run_query
+from pymetrics.time_utils import get_current_utc
 
 LOGGER = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ def _get_query(projects, start_date, end_date):
 
 
 def _get_query_dates(start_date, min_date, max_date, max_days, force=False):
-    end_date = datetime.now(timezone.utc).date()
+    end_date = get_current_utc().date()
     if start_date is None:
         start_date = end_date - timedelta(days=max_days)
 
