@@ -258,7 +258,7 @@ def _get_parser():
         help='Max days of data to pull. Default to last 90 days.',
     )
 
-    # collect Anaconda
+    # collect GitHub downloads
     collect_github = action.add_parser(
         'collect-github', help='Collect download data from GitHub.', parents=[logging_args]
     )
