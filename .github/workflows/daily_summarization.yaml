@@ -1,4 +1,4 @@
-name: Daily Summarize
+name: Daily Summarization
 
 on:
   workflow_dispatch:
@@ -72,6 +72,6 @@ jobs:
         uv run python -m pymetrics.slack_utils \
         -r ${{ github.run_id }} \
         -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-        -m 'Daily Summarize PyMetrics failed :fire: :dumpster-fire: :fire:'
+        -m 'Daily Summarization PyMetrics failed :fire: :dumpster-fire: :fire:'
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
