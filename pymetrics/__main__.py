@@ -267,7 +267,7 @@ def _get_parser():
         '-c',
         '--config-file',
         type=str,
-        default='config.yaml',
+        default='github_config.yaml',
         help='Path to the configuration file.',
     )
     collect_github.add_argument(

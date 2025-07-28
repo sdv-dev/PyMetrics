@@ -10,7 +10,7 @@ import requests
 from tqdm import tqdm
 
 from pymetrics.output import append_row, create_csv, get_path, load_csv
-from pymetrics.time_utils import drop_duplicates_by_date
+from pymetrics.time_utils import drop_duplicates_by_date, get_current_utc
 
 LOGGER = logging.getLogger(__name__)
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -89,7 +89,7 @@ def _get_downloads_from_anaconda_org(packages, channel='conda-forge'):
 
     for pkg_name in packages:
         URL = f'https://api.anaconda.org/package/{channel}/{pkg_name}'
-        timestamp = datetime.now(ZoneInfo('UTC'))
+        timestamp = get_current_utc()
         response = requests.get(URL)
         row_info = {'pkg_name': [pkg_name], TIME_COLUMN: [timestamp], 'total_ndownloads': 0}
         data = response.json()
@@ -158,6 +158,8 @@ def collect_anaconda_downloads(
             `start_date` has not been provided. Defaults to 90 days.
         dry_run (bool):
             If `True`, do not upload the results. Defaults to `False`.
+        verbose (bool):
+            If `True`, will output dataframes tails of anaconda data. Defaults to `False`.
     """
     overall_df, version_downloads = _collect_ananconda_downloads_from_website(
         projects, output_folder=output_folder

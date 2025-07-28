@@ -3,15 +3,13 @@
 import logging
 import os
 from collections import defaultdict
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
 import pandas as pd
 from tqdm import tqdm
 
 from pymetrics.github import GithubClient
 from pymetrics.output import append_row, create_csv, get_path, load_csv
-from pymetrics.time_utils import drop_duplicates_by_date
+from pymetrics.time_utils import drop_duplicates_by_date, get_current_utc
 
 LOGGER = logging.getLogger(__name__)
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +19,7 @@ GITHUB_DOWNLOAD_COUNT_FILENAME = 'github_download_counts.csv'
 
 
 def get_previous_github_downloads(output_folder, dry_run=False):
+    """Get previous GitHub Downloads."""
     csv_path = get_path(output_folder, GITHUB_DOWNLOAD_COUNT_FILENAME)
     read_csv_kwargs = {
         'parse_dates': [
@@ -42,24 +41,29 @@ def get_previous_github_downloads(output_folder, dry_run=False):
 def collect_github_downloads(
     projects: dict[str, list[str]], output_folder: str, dry_run: bool = False, verbose: bool = False
 ):
+    """Pull data about the downloads of a GitHub project.
+
+    Args:
+        projects (dict[str, list[str]]):
+            List of projects to analyze. Each key is the name of the ecosystem, and
+            each value is a list of github repositories (including organization).
+        output_folder (str):
+            Folder in which project downloads will be stored.
+            It can be passed as a local folder or as a Google Drive path in the format
+            `gdrive://{folder_id}`.
+            The folder must contain 'github_download_counts.csv'
+        dry_run (bool):
+            If `True`, do not upload the results. Defaults to `False`.
+        verbose (bool):
+            If `True`, will output dataframes heads of github download data. Defaults to `False`.
+    """
     overall_df = get_previous_github_downloads(output_folder=output_folder)
-    # overall_df = pd.DataFrame(
-    #     columns=[
-    #         TIME_COLUMN,
-    #         'created_at',
-    #         'ecosystem_name',
-    #         'org_repo',
-    #         'tag_name',
-    #         'prerelease',
-    #         'download_count',
-    #     ]
-    # )
 
     gh_client = GithubClient()
     download_counts = defaultdict(int)
 
-    for ecosystem_name, repositories in tqdm(projects.items(), position=2, desc='Overall'):
-        for org_repo in tqdm(repositories, position=1, desc=f'For Ecosystem: {ecosystem_name}'):
+    for ecosystem_name, repositories in projects.items():
+        for org_repo in tqdm(repositories, position=1, desc=f'Ecosystem: {ecosystem_name}'):
             pages_remain = True
             page = 1
             per_page = 100
@@ -85,18 +89,19 @@ def collect_github_downloads(
 
                 # Get download count
                 for release_info in tqdm(
-                    release_data, position=0, desc=f'For {repo} releases, page: {page}'
+                    release_data, position=0, desc=f'{repo} releases, page={page}'
                 ):
                     release_id = release_info.get('id')
                     tag_name = release_info.get('tag_name')
                     prerelease = release_info.get('prerelease')
                     created_at = release_info.get('created_at')
                     endpoint = f'releases/{release_id}'
-                    timestamp = datetime.now(ZoneInfo('UTC'))
 
+                    timestamp = get_current_utc()
                     response = gh_client.get(github_org, repo, endpoint=endpoint)
                     data = response.json()
                     assets = data.get('assets')
+
                     tag_row = {
                         'ecosystem_name': [ecosystem_name],
                         'org_repo': [org_repo],
@@ -122,6 +127,10 @@ def collect_github_downloads(
         time_column=TIME_COLUMN,
         group_by_columns=['ecosystem_name', 'org_repo', 'tag_name'],
     )
+    if verbose:
+        LOGGER.info(f'{GITHUB_DOWNLOAD_COUNT_FILENAME} tail')
+        LOGGER.info(overall_df.tail(5).to_string())
+
     overall_df.to_csv('github_download_counts.csv', index=False)
 
     if not dry_run:

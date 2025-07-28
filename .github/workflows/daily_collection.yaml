@@ -27,6 +27,9 @@ jobs:
     timeout-minutes: 25
     steps:
     - uses: actions/checkout@v4
+      with:
+        repository: sdv-dev/PyMetrics
+        token: ${{ secrets.GH_TOKEN }}
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
@@ -56,6 +59,13 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         ANACONDA_OUTPUT_FOLDER: ${{ secrets.ANACONDA_OUTPUT_FOLDER }}
+    - name: Collect GitHub Downloads
+      run: |
+        uv run pymetrics collect-github \
+          --output-folder ${{ secrets.GH_OUTPUT_FOLDER }}
+      env:
+        PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+        GH_OUTPUT_FOLDER: ${{ secrets.GH_OUTPUT_FOLDER }}
   alert:
     needs: [collect]
     runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-name: Daily Summarization
+name: Daily Summarize
 
 on:
   workflow_dispatch:
@@ -17,6 +17,9 @@ jobs:
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v4
+      with:
+        repository: sdv-dev/PyMetrics
+        token: ${{ secrets.GH_TOKEN }}
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
