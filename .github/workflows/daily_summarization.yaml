@@ -17,6 +17,9 @@ jobs:
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v4
+      with:
+        repository: sdv-dev/PyMetrics
+        token: ${{ secrets.GH_TOKEN }}
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
@@ -69,6 +72,6 @@ jobs:
         uv run python -m pymetrics.slack_utils \
         -r ${{ github.run_id }} \
         -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-        -m 'Daily Summarize PyMetrics failed :fire: :dumpster-fire: :fire:'
+        -m 'Daily Summarization PyMetrics failed :fire: :dumpster-fire: :fire:'
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}

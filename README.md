@@ -44,9 +44,8 @@ Currently, the download data is collected from the following distributions:
       - Replace `{package_name}` with the specific package (`sdv`) in the Anaconda channel
     - For each file returned by the API endpoint, the current number of downloads is saved. Over time, a historical download recording can be built.
 
-### Future Data Sources
-In the future, we may expand the source distributions to include:
-* [GitHub Releases](https://github.com/): Information about the project downloads from GitHub releases.
+* [GitHub Releases](https://docs.github.com/en/rest/releases): Information about the project downloads from GitHub release assets.
+  See this [GitHub API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-a-release).
 
 # Install
 Install pymetrics using pip (or uv):
@@ -143,6 +142,9 @@ The aggregation metrics spreasheets contain the following tabs:
 * **By Month and Python Version:** Absolute number of downloads per month and Python version.
 * **By Month and Country Code:** Absolute number of downloads per month and country.
 * **By Month and Installer Name:** Absolute number of downloads per month and Installer.
+* **By Prerelease**: Absolute and relative number of downloads for pre-release versions (alpha, beta, release candidate, and development versions).
+* **By Postrelease**: Absolute and relative number of downloads for post-release versions.
+* **By Devrelease**: Absolute and relative number of downloads for development release versions.
 
 ## Known Issues
 1. The conda package download data for Anaconda does not match the download count shown on the website. This is due to missing download data in the conda package download data. See this: https://github.com/anaconda/anaconda-package-data/issues/45

@@ -80,6 +80,9 @@ GROUPBY_COLUMNS = [
     'OS_type',
     'cpu',
     'ci',
+    'is_prerelease',
+    'is_postrelease',
+    'is_devrelease',
 ]
 SORT_BY_DOWNLOADS = [
     'country_code',
@@ -106,6 +109,23 @@ HISTORICAL_COLUMNS = [
 ]
 
 
+def _safe_version_parse(version_str):
+    if pd.isna(version_str):
+        return np.nan
+    try:
+        version = Version(str(version_str))
+    except InvalidVersion:
+        version = np.nan
+    return version
+
+
+def _extract_version_attribute(version_str, attribute):
+    version_obj = _safe_version_parse(version_str)
+    if isinstance(version_obj, Version):
+        return getattr(version_obj, attribute)
+    return np.nan
+
+
 def _mangle_columns(downloads):
     downloads = downloads.rename(columns=RENAME_COLUMNS)
     for col in [
@@ -124,24 +144,17 @@ def _mangle_columns(downloads):
     downloads['distro_version'] = downloads['distro_name'] + ' ' + downloads['distro_version']
     downloads['distro_kernel'] = downloads['distro_version'] + ' - ' + downloads['distro_kernel']
 
+    downloads['is_prerelease'] = downloads['version'].apply(
+        _extract_version_attribute, args=('is_prerelease',)
+    )
+    downloads['is_postrelease'] = downloads['version'].apply(
+        _extract_version_attribute, args=('is_postrelease',)
+    )
+    downloads['is_devrelease'] = downloads['version'].apply(
+        _extract_version_attribute, args=('is_devrelease',)
+    )
+
     return downloads
-
-
-def _safe_version_parse(version_str):
-    if pd.isna(version_str):
-        return np.nan
-
-    try:
-        version = Version(str(version_str))
-    except InvalidVersion:
-        cleaned = str(version_str).rstrip('+~')
-        try:
-            version = Version(cleaned)
-        except (InvalidVersion, TypeError):
-            LOGGER.info(f'Unable to parse version: {version_str}')
-            version = np.nan
-
-    return version
 
 
 def _version_order_key(version_column):

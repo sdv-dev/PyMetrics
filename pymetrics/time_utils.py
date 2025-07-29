@@ -1,6 +1,7 @@
 """Time utility functions."""
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
@@ -9,6 +10,11 @@ from pandas.api.types import is_datetime64_any_dtype
 def get_current_year(tz=None):
     """Get the current year."""
     return datetime.now(tz=tz).year
+
+
+def get_current_utc():
+    """Get the current datetime UTC."""
+    return datetime.now(ZoneInfo('UTC'))
 
 
 def get_first_datetime_in_year(year, tzinfo=None):

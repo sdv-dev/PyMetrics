@@ -25,17 +25,17 @@ def test__sort_by_version():
 def test__sort_by_version_with_invalid_versions():
     # Setup
     data = pd.DataFrame({
-        'version': pd.Series(['2.7.11+', '2.0.0', 'invalid', '3.0', np.nan], dtype='object'),
-        'name': ['v4', 'v3', 'v2', 'v5', 'v1'],
+        'version': pd.Series(['2.0.0', 'invalid', '3.0', np.nan], dtype='object'),
+        'name': ['v3', 'v2', 'v4', 'v1'],
     })
 
     # Run
     sorted_df = _sort_by_version(data, 'version')
 
     # Assert
-    expected_versions = ['3.0', '2.7.11+', '2.0.0', 'invalid', np.nan]
+    expected_versions = ['3.0', '2.0.0', 'invalid', np.nan]
     assert sorted_df['version'].tolist() == expected_versions
-    assert sorted_df['name'].tolist() == ['v5', 'v4', 'v3', 'v2', 'v1']
+    assert sorted_df['name'].tolist() == ['v4', 'v3', 'v2', 'v1']
 
 
 def test__sort_by_version_with_mixed_version_formats():

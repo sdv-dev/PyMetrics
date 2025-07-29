@@ -10,6 +10,7 @@ from datetime import datetime
 import yaml
 
 from pymetrics.anaconda import collect_anaconda_downloads
+from pymetrics.gh_downloads import collect_github_downloads
 from pymetrics.main import collect_pypi_downloads
 from pymetrics.summarize import summarize_downloads
 
@@ -71,6 +72,19 @@ def _collect_anaconda(args):
         projects=projects,
         output_folder=output_folder,
         max_days=args.max_days,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
+    )
+
+
+def _collect_github(args):
+    config = _load_config(args.config_file)
+    projects = config['projects']
+    output_folder = args.output_folder
+
+    collect_github_downloads(
+        projects=projects,
+        output_folder=output_folder,
         dry_run=args.dry_run,
         verbose=args.verbose,
     )
@@ -242,6 +256,29 @@ def _get_parser():
         required=False,
         default=90,
         help='Max days of data to pull. Default to last 90 days.',
+    )
+
+    # collect GitHub downloads
+    collect_github = action.add_parser(
+        'collect-github', help='Collect download data from GitHub.', parents=[logging_args]
+    )
+    collect_github.set_defaults(action=_collect_github)
+    collect_github.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='github_config.yaml',
+        help='Path to the configuration file.',
+    )
+    collect_github.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=True,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
     )
     return parser
 
