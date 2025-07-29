@@ -112,17 +112,10 @@ HISTORICAL_COLUMNS = [
 def _safe_version_parse(version_str):
     if pd.isna(version_str):
         return np.nan
-
     try:
         version = Version(str(version_str))
     except InvalidVersion:
-        cleaned = str(version_str).rstrip('+~')
-        try:
-            version = Version(cleaned)
-        except (InvalidVersion, TypeError):
-            LOGGER.info(f'Unable to parse version: {version_str}')
-            version = np.nan
-
+        version = np.nan
     return version
 
 
