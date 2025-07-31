@@ -4,21 +4,31 @@
     <i>An open source project by Engineering at <a href="https://datacebo.com">DataCebo</a>.</i>
 </p>
 
+
 [![Dev Status](https://img.shields.io/badge/Dev%20Status-5%20--%20Production%2fStable-green)](https://pypi.org/search/?c=Development+Status+%3A%3A+5+-+Production%2FStable)
 [![Unit Tests](https://github.com/datacebo/PyMetrics/actions/workflows/unit.yaml/badge.svg)](https://github.com/datacebo/PyMetrics/actions/workflows/unit.yaml?query=branch%3Amain)
 [![Slack](https://img.shields.io/badge/Slack-Join%20now!-36C5F0?logo=slack)](https://bit.ly/sdv-slack-invite)
 
-<div align="center">
-  <a href="https://datacebo.com">
-  <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo-dark-mode.png">
-      <img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo.png"></img>
-  </picture></a>
-</div>
-<br/>
+
+  <div align="center">
+    <a href="https://datacebo.com">
+      <picture>
+          <img align="center" width=40% src="https://github.com/sdv-dev/PyMetrics/blob/main/docs/images/datacebo-logo.png"></img>
+      </picture>
+    </a>
+  </div>
 </div>
 
-# PyMetrics
+<br/>
+
+<div align="left">
+  <picture>
+      <img align="center" width=15% src="https://github.com/sdv-dev/PyMetrics/blob/main/docs/images/pymetrics-logo.png"></img>
+  </picture>
+</div>
+
+---
+
 The PyMetrics project allows you to extract download metrics for Python libraries published on [PyPI](https://pypi.org/) and [Anaconda](https://www.anaconda.com/).
 
 The DataCebo team uses these scripts to report download counts for the libraries in the [SDV ecosystem](https://sdv.dev/) and other libraries.
