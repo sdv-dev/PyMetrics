@@ -23,7 +23,7 @@
 
 <div align="left">
   <picture>
-      <img align="center" width=15% src="https://github.com/sdv-dev/PyMetrics/blob/main/docs/images/pymetrics-logo.png"></img>
+      <img align="center" width=25% src="https://github.com/sdv-dev/PyMetrics/blob/main/docs/images/pymetrics-logo.png"></img>
   </picture>
 </div>
 
