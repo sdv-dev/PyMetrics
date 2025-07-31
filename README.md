@@ -12,9 +12,10 @@
 
   <div align="center">
     <a href="https://datacebo.com">
-    <picture>
-        <img align="center" width=40% src="docs/images/datacebo-logo.png"></img>
-    </picture></a>
+      <picture>
+          <img align="center" width=40% src="https://github.com/sdv-dev/PyMetrics/blob/stable/docs/images/datacebo-logo.png"></img>
+      </picture>
+    </a>
   </div>
 </div>
 
@@ -22,8 +23,8 @@
 
 <div align="left">
   <picture>
-      <img align="center" width=15% src="docs/images/pymetrics-logo.png"></img>
-  </picture></a>
+      <img align="center" width=15% src="https://github.com/sdv-dev/PyMetrics/blob/stable/docs/images/pymetrics-logo.png"></img>
+  </picture>
 </div>
 
 ---
