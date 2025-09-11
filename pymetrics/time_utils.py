@@ -79,6 +79,6 @@ def format_datetime_as_date(dt: datetime):
     return dt.strftime('%B %-d, %Y')
 
 
-def get_dt_now_spelled_out():
+def get_dt_now_spelled_out(tz=None):
     """Get the current date as full spelled out string."""
-    return format_datetime_as_date(datetime.now())
+    return format_datetime_as_date(datetime.now(tz=tz))

@@ -339,8 +339,11 @@ def summarize_downloads(
             bsl_vs_pre_bsl_df = append_row(bsl_vs_pre_bsl_df, version_row)
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
 
-    runtime_data = {'value': [get_dt_now_spelled_out()]}
-    metainfo_df = pd.DataFrame(runtime_data, columns=['value'], index=['date'])
+    runtime_data = {
+        'index': ['date'],
+        'value': [get_dt_now_spelled_out()],
+    }
+    metainfo_df = pd.DataFrame(runtime_data)
     sheets = {
         SHEET_NAMES[0]: all_df,
         SHEET_NAMES[1]: vendor_df,
