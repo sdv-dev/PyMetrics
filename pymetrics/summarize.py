@@ -340,13 +340,13 @@ def summarize_downloads(
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
 
     runtime_data = {'value': [get_dt_now_spelled_out()]}
-    metadata_df = pd.DataFrame(runtime_data, columns=['value'], index=['date'])
+    metainfo_df = pd.DataFrame(runtime_data, columns=['value'], index=['date'])
     sheets = {
         SHEET_NAMES[0]: all_df,
         SHEET_NAMES[1]: vendor_df,
         SHEET_NAMES[2]: breakdown_df,
         SHEET_NAMES[3]: bsl_vs_pre_bsl_df,
-        SHEET_NAMES[4]: metadata_df,
+        SHEET_NAMES[4]: metainfo_df,
     }
     if verbose:
         for sheet_name, df in sheets.items():
