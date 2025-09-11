@@ -72,3 +72,13 @@ def _create_unique_name(name, list_names):
         result += '_'
 
     return result
+
+
+def format_datetime_as_date(dt: datetime):
+    """Format datetime as spelled out date (Month Day, Year)."""
+    return dt.strftime('%B %-d, %Y')
+
+
+def get_dt_now_spelled_out():
+    """Get the current date as full spelled out string."""
+    return format_datetime_as_date(datetime.now())

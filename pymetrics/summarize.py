@@ -7,18 +7,13 @@ import pandas as pd
 from packaging.version import Version, parse
 
 from pymetrics.output import append_row, create_spreadsheet, get_path, load_csv
-from pymetrics.time_utils import get_current_year, get_min_max_dt_in_year
+from pymetrics.time_utils import get_current_year, get_dt_now_spelled_out, get_min_max_dt_in_year
 
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 BREAKDOWN_COLUMN_NAME = 'Library'
 BSL_COLUMN_NAME = 'Type'
-SHEET_NAMES = [
-    'all',
-    'vendor-mapping',
-    'SDV',
-    'PreBSL-vs-BSL',
-]
+SHEET_NAMES = ['all', 'vendor-mapping', 'SDV', 'PreBSL-vs-BSL', 'metainfo']
 OUTPUT_FILENAME = 'Downloads_Summary'
 pre_bsl_versions = {
     'rdt': '1.2.1',
@@ -343,11 +338,15 @@ def summarize_downloads(
             )
             bsl_vs_pre_bsl_df = append_row(bsl_vs_pre_bsl_df, version_row)
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
+
+    runtime_data = {'value': [get_dt_now_spelled_out()]}
+    metadata_df = pd.DataFrame(runtime_data, columns=['value'], index=['date'])
     sheets = {
         SHEET_NAMES[0]: all_df,
         SHEET_NAMES[1]: vendor_df,
         SHEET_NAMES[2]: breakdown_df,
         SHEET_NAMES[3]: bsl_vs_pre_bsl_df,
+        SHEET_NAMES[4]: metadata_df,
     }
     if verbose:
         for sheet_name, df in sheets.items():
