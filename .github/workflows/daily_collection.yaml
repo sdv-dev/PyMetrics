@@ -3,10 +3,6 @@ name: Daily Collection
 on:
   workflow_dispatch:
     inputs:
-      slack_channel:
-        description: Slack channel to post the error message to if the builds fail.
-        required: false
-        default: "sdv-alerts-debug"
       max_days_pypi:
         description: 'Maximum number of days to collect, starting from today for PyPI.'
         required: false
@@ -80,11 +76,3 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -e .[dev]
-    - name: Slack alert if failure
-      run: |
-        uv run python -m pymetrics.slack_utils \
-        -r ${{ github.run_id }} \
-        -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-        -m 'Daily Collection PyMetrics failed :fire: :dumpster-fire: :fire:'
-      env:
-        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
