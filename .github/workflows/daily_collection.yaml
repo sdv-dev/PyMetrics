@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest-large
     timeout-minutes: 25
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         repository: sdv-dev/PyMetrics
         token: ${{ secrets.GH_TOKEN }}
     - name: Install uv
-      uses: astral-sh/setup-uv@v6
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
         activate-environment: true
@@ -62,17 +62,3 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         GH_OUTPUT_FOLDER: ${{ secrets.GH_OUTPUT_FOLDER }}
-  alert:
-    needs: [collect]
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v6
-      with:
-        enable-cache: true
-        activate-environment: true
-    - name: Install pip and dependencies
-      run: |
-        uv pip install -e .[dev]

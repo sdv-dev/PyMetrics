@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest-large
     timeout-minutes: 10
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         repository: sdv-dev/PyMetrics
         token: ${{ secrets.GH_TOKEN }}
     - name: Install uv
-      uses: astral-sh/setup-uv@v6
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
         activate-environment: true
@@ -32,7 +32,7 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
         PYPI_OUTPUT_FOLDER: ${{ secrets.PYPI_OUTPUT_FOLDER }}
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         repository: sdv-dev/sdv-dev.github.io
         path: sdv-dev.github.io
@@ -48,17 +48,3 @@ jobs:
         git commit -m "Upload Download Summary - $(date '+%Y-%m-%d %H:%M:%S')"
         git remote set-url origin https://sdv-team:${{ secrets.GH_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
         git push origin gatsby-home
-  alert:
-    needs: [summarize]
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v6
-      with:
-        enable-cache: true
-        activate-environment: true
-    - name: Install pip and dependencies
-      run: |
-        uv pip install .[dev]
